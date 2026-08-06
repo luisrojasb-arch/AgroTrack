@@ -1,0 +1,7 @@
+export default function InventoryPage() {
+  return (
+    <div>
+      <h1>Gestión de Inventario</h1>
+    </div>
+  );
+}
