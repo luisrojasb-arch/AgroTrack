@@ -1,7 +1,7 @@
 export default function ForgotPasswordPage() {
   return (
     <div>
-      <h1>Gestión de Perfil Completo</h1>
+      <h1>Gestión de Contraseña</h1>
     </div>
   );
 }

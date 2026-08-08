@@ -1,22 +1,27 @@
 import express from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
+import cors from "cors";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
 
+import configurarCors from "./config/cors.js";
+
 import usuarioRoutes from "./routes/usuario.routes.js";
 import fincaRoutes from "./routes/finca.routes.js";
-//import animalRoutes from "./routes/animal.routes.js";
-//import loteRoutes from "./routes/lote.routes.js";
-//import seleccionRoutes from "./routes/seleccion.routes.js";
-//import saludRoutes from "./routes/salud.routes.js";
-//import inventarioRoutes from "./routes/inventario.routes.js";
-//import finanzasRoutes from "./routes/finanzas.routes.js";
-//import reproduccionRoutes from "./routes/reproduccion.routes.js";
+import animalRoutes from "./routes/animal.routes.js";
+import loteRoutes from "./routes/lote.routes.js";
+import seleccionRoutes from "./routes/seleccion.routes.js";
+import saludRoutes from "./routes/salud.routes.js";
+import inventarioRoutes from "./routes/inventario.routes.js";
+import finanzasRoutes from "./routes/finanzas.routes.js";
+import reproduccionRoutes from "./routes/reproduccion.routes.js";
 
 dotenv.config();
 
 const app = express();
+
+app.use(configurarCors);
 
 const limonero = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -27,7 +32,6 @@ const limonero = rateLimit({
 });
 
 app.use(morgan("dev"));
-
 app.use(helmet());
 app.use(limonero);
 app.use(express.json());
@@ -43,13 +47,13 @@ app.get("/", (req, res) => {
 // RUTAS DE LA API
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/fincas", fincaRoutes);
-//app.use("/api/animales", animalRoutes);
-//app.use("/api/lotes", loteRoutes);
-//app.use("/api/selecciones", seleccionRoutes);
-//app.use("/api/salud", saludRoutes);
-//app.use("/api/inventario", inventarioRoutes);
-//app.use("/api/finanzas", finanzasRoutes);
-//app.use("/api/reproduccion", reproduccionRoutes);
+app.use("/api/animales", animalRoutes);
+app.use("/api/lotes", loteRoutes);
+app.use("/api/selecciones", seleccionRoutes);
+app.use("/api/salud", saludRoutes);
+app.use("/api/inventario", inventarioRoutes);
+app.use("/api/finanzas", finanzasRoutes);
+app.use("/api/reproduccion", reproduccionRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ msg: "Ruta no encontrada" });
