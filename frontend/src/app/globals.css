@@ -25,6 +25,6 @@
 }
 
 body {
-  background-color: var(--color-bg-nav);
-  color: var(--color-gray-agro);
+  color: #000000;
+  background-color: #FFFFFF
 }

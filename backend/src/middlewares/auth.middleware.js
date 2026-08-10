@@ -10,7 +10,9 @@ import { catchAsync } from "./catch_async.middleware.js";
 export const verificarAcceso = catchAsync(async (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {
-    return res.status(401).json({ msg: "Acceso denegado. No se encontró un token." });
+    return res
+      .status(401)
+      .json({ msg: "Acceso denegado. No se encontró un token." });
   }
 
   const decodificado = jwt.verify(token, process.env.JWT_SECRET);
@@ -35,11 +37,13 @@ export const verificarAcceso = catchAsync(async (req, res, next) => {
 
 /**
  * @description Paso 2: Valida que el usuario pertenezca a la finca sobre la que intenta operar.
- * Requiere que el frontend envíe el ID de la finca por la URL o por los headers (x-finca-id).
  */
 export const validarFincaSeleccionada = catchAsync(async (req, res, next) => {
   const fincaId =
-    req.params.fincaId || req.header("x-finca-id") || req.body.finca_id;
+    req.params.fincaId ||
+    req.header("x-finca-id") ||
+    req.body?.finca_id ||
+    req.finca?._id;
 
   if (!fincaId) {
     return res
