@@ -1,13 +1,19 @@
-export default function OverviewPage() {
-  
+import OverviewHeader from '@/components/overview/OverviewHeader';
+import OverviewStats from '@/components/overview/OverviewStats';
+import { getSession } from '@/actions/auth.actions';
+import {getAnimalesAction} from '@/actions/animal.actions';
+
+export default async function OverviewPage() {
+
+  const info_animales = await getAnimalesAction({page: 1, limit: 100, search: "", sexo: "Todos"}); 
+  const user = await getSession();
+  console.log(user);
+  console.log(info_animales);
   return (
-    <div className="max-w-4xl mx-auto p-6 md:p-10">
-        <h1 className="text-4xl md:text-5xl font-bold text-black mb-2">
-          ¡Bienvenido de nuevo, !
-        </h1>
-        <p className="text-gray-agro-muted text-sm md:text-base mb-10">
-          Esto es lo que está pasando en tu granja hoy
-        </p>
+    <div>
+      <OverviewHeader name={user.nombre} />
+      <OverviewStats stats={info_animales.data.paginacion.totalRegistros} />
     </div>
+    
   );
 }
