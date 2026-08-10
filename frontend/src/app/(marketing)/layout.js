@@ -1,17 +1,16 @@
+import { cookies } from "next/headers";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
-/**
- * @description Layout principal para las páginas públicas de marketing.
- * @param {Object} props - Propiedades del componente.
- * @param {React.ReactNode} props.children - Contenido de la página actual.
- * @returns {JSX.Element} Estructura del layout con Navbar y contenido.
- */
-export default function MarketingLayout({ children }) {
+export default async function MarketingLayout({ children }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  const isAuthenticated = !!token;
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1 flex flex-col">{children}</main>
+      <Navbar isAuthenticated={isAuthenticated} />
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );
