@@ -9,7 +9,7 @@ export default function DashboardLayout({ children, usuario }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#F8F9FA] overflow-hidden">
+    <div className="flex h-screen overflow-hidden">
       <div
         className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 ${
           isSidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
@@ -29,7 +29,7 @@ export default function DashboardLayout({ children, usuario }) {
         <Navbar onMenuClick={() => setIsSidebarOpen(true)} usuario={usuario} />
 
         <main className="flex-1 overflow-y-auto flex flex-col [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
-          <div className="p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto w-full flex-1">
+          <div className="p-6 lg:p-8 max-w-[1600px] mx-auto w-full flex-1">
             {children}
           </div>
           <Footer />
