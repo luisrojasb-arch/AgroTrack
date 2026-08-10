@@ -8,9 +8,9 @@ import { Menu, X } from "lucide-react";
 
 /**
  * @description Barra de navegación pública principal de AgroTrack.
- * @returns {JSX.Element} Componente Navbar responsivo.
+ * @param {boolean} isAuthenticated - Indica si el usuario tiene una sesión activa.
  */
-export default function Navbar() {
+export default function Navbar({ isAuthenticated = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
@@ -48,18 +48,32 @@ export default function Navbar() {
 
           <div className="flex items-center gap-4">
             <div className="hidden lg:flex items-center gap-4">
-              <Button variant="white" size="36" href="/login">
-                Iniciar Sesión
-              </Button>
-              <Button variant="green" size="36" href="/register">
-                Registrarse
-              </Button>
+              {isAuthenticated ? (
+                <Button variant="green" size="36" href="/overview">
+                  Ir al Panel
+                </Button>
+              ) : (
+                <>
+                  <Button variant="white" size="36" href="/login">
+                    Iniciar Sesión
+                  </Button>
+                  <Button variant="green" size="36" href="/register">
+                    Registrarse
+                  </Button>
+                </>
+              )}
             </div>
 
             <div className="hidden md:flex lg:hidden">
-              <Button variant="white" size="36" href="/login">
-                Iniciar Sesión
-              </Button>
+              {isAuthenticated ? (
+                <Button variant="green" size="36" href="/overview">
+                  Ir al Panel
+                </Button>
+              ) : (
+                <Button variant="white" size="36" href="/login">
+                  Iniciar Sesión
+                </Button>
+              )}
             </div>
 
             <button
@@ -102,14 +116,27 @@ export default function Navbar() {
               <div className="w-full h-px bg-border-agro"></div>
 
               <div className="flex flex-col gap-4">
-                <div className="md:hidden w-full">
-                  <Button variant="white" size="36" href="/login" fullWidth>
-                    Iniciar Sesión
+                {isAuthenticated ? (
+                  <Button variant="green" size="36" href="/overview" fullWidth>
+                    Ir al Panel
                   </Button>
-                </div>
-                <Button variant="green" size="36" href="/register" fullWidth>
-                  Registrarse
-                </Button>
+                ) : (
+                  <>
+                    <div className="md:hidden w-full">
+                      <Button variant="white" size="36" href="/login" fullWidth>
+                        Iniciar Sesión
+                      </Button>
+                    </div>
+                    <Button
+                      variant="green"
+                      size="36"
+                      href="/register"
+                      fullWidth
+                    >
+                      Registrarse
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
