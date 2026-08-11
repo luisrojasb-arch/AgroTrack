@@ -18,4 +18,64 @@ export const loteService = {
     if (!res.ok) throw new Error(data.msg || "Error al obtener lotes");
     return data;
   },
+
+  registrarLote: async (token, data) => {
+    const res = await fetch(`${API_URL}/lotes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.msg || "Error al registrar el lote");
+    return result;
+  },
+
+  obtenerDetalleLote: async (token, id) => {
+    const res = await fetch(`${API_URL}/lotes/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    const result = await res.json();
+    if (!res.ok)
+      throw new Error(result.msg || "Error al obtener detalles del lote");
+    return result;
+  },
+
+  editarLote: async (token, id, data) => {
+    const res = await fetch(`${API_URL}/lotes/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.msg || "Error al editar el lote");
+    return result;
+  },
+
+  eliminarLote: async (token, id) => {
+    const res = await fetch(`${API_URL}/lotes/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.msg || "Error al eliminar el lote");
+    return result;
+  },
 };

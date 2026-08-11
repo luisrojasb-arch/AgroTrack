@@ -1,6 +1,7 @@
-import { MoreVertical } from "lucide-react";
+import { Eye, Edit, ClipboardList, Trash2 } from "lucide-react";
+import ActionMenu from "@/components/ui/ActionMenu";
 
-export default function LotesTable({ lotes = [] }) {
+export default function LotesTable({ lotes = [], onView, onEdit, onDelete }) {
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
       <table className="w-full text-left border-collapse min-w-200">
@@ -70,9 +71,31 @@ export default function LotesTable({ lotes = [] }) {
                   {lote.padre_id ? lote.padre_id.codigo : "-"}
                 </td>
                 <td className="py-4 px-2 text-center">
-                  <button className="text-gray-400 hover:text-black transition-colors cursor-pointer">
-                    <MoreVertical size={20} />
-                  </button>
+                  <ActionMenu
+                    opciones={[
+                      {
+                        label: "Ver Detalles",
+                        icono: <Eye size={16} />,
+                        accion: () => onView(lote._id),
+                      },
+                      {
+                        label: "Editar",
+                        icono: <Edit size={16} />,
+                        accion: () => onEdit(lote),
+                      },
+                      {
+                        label: "Situaciones",
+                        icono: <ClipboardList size={16} />,
+                        accion: () => console.log("Situaciones lote", lote._id),
+                      },
+                      {
+                        label: "Eliminar",
+                        icono: <Trash2 size={16} />,
+                        esDestructivo: true,
+                        accion: () => onDelete(lote),
+                      },
+                    ]}
+                  />
                 </td>
               </tr>
             ))

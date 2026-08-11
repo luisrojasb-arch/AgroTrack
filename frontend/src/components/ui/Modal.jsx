@@ -44,10 +44,10 @@ export default function Modal({
       onMouseDown={onClose}
     >
       <div
-        className={`bg-gradient-card border border-border-agro w-full ${width} max-h-[85vh] rounded-2xl shadow-xl flex flex-col p-6`}
+        className={`bg-gradient-card border border-border-agro w-full ${width} max-h-[85vh] rounded-2xl shadow-xl flex flex-col`}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full px-6 pt-6">
           <div className="flex items-center justify-end w-full">
             <button
               onClick={onClose}
@@ -70,12 +70,12 @@ export default function Modal({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto mt-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
+        <div className="flex-1 overflow-y-auto mt-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
           {children}
         </div>
 
         {footer && (
-          <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-end w-full gap-3">
+          <div className="mt-6 px-6 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-end w-full gap-3">
             {footer}
           </div>
         )}
