@@ -38,22 +38,28 @@ export default function SeleccionFormModal({
     setPrevIsOpen(isOpen);
     if (isOpen) {
       if (seleccionToEdit) {
-        setAnimalesList([
-          {
-            ...seleccionToEdit,
-            lote_origen_id: seleccionToEdit.lote_origen_id?._id || "",
-            lote_label: seleccionToEdit.lote_origen_id?.codigo_lote || "",
-            fecha_nacimiento: seleccionToEdit.fecha_nacimiento
-              ? new Date(seleccionToEdit.fecha_nacimiento)
-                  .toISOString()
-                  .split("T")[0]
-              : "",
-          },
-        ]);
+        const animalesMapeados = (seleccionToEdit.animales || []).map((a) => ({
+          ...emptyForm,
+          ...a,
+          peso:
+            a.peso_inicial ||
+            (a.historial_pesos?.length > 0
+              ? a.historial_pesos[a.historial_pesos.length - 1].peso
+              : ""),
+          fecha_nacimiento: a.fecha_nacimiento
+            ? new Date(a.fecha_nacimiento).toISOString().split("T")[0]
+            : "",
+        }));
+        setAnimalesList(animalesMapeados);
+        setFormData({
+          ...emptyForm,
+          lote_origen_id: seleccionToEdit.lote_origen_id?._id || "",
+          lote_label: seleccionToEdit.lote_origen_id?.codigo_lote || "",
+        });
       } else {
         setAnimalesList([]);
+        setFormData(emptyForm);
       }
-      setFormData(emptyForm);
       setEditingIndex(null);
     }
   }
@@ -86,14 +92,18 @@ export default function SeleccionFormModal({
   };
 
   const handleLoadToEdit = (index) => {
-    setFormData(animalesList[index]);
+    setFormData({ ...emptyForm, ...animalesList[index] });
     setEditingIndex(index);
   };
 
   const handleDeleteFromList = (index) => {
     setAnimalesList(animalesList.filter((_, i) => i !== index));
     if (editingIndex === index) {
-      setFormData(emptyForm);
+      setFormData({
+        ...emptyForm,
+        lote_origen_id: formData.lote_origen_id,
+        lote_label: formData.lote_label,
+      });
       setEditingIndex(null);
     }
   };
@@ -161,7 +171,7 @@ export default function SeleccionFormModal({
             <input
               type="text"
               name="codigo"
-              value={formData.codigo}
+              value={formData.codigo || ""}
               onChange={handleChange}
               placeholder="Ej: 1"
               className="w-full h-10 px-3 rounded-lg border border-border-agro focus:ring-1 focus:ring-primary text-[14px] text-black"
@@ -172,7 +182,7 @@ export default function SeleccionFormModal({
             <input
               type="text"
               name="nombre"
-              value={formData.nombre}
+              value={formData.nombre || ""}
               onChange={handleChange}
               placeholder="Ej: Manuela"
               className="w-full h-10 px-3 rounded-lg border border-border-agro focus:ring-1 focus:ring-primary text-[14px] text-black"
@@ -184,7 +194,7 @@ export default function SeleccionFormModal({
             <input
               type="text"
               name="raza"
-              value={formData.raza}
+              value={formData.raza || ""}
               onChange={handleChange}
               placeholder="Ej: Landrace"
               className="w-full h-10 px-3 rounded-lg border border-border-agro focus:ring-1 focus:ring-primary text-[14px] text-black"
@@ -197,7 +207,7 @@ export default function SeleccionFormModal({
             <input
               type="number"
               name="peso"
-              value={formData.peso}
+              value={formData.peso || ""}
               onChange={handleChange}
               placeholder="0"
               min="0"
@@ -213,7 +223,7 @@ export default function SeleccionFormModal({
             <input
               type="date"
               name="fecha_nacimiento"
-              value={formData.fecha_nacimiento}
+              value={formData.fecha_nacimiento || ""}
               onChange={handleChange}
               className="w-full h-10 px-3 rounded-lg border border-border-agro focus:ring-1 focus:ring-primary text-[14px] text-gray-700"
             />
@@ -225,7 +235,7 @@ export default function SeleccionFormModal({
             <input
               type="number"
               name="cantidad_pezones"
-              value={formData.cantidad_pezones}
+              value={formData.cantidad_pezones || ""}
               onChange={handleChange}
               placeholder="0"
               min="0"
@@ -239,7 +249,7 @@ export default function SeleccionFormModal({
             </label>
             <Select
               opciones={["Buenas", "Malas"]}
-              valorSeleccionado={formData.patas_delanteras}
+              valorSeleccionado={formData.patas_delanteras || "Buenas"}
               onChange={(val) => handleSelectChange("patas_delanteras", val)}
             />
           </div>
@@ -249,7 +259,7 @@ export default function SeleccionFormModal({
             </label>
             <Select
               opciones={["Buenas", "Malas"]}
-              valorSeleccionado={formData.patas_traseras}
+              valorSeleccionado={formData.patas_traseras || "Buenas"}
               onChange={(val) => handleSelectChange("patas_traseras", val)}
             />
           </div>
@@ -284,13 +294,13 @@ export default function SeleccionFormModal({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleLoadToEdit(idx)}
-                    className="text-[14px] font-semibold text-gray-700 hover:text-black border border-border-agro rounded-lg px-4 py-1.5 transition-colors"
+                    className="text-[14px] font-semibold text-gray-700 hover:text-black border border-border-agro rounded-lg px-4 py-1.5 transition-colors cursor-pointer"
                   >
                     Editar
                   </button>
                   <button
                     onClick={() => handleDeleteFromList(idx)}
-                    className="text-[#F04438] hover:bg-red-50 p-2 rounded-lg border border-transparent hover:border-red-200 transition-colors"
+                    className="text-[#F04438] hover:bg-red-50 p-2 rounded-lg border border-transparent hover:border-red-200 transition-colors cursor-pointer"
                   >
                     <Trash2 size={18} />
                   </button>

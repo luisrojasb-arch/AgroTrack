@@ -64,10 +64,10 @@ export async function deleteSeleccionAction(id) {
   }
 }
 
-export async function registrarPesoAction(id, peso) {
+export async function registrarPesoAction(id, payload) {
   try {
     const token = await getToken();
-    const result = await seleccionService.registrarPeso(token, id, peso);
+    const result = await seleccionService.registrarPeso(token, id, payload);
     revalidatePath("/animals");
     return { success: true, data: result };
   } catch (error) {
@@ -75,10 +75,10 @@ export async function registrarPesoAction(id, peso) {
   }
 }
 
-export async function aprobarSeleccionAction(id) {
+export async function aprobarSeleccionAction(id, payload) {
   try {
     const token = await getToken();
-    const result = await seleccionService.aprobarSeleccion(token, id);
+    const result = await seleccionService.aprobarSeleccion(token, id, payload);
     revalidatePath("/animals");
     return { success: true, data: result };
   } catch (error) {

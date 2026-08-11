@@ -2,7 +2,6 @@
 
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
-import { CheckCircle } from "lucide-react";
 
 export default function SeleccionDetailsModal({
   isOpen,
@@ -15,6 +14,20 @@ export default function SeleccionDetailsModal({
 
   const grupo = data.datos_basicos;
   const animales = data.animales || [];
+
+  const calcularPesoPromedioGrupo = () => {
+    if (animales.length === 0) return 0;
+    let sumaPesos = 0;
+    animales.forEach((a) => {
+      sumaPesos +=
+        a.historial_pesos?.length > 0
+          ? a.historial_pesos[a.historial_pesos.length - 1].peso
+          : a.peso_inicial || 0;
+    });
+    return (sumaPesos / animales.length).toFixed(1);
+  };
+
+  const pesoPromedioTotal = calcularPesoPromedioGrupo();
 
   const detailsFooter = (
     <Button variant="green" onClick={onClose} className="w-full sm:w-auto">
@@ -31,17 +44,19 @@ export default function SeleccionDetailsModal({
       width="max-w-4xl"
       footer={detailsFooter}
     >
-      <div className="flex flex-col mt-2 px-6 pb-2 gap-6">
-        <h3 className="text-[18px] font-bold text-center text-black">
-          Selección {grupo.codigo_grupo}
-        </h3>
+      <div className="relative flex flex-col w-full">
+        <div className="sticky bg-gradient-card top-0 z-20 pt-2 pb-4 mb-2 shadow-[0_4px_6px_-6px_rgba(0,0,0,0.1)] px-6">
+          <h3 className="text-[18px] font-bold text-center text-black">
+            Selección {grupo.codigo_grupo}
+          </h3>
+        </div>
 
-        <div className="flex flex-col gap-6 max-h-[60vh] overflow-y-auto pr-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
+        <div className="flex flex-col gap-6 px-6 pb-6 mt-2">
           {animales.map((animal) => {
             const pesoActual =
               animal.historial_pesos?.length > 0
                 ? animal.historial_pesos[animal.historial_pesos.length - 1].peso
-                : animal.peso_inicial;
+                : animal.peso_inicial || 0;
 
             return (
               <div
@@ -70,7 +85,7 @@ export default function SeleccionDetailsModal({
                       Peso Promedio
                     </span>
                     <span className="text-[15px] text-black font-medium">
-                      {pesoActual} kg
+                      {pesoPromedioTotal} kg
                     </span>
                   </div>
 
@@ -117,24 +132,7 @@ export default function SeleccionDetailsModal({
                   </div>
                 </div>
 
-                <div className="flex flex-row items-center gap-3 w-full pt-1 border-t border-gray-100">
-                  <button
-                    onClick={() => onOpenRegistrarPeso(grupo._id, animal._id)}
-                    className="flex-1 h-10 rounded-lg border border-border-agro text-[13px] font-medium text-black hover:bg-gray-50 transition cursor-pointer flex items-center justify-center"
-                  >
-                    Registrar Peso
-                  </button>
-                  {animal.estado_evaluacion === "En Evaluación" && (
-                    <button
-                      onClick={() => onApprove(grupo._id, animal._id)}
-                      className="flex-1 h-10 rounded-lg bg-green-50 text-primary border border-green-200 text-[13px] font-semibold hover:bg-primary hover:text-white transition cursor-pointer flex items-center justify-center gap-1.5"
-                    >
-                      <CheckCircle size={14} /> Seleccionar Madre
-                    </button>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 mt-1">
                   <span className="text-[13px] font-bold text-gray-500">
                     Nota
                   </span>
@@ -143,6 +141,28 @@ export default function SeleccionDetailsModal({
                       {animal.nota || "Nota sobre el animal"}
                     </span>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full pt-4 mt-2 border-t border-gray-100">
+                  <Button
+                    variant="white"
+                    onClick={() => onOpenRegistrarPeso(grupo._id, animal._id)}
+                    fullWidth={true}
+                    className="w-full"
+                  >
+                    Registrar Peso
+                  </Button>
+
+                  {animal.estado_evaluacion === "En Evaluación" && (
+                    <Button
+                      variant="green"
+                      onClick={() => onApprove(grupo._id, animal._id)}
+                      fullWidth={true}
+                      className="w-full"
+                    >
+                      Seleccionar Madre
+                    </Button>
+                  )}
                 </div>
               </div>
             );

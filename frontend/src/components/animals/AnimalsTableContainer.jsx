@@ -261,7 +261,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   };
 
   return (
-    <div className="bg-white border border-border-agro rounded-2xl p-6 w-full shadow-sm relative">
+    <div className="bg-gradient-card border border-border-agro rounded-2xl p-6 w-full shadow-sm relative">
       <AnimalsTableHeader
         activeTab={activeTab}
         onAddAnimal={handleAddAnimal}

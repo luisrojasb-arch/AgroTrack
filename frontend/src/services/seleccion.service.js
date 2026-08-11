@@ -86,14 +86,14 @@ export const seleccionService = {
     return result;
   },
 
-  registrarPeso: async (token, id, peso) => {
+  registrarPeso: async (token, id, payload) => {
     const res = await fetch(`${API_URL}/selecciones/${id}/pesos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ peso }),
+      body: JSON.stringify(payload),
     });
 
     const result = await res.json();
@@ -101,13 +101,14 @@ export const seleccionService = {
     return result;
   },
 
-  aprobarSeleccion: async (token, id) => {
+  aprobarSeleccion: async (token, id, payload) => {
     const res = await fetch(`${API_URL}/selecciones/${id}/aprobar`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify(payload),
     });
 
     const result = await res.json();
