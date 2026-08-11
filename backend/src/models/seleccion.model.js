@@ -17,24 +17,14 @@ const pesoHistorialSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { _id: true }
+  { _id: true },
 );
 
 /**
- * @description Esquema para evaluar hembras prospecto provenientes de un lote antes de ingresarlas como reproductoras.
+ * @description Sub-esquema para evaluar hembras prospecto (cada animal individual).
  */
-const seleccionSchema = new mongoose.Schema(
+const animalEvaluacionSchema = new mongoose.Schema(
   {
-    finca_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Finca",
-      required: [true, "El registro de selección debe estar asociado a una finca"],
-    },
-    lote_origen_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Lote",
-      required: [true, "Debe seleccionar el lote de donde proviene la hembra"],
-    },
     codigo: {
       type: String,
       required: [true, "El código del animal es obligatorio"],
@@ -107,6 +97,48 @@ const seleccionSchema = new mongoose.Schema(
       },
       default: "En Evaluación",
     },
+  },
+  { _id: true },
+);
+
+/**
+ * @description Esquema Principal: Grupo de Selección (Contenedor de los animales)
+ */
+const seleccionGrupoSchema = new mongoose.Schema(
+  {
+    finca_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Finca",
+      required: [
+        true,
+        "El registro de selección debe estar asociado a una finca",
+      ],
+    },
+    lote_origen_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Lote",
+      required: [true, "Debe seleccionar el lote de donde proviene la hembra"],
+    },
+    codigo_grupo: {
+      type: String,
+      required: [true, "El código de grupo es obligatorio"],
+      trim: true,
+    },
+    animales: {
+      type: [animalEvaluacionSchema],
+      validate: {
+        validator: function (v) {
+          return v && v.length > 0;
+        },
+        message: "Debe registrar al menos un animal en el grupo de selección",
+      },
+    },
+    nota_grupo: {
+      type: String,
+      trim: true,
+      maxlength: [500, "La nota del grupo no puede exceder los 500 caracteres"],
+      default: null,
+    },
     esta_eliminado: {
       type: Boolean,
       default: false,
@@ -118,12 +150,12 @@ const seleccionSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-seleccionSchema.index({ finca_id: 1, codigo: 1 }, { unique: true });
+seleccionGrupoSchema.index({ finca_id: 1, codigo_grupo: 1 }, { unique: true });
 
-seleccionSchema.plugin(mongoosePaginate);
+seleccionGrupoSchema.plugin(mongoosePaginate);
 
-const Seleccion = mongoose.model("Seleccion", seleccionSchema);
+const Seleccion = mongoose.model("Seleccion", seleccionGrupoSchema);
 export default Seleccion;

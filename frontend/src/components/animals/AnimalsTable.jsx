@@ -1,4 +1,5 @@
-import { Image as ImageIcon, MoreVertical } from "lucide-react";
+import { Eye, Edit, ClipboardList, Trash2 } from "lucide-react";
+import ActionMenu from "@/components/ui/ActionMenu";
 
 const calcularEdad = (fecha) => {
   if (!fecha) return "-";
@@ -21,7 +22,12 @@ const calcularEdad = (fecha) => {
   return `${anios} ${anios === 1 ? "Año" : "Años"} y ${mesesSobrantes} ${mesesSobrantes === 1 ? "Mes" : "Meses"}`;
 };
 
-export default function AnimalsTable({ animales = [] }) {
+export default function AnimalsTable({
+  animales = [],
+  onView,
+  onEdit,
+  onDelete,
+}) {
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
       <table className="w-full text-left border-collapse min-w-200">
@@ -54,7 +60,6 @@ export default function AnimalsTable({ animales = [] }) {
           </tr>
         </thead>
         <tbody>
-          {/* Si no hay datos, mostramos un mensaje amigable. Si hay, hacemos el map. */}
           {animales.length === 0 ? (
             <tr>
               <td
@@ -71,9 +76,7 @@ export default function AnimalsTable({ animales = [] }) {
                 className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
               >
                 <td className="py-4 px-2 text-[14px] text-black">
-                  <div className="flex items-center gap-2">
-                    {animal.codigo}
-                  </div>
+                  <div className="flex items-center gap-2">{animal.codigo}</div>
                 </td>
                 <td className="py-4 px-2 text-[14px] text-black font-medium">
                   {animal.nombre || "-"}
@@ -94,9 +97,31 @@ export default function AnimalsTable({ animales = [] }) {
                   {animal.sexo === "Hembra" ? animal.cantidad_pezones : "-"}
                 </td>
                 <td className="py-4 px-2 text-center">
-                  <button className="text-gray-400 hover:text-black transition-colors cursor-pointer">
-                    <MoreVertical size={20} />
-                  </button>
+                  <ActionMenu
+                    opciones={[
+                      {
+                        label: "Ver Detalles",
+                        icono: <Eye size={16} />,
+                        accion: () => onView(animal._id),
+                      },
+                      {
+                        label: "Editar",
+                        icono: <Edit size={16} />,
+                        accion: () => onEdit(animal),
+                      },
+                      {
+                        label: "Situaciones",
+                        icono: <ClipboardList size={16} />,
+                        accion: () => console.log("Situaciones", animal._id),
+                      },
+                      {
+                        label: "Eliminar",
+                        icono: <Trash2 size={16} />,
+                        esDestructivo: true,
+                        accion: () => onDelete(animal),
+                      },
+                    ]}
+                  />
                 </td>
               </tr>
             ))

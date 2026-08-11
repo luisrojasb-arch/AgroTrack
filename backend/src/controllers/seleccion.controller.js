@@ -1,34 +1,21 @@
 import Seleccion from "../models/seleccion.model.js";
 import Animal from "../models/animal.model.js";
-import Lote from "../models/lote.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**
- * @description Obtener la lista de animales en selección con paginación y filtros.
+ * @description Obtener la lista de grupos de selección con paginación.
  */
 export const obtenerSelecciones = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
-  const {
-    page = 1,
-    limit = 10,
-    search = "",
-    estado = "En Evaluación",
-  } = req.query;
+  const { page = 1, limit = 10, search = "" } = req.query;
 
   const query = {
     finca_id: fincaId,
     esta_eliminado: false,
   };
 
-  if (estado && estado !== "Todos") {
-    query.estado_evaluacion = estado;
-  }
-
   if (search) {
-    query.$or = [
-      { codigo: { $regex: search, $options: "i" } },
-      { nombre: { $regex: search, $options: "i" } },
-    ];
+    query.codigo_grupo = { $regex: search, $options: "i" };
   }
 
   const options = {
@@ -37,7 +24,7 @@ export const obtenerSelecciones = catchAsync(async (req, res) => {
     sort: { createdAt: -1 },
     populate: {
       path: "lote_origen_id",
-      select: "codigo_lote madre_id padre_id",
+      select: "codigo_lote madre_id padre_id cantidad_total",
       populate: [
         { path: "madre_id", select: "codigo nombre" },
         { path: "padre_id", select: "codigo nombre" },
@@ -54,55 +41,61 @@ export const obtenerSelecciones = catchAsync(async (req, res) => {
       totalPaginas: resultado.totalPages,
       paginaActual: resultado.page,
       limite: resultado.limit,
-      tienePaginaAnterior: resultado.hasPrevPage,
-      tienePaginaSiguiente: resultado.hasNextPage,
-      paginaAnterior: resultado.prevPage,
-      paginaSiguiente: resultado.nextPage,
     },
   });
 });
 
 /**
- * @description Registrar una hembra en evaluación desde un lote.
+ * @description Registrar un nuevo grupo de selección con su lista de animales.
  */
 export const registrarSeleccion = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
-  const { codigo, peso, ...restData } = req.body;
+  const { lote_origen_id, animales } = req.body;
 
-  const existeEnSeleccion = await Seleccion.findOne({
-    codigo,
-    finca_id: fincaId,
-    esta_eliminado: false,
-  });
-  const existeEnAnimal = await Animal.findOne({
-    codigo,
-    finca_id: fincaId,
-    esta_eliminado: false,
-  });
-
-  if (existeEnSeleccion || existeEnAnimal) {
+  if (!animales || animales.length === 0) {
     return res
       .status(400)
-      .json({
-        msg: "Ya existe un animal o prospecto con ese código en esta finca.",
-      });
+      .json({ msg: "Debe incluir al menos un animal en la selección." });
   }
 
-  const nuevaSeleccion = await Seleccion.create({
-    ...restData,
-    codigo,
+  const codigo_grupo = `SEL-${Date.now().toString().slice(-6)}`;
+  const codigosAnimales = animales.map((a) => a.codigo);
+  const existenOficiales = await Animal.find({
+    codigo: { $in: codigosAnimales },
     finca_id: fincaId,
-    historial_pesos: peso ? [{ peso: Number(peso), fecha: Date.now() }] : [],
+    esta_eliminado: false,
+  });
+
+  if (existenOficiales.length > 0) {
+    const repetidos = existenOficiales.map((a) => a.codigo).join(", ");
+    return res.status(400).json({
+      msg: `Los siguientes códigos ya existen en el inventario oficial: ${repetidos}`,
+    });
+  }
+
+  const animalesProcesados = animales.map((animal) => ({
+    ...animal,
+    peso_inicial: Number(animal.peso) || 0,
+    historial_pesos: animal.peso
+      ? [{ peso: Number(animal.peso), fecha: Date.now() }]
+      : [],
+  }));
+
+  const nuevoGrupo = await Seleccion.create({
+    finca_id: fincaId,
+    lote_origen_id,
+    codigo_grupo,
+    animales: animalesProcesados,
   });
 
   res.status(201).json({
-    msg: "Prospecto registrado en selección exitosamente.",
-    seleccion: nuevaSeleccion,
+    msg: "Grupo de selección registrado exitosamente.",
+    seleccion: nuevoGrupo,
   });
 });
 
 /**
- * @description Obtener los detalles de la selección y su historial de pesos.
+ * @description Obtener los detalles de un grupo de selección (incluye todos sus animales).
  */
 export const obtenerDetalleSeleccion = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -115,76 +108,57 @@ export const obtenerDetalleSeleccion = catchAsync(async (req, res) => {
   }).populate("lote_origen_id", "codigo_lote cantidad_total fecha");
 
   if (!seleccion) {
-    return res
-      .status(404)
-      .json({ msg: "Registro de selección no encontrado." });
+    return res.status(404).json({ msg: "Grupo de selección no encontrado." });
   }
-
-  const pesoActual =
-    seleccion.historial_pesos.length > 0
-      ? seleccion.historial_pesos[seleccion.historial_pesos.length - 1].peso
-      : 0;
 
   res.status(200).json({
     datos_basicos: seleccion,
-    peso_actual: pesoActual,
-    historial_pesos: seleccion.historial_pesos,
+    animales: seleccion.animales,
   });
 });
 
 /**
- * @description Agregar un nuevo peso al historial (Modal: Registrar Peso Nuevo).
+ * @description Agregar un nuevo peso al historial de un animal específico dentro del grupo.
  */
 export const registrarPeso = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
-  const { peso } = req.body;
+  const { animal_id, peso } = req.body;
 
-  if (peso === undefined || peso < 0) {
-    return res.status(400).json({ msg: "Debe proporcionar un peso válido." });
+  if (peso === undefined || peso < 0 || !animal_id) {
+    return res
+      .status(400)
+      .json({ msg: "Debe proporcionar un peso válido y el ID del animal." });
   }
 
-  const seleccionActualizada = await Seleccion.findOneAndUpdate(
-    { _id: id, finca_id: fincaId, esta_eliminado: false },
-    { $push: { historial_pesos: { peso: Number(peso), fecha: Date.now() } } },
-    { new: true, runValidators: true },
-  );
+  const grupo = await Seleccion.findOne({
+    _id: id,
+    finca_id: fincaId,
+    esta_eliminado: false,
+  });
+  if (!grupo) return res.status(404).json({ msg: "Grupo no encontrado." });
 
-  if (!seleccionActualizada) {
+  const animal = grupo.animales.id(animal_id);
+  if (!animal)
     return res
       .status(404)
-      .json({ msg: "Registro de selección no encontrado." });
-  }
+      .json({ msg: "Animal no encontrado dentro del grupo." });
+
+  animal.historial_pesos.push({ peso: Number(peso), fecha: Date.now() });
+  await grupo.save();
 
   res.status(200).json({
     msg: "Nuevo peso registrado correctamente.",
-    peso_actual: peso,
-    historial_pesos: seleccionActualizada.historial_pesos,
+    animal_actualizado: animal,
   });
 });
 
 /**
- * @description Editar los datos básicos de la evaluación.
+ * @description Editar los datos de un grupo (Reemplaza la lista de animales).
  */
 export const editarSeleccion = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
-
-  if (req.body.codigo) {
-    const existeCodigo = await Seleccion.findOne({
-      codigo: req.body.codigo,
-      finca_id: fincaId,
-      _id: { $ne: id },
-      esta_eliminado: false,
-    });
-    if (existeCodigo) {
-      return res
-        .status(400)
-        .json({
-          msg: "El código ingresado ya pertenece a otro registro en evaluación.",
-        });
-    }
-  }
 
   const seleccionActualizada = await Seleccion.findOneAndUpdate(
     { _id: id, finca_id: fincaId, esta_eliminado: false },
@@ -193,9 +167,7 @@ export const editarSeleccion = catchAsync(async (req, res) => {
   );
 
   if (!seleccionActualizada) {
-    return res
-      .status(404)
-      .json({ msg: "Registro de selección no encontrado." });
+    return res.status(404).json({ msg: "Grupo no encontrado." });
   }
 
   res.status(200).json({
@@ -205,7 +177,7 @@ export const editarSeleccion = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Eliminar la selección (Soft Delete).
+ * @description Eliminar el grupo completo (Soft Delete).
  */
 export const eliminarSeleccion = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -217,61 +189,68 @@ export const eliminarSeleccion = catchAsync(async (req, res) => {
     { new: true },
   );
 
-  if (!seleccionEliminada) {
-    return res.status(404).json({ msg: "Registro no encontrado." });
-  }
+  if (!seleccionEliminada)
+    return res.status(404).json({ msg: "Grupo no encontrado." });
 
-  res.status(200).json({ msg: "El registro de selección ha sido eliminado." });
+  res.status(200).json({ msg: "El grupo de selección ha sido eliminado." });
 });
 
 /**
- * @description Aprobar a la hembra (La convierte en un Animal oficial).
+ * @description Aprobar a una hembra específica dentro del grupo (La convierte en Animal oficial).
  */
 export const aprobarSeleccion = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
+  const { animal_id } = req.body;
 
-  // 1. Buscamos a la hembra en evaluación
-  const seleccion = await Seleccion.findOne({
+  if (!animal_id)
+    return res
+      .status(400)
+      .json({ msg: "Debe proporcionar el ID del animal a aprobar." });
+
+  const grupo = await Seleccion.findOne({
     _id: id,
     finca_id: fincaId,
     esta_eliminado: false,
-    estado_evaluacion: "En Evaluación",
   }).populate("lote_origen_id");
+  if (!grupo) return res.status(404).json({ msg: "Grupo no encontrado." });
 
-  if (!seleccion) {
+  const animalEvaluado = grupo.animales.id(animal_id);
+  if (!animalEvaluado)
+    return res.status(404).json({ msg: "Animal no encontrado." });
+  if (animalEvaluado.estado_evaluacion !== "En Evaluación") {
     return res
-      .status(404)
-      .json({
-        msg: "Prospecto no encontrado o ya ha sido evaluado previamente.",
-      });
+      .status(400)
+      .json({ msg: "Este animal ya ha sido evaluado previamente." });
   }
 
   const pesoFinal =
-    seleccion.historial_pesos.length > 0
-      ? seleccion.historial_pesos[seleccion.historial_pesos.length - 1].peso
-      : 0;
+    animalEvaluado.historial_pesos.length > 0
+      ? animalEvaluado.historial_pesos[
+          animalEvaluado.historial_pesos.length - 1
+        ].peso
+      : animalEvaluado.peso_inicial;
 
   const nuevaMadre = await Animal.create({
     finca_id: fincaId,
-    codigo: seleccion.codigo,
-    nombre: seleccion.nombre,
+    codigo: animalEvaluado.codigo,
+    nombre: animalEvaluado.nombre,
     sexo: "Hembra",
     estado: "Vivo",
-    raza: seleccion.raza,
+    raza: animalEvaluado.raza,
     peso: pesoFinal,
-    fecha_nacimiento: seleccion.fecha_nacimiento,
-    cantidad_pezones: seleccion.cantidad_pezones,
-    madre_id: seleccion.lote_origen_id?.madre_id || null,
-    padre_id: seleccion.lote_origen_id?.padre_id || null,
-    nota: `Proveniente del proceso de selección. Lote Origen: ${seleccion.lote_origen_id?.codigo_lote || "N/A"}. Patas Delanteras: ${seleccion.patas_delanteras}. Patas Traseras: ${seleccion.patas_traseras}.`,
+    fecha_nacimiento: animalEvaluado.fecha_nacimiento,
+    cantidad_pezones: animalEvaluado.cantidad_pezones,
+    madre_id: grupo.lote_origen_id?.madre_id || null,
+    padre_id: grupo.lote_origen_id?.padre_id || null,
+    nota: `Proveniente de Selección. Lote Origen: ${grupo.lote_origen_id?.codigo_lote || "N/A"}. Patas D: ${animalEvaluado.patas_delanteras}. Patas T: ${animalEvaluado.patas_traseras}.`,
   });
 
-  seleccion.estado_evaluacion = "Seleccionada";
-  await seleccion.save();
+  animalEvaluado.estado_evaluacion = "Seleccionada";
+  await grupo.save();
 
   res.status(200).json({
-    msg: "¡Hembra seleccionada con éxito! Ha sido agregada a tu inventario de animales reproductores.",
+    msg: `¡${animalEvaluado.codigo} seleccionada con éxito! Agregada a reproductoras.`,
     animal: nuevaMadre,
   });
 });

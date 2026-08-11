@@ -1,6 +1,11 @@
 import Button from "@/components/ui/Button";
 
-export default function AnimalsTableHeader({ activeTab }) {
+export default function AnimalsTableHeader({
+  activeTab,
+  onAddAnimal,
+  onAddLote,
+  onAddSeleccion,
+}) {
   const getHeaderContent = () => {
     switch (activeTab) {
       case "lotes":
@@ -8,10 +13,20 @@ export default function AnimalsTableHeader({ activeTab }) {
           title: "Registro de Lotes",
           buttons: (
             <>
-              <Button variant="white" size="42" className="w-full sm:w-auto">
+              <Button
+                variant="white"
+                size="42"
+                className="w-full sm:w-auto"
+                onClick={onAddLote}
+              >
                 Agregar Lote
               </Button>
-              <Button variant="green" size="42" className="w-full sm:w-auto">
+              <Button
+                variant="green"
+                size="42"
+                className="w-full sm:w-auto"
+                onClick={onAddAnimal}
+              >
                 Agregar Animal
               </Button>
             </>
@@ -21,7 +36,12 @@ export default function AnimalsTableHeader({ activeTab }) {
         return {
           title: "Registro de Selección de Madre",
           buttons: (
-            <Button variant="green" size="42" className="w-full sm:w-auto">
+            <Button
+              variant="green"
+              size="42"
+              className="w-full sm:w-auto"
+              onClick={onAddSeleccion}
+            >
               Agregar Selección
             </Button>
           ),
@@ -31,10 +51,20 @@ export default function AnimalsTableHeader({ activeTab }) {
           title: "Registro de Animales",
           buttons: (
             <>
-              <Button variant="white" size="42" className="w-full sm:w-auto">
+              <Button
+                variant="white"
+                size="42"
+                className="w-full sm:w-auto"
+                onClick={onAddLote}
+              >
                 Agregar Lote
               </Button>
-              <Button variant="green" size="42" className="w-full sm:w-auto">
+              <Button
+                variant="green"
+                size="42"
+                className="w-full sm:w-auto"
+                onClick={onAddAnimal}
+              >
                 Agregar Animal
               </Button>
             </>
@@ -55,7 +85,6 @@ export default function AnimalsTableHeader({ activeTab }) {
           Administra tus animales de forma individual o en lote
         </p>
       </div>
-
       <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto shrink-0">
         {content.buttons}
       </div>

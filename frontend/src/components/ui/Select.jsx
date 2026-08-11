@@ -35,7 +35,7 @@ export default function Select({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between h-10.5 bg-white border rounded-lg pl-4 pr-3 text-[14px] text-black focus:outline-none transition-colors ${
+        className={`w-full flex items-center justify-between h-10.5 bg-white border rounded-lg pl-4 pr-3 text-[14px] text-black focus:outline-none transition-colors cursor-pointer ${
           isOpen
             ? "border-primary ring-1 ring-primary"
             : "border-border-agro hover:border-gray-300"
