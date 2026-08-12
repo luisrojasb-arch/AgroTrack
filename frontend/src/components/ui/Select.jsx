@@ -10,12 +10,14 @@ import { ChevronDown } from "lucide-react";
  * @param {string} props.valorSeleccionado - El valor actualmente seleccionado.
  * @param {function} props.onChange - Función que se ejecuta al seleccionar una opción.
  * @param {string} [props.className=""] - Clases CSS adicionales para el contenedor.
+ * @param {string} [props.placement="bottom"] - Dirección en la que se abre ("bottom" o "top").
  */
 export default function Select({
   opciones = [],
   valorSeleccionado,
   onChange,
   className = "",
+  placement = "bottom",
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -51,7 +53,11 @@ export default function Select({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-border-agro rounded-lg shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+        <div
+          className={`absolute z-50 w-full bg-white border border-border-agro rounded-lg shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-100 ${
+            placement === "top" ? "bottom-full mb-1" : "top-full mt-1"
+          }`}
+        >
           <ul className="py-1 max-h-60 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
             {opciones.map((opcion) => (
               <li

@@ -4,13 +4,8 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 
-export default function DeleteSeleccionModal({
-  isOpen,
-  onClose,
-  seleccion,
-  onConfirm,
-}) {
-  const nombreAEnseñar = seleccion?.codigo_grupo || "este grupo";
+export default function DeleteUserModal({ isOpen, onClose, user, onConfirm }) {
+  const nombreAEnseñar = user?.nombre || "este miembro";
 
   const deleteFooter = (
     <>
@@ -19,10 +14,10 @@ export default function DeleteSeleccionModal({
       </Button>
       <Button
         variant="red"
-        onClick={() => onConfirm(seleccion?._id)}
+        onClick={() => onConfirm(user?.id)}
         className="w-full sm:w-auto"
       >
-        Eliminar Selección
+        Eliminar Miembro
       </Button>
     </>
   );
@@ -39,10 +34,10 @@ export default function DeleteSeleccionModal({
           <AlertTriangle className="text-[#F04438] w-7 h-7" strokeWidth={2} />
         </div>
         <h3 className="text-[20px] font-bold text-black mb-2 leading-tight">
-          ¿Seguro Que Quiere Eliminar el Lote de Selección?
+          ¿Seguro Que Quiere Eliminar el Miembro?
         </h3>
         <p className="text-[14px] text-gray-500">
-          Estás a punto de eliminar a{" "}
+          Estás a punto de eliminar el Miembro{" "}
           <span className="font-bold text-black">{nombreAEnseñar}</span>. Esta
           acción no se puede deshacer.
         </p>

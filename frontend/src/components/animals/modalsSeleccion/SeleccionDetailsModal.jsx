@@ -41,7 +41,7 @@ export default function SeleccionDetailsModal({
       onClose={onClose}
       title="Detalles de Selección"
       description="Información completa del grupo"
-      width="max-w-4xl"
+      width="max-w-3xl"
       footer={detailsFooter}
     >
       <div className="relative flex flex-col w-full">

@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { Trash2 } from "lucide-react";
 import LoteSearchInput from "./LoteSearchInput";
+import { toast } from "sonner";
 
 const emptyForm = {
   lote_origen_id: "",
@@ -70,9 +71,36 @@ export default function SeleccionFormModal({
     setFormData((prev) => ({ ...prev, [name]: value }));
 
   const handleAddOrUpdateToList = () => {
-    if (!formData.codigo || !formData.lote_origen_id) {
-      alert("El código y el lote son obligatorios para añadir a la lista.");
-      return;
+    // VALIDACIONES ESTRICTAS FRONTEND
+    if (!formData.lote_origen_id) {
+      return toast.error("Debe seleccionar un lote de origen.");
+    }
+    if (!formData.codigo || !/^[a-zA-Z0-9\-]+$/.test(formData.codigo)) {
+      return toast.error(
+        "El código es obligatorio y solo acepta letras, números y guiones.",
+      );
+    }
+    if (!formData.nombre || !/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.nombre)) {
+      return toast.error(
+        "El nombre es obligatorio y solo acepta letras y espacios.",
+      );
+    }
+    if (!formData.raza || !/^[a-zA-ZÀ-ÿ\s]+$/.test(formData.raza)) {
+      return toast.error(
+        "La raza es obligatoria y solo acepta letras y espacios.",
+      );
+    }
+    if (!formData.peso || Number(formData.peso) <= 0) {
+      return toast.error("El peso es obligatorio y debe ser mayor a 0.");
+    }
+    if (!formData.fecha_nacimiento) {
+      return toast.error("La fecha de nacimiento es obligatoria.");
+    }
+    if (new Date(formData.fecha_nacimiento) > new Date()) {
+      return toast.error("La fecha de nacimiento no puede ser en el futuro.");
+    }
+    if (!formData.cantidad_pezones || Number(formData.cantidad_pezones) < 0) {
+      return toast.error("La cantidad de pezones es obligatoria.");
     }
 
     if (editingIndex !== null) {
@@ -110,7 +138,7 @@ export default function SeleccionFormModal({
 
   const handleSubmitGlobal = () => {
     if (animalesList.length === 0) {
-      alert("Debe agregar al menos un animal a la lista.");
+      toast.error("Debe agregar al menos un animal a la lista.");
       return;
     }
 
@@ -178,7 +206,9 @@ export default function SeleccionFormModal({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[14px] font-medium text-black">Nombre</label>
+            <label className="text-[14px] font-medium text-black">
+              Nombre *
+            </label>
             <input
               type="text"
               name="nombre"
@@ -190,7 +220,7 @@ export default function SeleccionFormModal({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[14px] font-medium text-black">Raza</label>
+            <label className="text-[14px] font-medium text-black">Raza *</label>
             <input
               type="text"
               name="raza"
@@ -202,7 +232,7 @@ export default function SeleccionFormModal({
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-[14px] font-medium text-black">
-              Peso (kg)
+              Peso (kg) *
             </label>
             <input
               type="number"
@@ -218,7 +248,7 @@ export default function SeleccionFormModal({
 
           <div className="flex flex-col gap-1.5">
             <label className="text-[14px] font-medium text-black">
-              Fecha de nacimiento
+              Fecha de nacimiento *
             </label>
             <input
               type="date"
@@ -230,7 +260,7 @@ export default function SeleccionFormModal({
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-[14px] font-medium text-black">
-              Cantidad de pezones
+              Cantidad de pezones *
             </label>
             <input
               type="number"
@@ -248,7 +278,7 @@ export default function SeleccionFormModal({
               Patas delanteras *
             </label>
             <Select
-              opciones={["Buenas", "Malas"]}
+              opciones={["Buenas", "Regulares", "Malas"]}
               valorSeleccionado={formData.patas_delanteras || "Buenas"}
               onChange={(val) => handleSelectChange("patas_delanteras", val)}
             />
@@ -258,7 +288,7 @@ export default function SeleccionFormModal({
               Patas traseras *
             </label>
             <Select
-              opciones={["Buenas", "Malas"]}
+              opciones={["Buenas", "Regulares", "Malas"]}
               valorSeleccionado={formData.patas_traseras || "Buenas"}
               onChange={(val) => handleSelectChange("patas_traseras", val)}
             />

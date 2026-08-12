@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import AnimalsTableHeader from "./AnimalsTableHeader";
 import AnimalsTabs from "./AnimalsTabs";
 import AnimalsTableControls from "./AnimalsTableControls";
@@ -33,6 +34,7 @@ import SeleccionFormModal from "./modalsSeleccion/SeleccionFormModal";
 import SeleccionDetailsModal from "./modalsSeleccion/SeleccionDetailsModal";
 import RegistrarPesoModal from "./modalsSeleccion/RegistrarPesoModal";
 import DeleteSeleccionModal from "./modalsSeleccion/DeleteSeleccionModal";
+import AprobarMadreModal from "./modalsSeleccion/AprobarMadreModal";
 import {
   createSeleccionAction,
   updateSeleccionAction,
@@ -79,7 +81,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
       setAnimalDetailsData(res.data);
       setIsAnimalDetailsOpen(true);
     } else {
-      alert("Error al cargar detalles: " + res.error);
+      toast.error(res.error || "Error al cargar detalles");
     }
   };
 
@@ -96,8 +98,13 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     if (res.success) {
       setIsAnimalFormOpen(false);
       setSelectedAnimal(null);
+      toast.success(
+        selectedAnimal
+          ? "Animal actualizado correctamente"
+          : "Animal registrado correctamente",
+      );
     } else {
-      alert("Error: " + res.error);
+      toast.error(res.error);
     }
   };
 
@@ -106,8 +113,9 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     if (res.success) {
       setIsAnimalDeleteOpen(false);
       setSelectedAnimal(null);
+      toast.success("Animal eliminado correctamente");
     } else {
-      alert("Error: " + res.error);
+      toast.error(res.error);
     }
   };
 
@@ -136,7 +144,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
       setLoteDetailsData(res.data);
       setIsLoteDetailsOpen(true);
     } else {
-      alert("Error al cargar detalles: " + res.error);
+      toast.error(res.error || "Error al cargar detalles del lote");
     }
   };
 
@@ -148,8 +156,13 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     if (res.success) {
       setIsLoteFormOpen(false);
       setSelectedLote(null);
+      toast.success(
+        selectedLote
+          ? "Lote actualizado correctamente"
+          : "Lote registrado correctamente",
+      );
     } else {
-      alert("Error: " + res.error);
+      toast.error(res.error);
     }
   };
 
@@ -158,8 +171,9 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     if (res.success) {
       setIsLoteDeleteOpen(false);
       setSelectedLote(null);
+      toast.success("Lote eliminado correctamente");
     } else {
-      alert("Error: " + res.error);
+      toast.error(res.error);
     }
   };
 
@@ -167,6 +181,12 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   const [isSeleccionDetailsOpen, setIsSeleccionDetailsOpen] = useState(false);
   const [isSeleccionDeleteOpen, setIsSeleccionDeleteOpen] = useState(false);
   const [isRegistrarPesoOpen, setIsRegistrarPesoOpen] = useState(false);
+
+  const [isAprobarMadreOpen, setIsAprobarMadreOpen] = useState(false);
+  const [aprobarMadreData, setAprobarMadreData] = useState({
+    grupo_id: null,
+    animal_id: null,
+  });
 
   const [selectedSeleccion, setSelectedSeleccion] = useState(null);
   const [selectedAnimalId, setSelectedAnimalId] = useState(null);
@@ -191,23 +211,25 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
       setSeleccionDetailsData(res.data);
       setIsSeleccionDetailsOpen(true);
     } else {
-      alert("Error al cargar detalles: " + res.error);
+      toast.error(res.error || "Error al cargar detalles de la selección");
     }
   };
 
-  const handleApproveSeleccion = async (grupo_id, animal_id) => {
-    if (
-      confirm(
-        "¿Estás seguro de aprobar esta hembra para pasarla al inventario oficial?",
-      )
-    ) {
-      const res = await aprobarSeleccionAction(grupo_id, { animal_id });
-      if (res.success) {
-        alert("¡Madre aprobada y agregada al inventario!");
-        handleViewSeleccionDetails(grupo_id);
-      } else {
-        alert("Error: " + res.error);
-      }
+  const handleOpenApproveMadre = (grupo_id, animal_id) => {
+    setAprobarMadreData({ grupo_id, animal_id });
+    setIsAprobarMadreOpen(true);
+  };
+
+  const handleConfirmApproveMadre = async () => {
+    const { grupo_id, animal_id } = aprobarMadreData;
+    const res = await aprobarSeleccionAction(grupo_id, { animal_id });
+
+    if (res.success) {
+      toast.success("¡Madre aprobada y agregada al inventario!");
+      setIsAprobarMadreOpen(false);
+      handleViewSeleccionDetails(grupo_id);
+    } else {
+      toast.error(res.error);
     }
   };
 
@@ -217,15 +239,17 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
       if (res.success) {
         setIsSeleccionFormOpen(false);
         setSelectedSeleccion(null);
+        toast.success("Selección actualizada correctamente");
       } else {
-        alert("Error al editar: " + res.error);
+        toast.error(res.error);
       }
     } else {
       const res = await createSeleccionAction(payload);
       if (res.success) {
         setIsSeleccionFormOpen(false);
+        toast.success("Selección registrada correctamente");
       } else {
-        alert("Error al registrar: " + res.error);
+        toast.error(res.error);
       }
     }
   };
@@ -235,8 +259,9 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     if (res.success) {
       setIsSeleccionDeleteOpen(false);
       setSelectedSeleccion(null);
+      toast.success("Selección eliminada correctamente");
     } else {
-      alert("Error: " + res.error);
+      toast.error(res.error);
     }
   };
 
@@ -255,8 +280,9 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     if (res.success) {
       setIsRegistrarPesoOpen(false);
       handleViewSeleccionDetails(selectedSeleccion._id);
+      toast.success("Peso registrado correctamente");
     } else {
-      alert("Error: " + res.error);
+      toast.error(res.error);
     }
   };
 
@@ -350,7 +376,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
         onClose={() => setIsSeleccionDetailsOpen(false)}
         data={seleccionDetailsData}
         onOpenRegistrarPeso={handleOpenRegistrarPeso}
-        onApprove={handleApproveSeleccion}
+        onApprove={handleOpenApproveMadre}
       />
       <RegistrarPesoModal
         isOpen={isRegistrarPesoOpen}
@@ -362,6 +388,12 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
         onClose={() => setIsSeleccionDeleteOpen(false)}
         seleccion={selectedSeleccion}
         onConfirm={handleConfirmDeleteSeleccion}
+      />
+
+      <AprobarMadreModal
+        isOpen={isAprobarMadreOpen}
+        onClose={() => setIsAprobarMadreOpen(false)}
+        onConfirm={handleConfirmApproveMadre}
       />
     </div>
   );
