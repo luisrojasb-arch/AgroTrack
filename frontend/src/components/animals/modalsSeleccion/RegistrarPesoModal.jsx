@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import { toast } from "sonner";
 
 export default function RegistrarPesoModal({ isOpen, onClose, onSubmitPeso }) {
   const [peso, setPeso] = useState("");
@@ -10,7 +11,7 @@ export default function RegistrarPesoModal({ isOpen, onClose, onSubmitPeso }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!peso || Number(peso) <= 0) {
-      alert("Por favor ingrese un peso válido.");
+      toast.error("Por favor ingrese un peso válido.");
       return;
     }
     onSubmitPeso(Number(peso));

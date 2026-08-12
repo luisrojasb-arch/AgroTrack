@@ -40,14 +40,27 @@ const animalEvaluacionSchema = new mongoose.Schema(
     nombre: {
       type: String,
       trim: true,
-      maxlength: [50, "El nombre no puede exceder los 50 caracteres"],
       default: null,
+      maxlength: [50, "El nombre no puede exceder los 50 caracteres"],
+      validate: {
+        validator: function (v) {
+          if (!v) return true;
+          return /^[a-zA-ZÀ-ÿ\s]+$/.test(v);
+        },
+        message: "El nombre solo puede contener letras y espacios",
+      },
     },
     raza: {
       type: String,
+      required: [true, "La raza es obligatoria"],
       trim: true,
       maxlength: [50, "La raza no puede exceder los 50 caracteres"],
-      default: null,
+      validate: {
+        validator: function (v) {
+          return /^[a-zA-ZÀ-ÿ\s]+$/.test(v);
+        },
+        message: "La raza solo puede contener letras y espacios",
+      },
     },
     fecha_nacimiento: {
       type: Date,
@@ -63,7 +76,10 @@ const animalEvaluacionSchema = new mongoose.Schema(
     cantidad_pezones: {
       type: Number,
       min: [0, "La cantidad de pezones no puede ser negativa"],
-      max: [30, "Cantidad de pezones irreal"],
+      max: [
+        20,
+        "La cantidad de pezones supera el límite biológico permitido (20)",
+      ],
       default: null,
     },
     patas_delanteras: {

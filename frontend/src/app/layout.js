@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -14,11 +15,23 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col">
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            classNames: {
+              error: "bg-red-50 text-[#F04438] border border-red-200 shadow-sm",
+              success:
+                "bg-green-50 text-green-700 border border-green-200 shadow-sm",
+              warning:
+                "bg-yellow-50 text-yellow-700 border border-yellow-200 shadow-sm",
+              info: "bg-white text-black border border-border-agro shadow-sm",
+            },
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

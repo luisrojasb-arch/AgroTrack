@@ -1,6 +1,7 @@
 "use client";
 
 import Modal from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 
 export default function DeleteLoteModal({ isOpen, onClose, lote, onConfirm }) {
@@ -8,18 +9,16 @@ export default function DeleteLoteModal({ isOpen, onClose, lote, onConfirm }) {
 
   const deleteFooter = (
     <>
-      <button
-        onClick={onClose}
-        className="w-full sm:w-auto px-6 h-10 rounded-lg border border-border-agro bg-white text-black text-[14px] font-medium hover:bg-gray-50 transition-colors cursor-pointer"
-      >
+      <Button variant="white" onClick={onClose} className="w-full sm:w-auto">
         Cancelar
-      </button>
-      <button
+      </Button>
+      <Button
+        variant="red"
         onClick={() => onConfirm(lote?._id)}
-        className="w-full sm:w-auto px-6 h-10 rounded-lg bg-[#F04438] text-white text-[14px] font-medium hover:bg-red-600 transition-colors shadow-sm cursor-pointer"
+        className="w-full sm:w-auto"
       >
         Eliminar Lote
-      </button>
+      </Button>
     </>
   );
 

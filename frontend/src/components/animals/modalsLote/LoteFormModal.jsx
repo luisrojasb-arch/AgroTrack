@@ -4,6 +4,7 @@ import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import AnimalSearchInput from "../modalsAnimals/AnimalSearchInput";
+import { toast } from "sonner";
 
 const getInitialState = (lote) => {
   if (lote) {
@@ -76,6 +77,12 @@ export default function LoteFormModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.codigo_lote) {
+      toast.error("El número de lote es obligatorio.");
+      return;
+    }
+
     const dataToSend = { ...formData };
 
     delete dataToSend.madre_label;

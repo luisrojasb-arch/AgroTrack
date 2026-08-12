@@ -4,7 +4,7 @@ import Link from "next/link";
  * @description Componente de botón o enlace reutilizable para la interfaz de usuario.
  * @param {Object} props - Propiedades del componente.
  * @param {React.ReactNode} props.children - Contenido interno del botón.
- * @param {"green" | "white"} [props.variant="green"] - Estilo visual del botón.
+ * @param {"green" | "white" | "red"} [props.variant="green"] - Estilo visual del botón.
  * @param {"36" | "42" | "46" | "full"} [props.size="42"] - Altura predefinida del botón.
  * @param {boolean} [props.fullWidth=false] - Si es true, el botón ocupará el 100% del contenedor padre.
  * @param {string} [props.className=""] - Clases CSS adicionales.
@@ -27,6 +27,7 @@ export default function Button({
     green: "bg-gradient-green text-white hover:opacity-90 shadow-sm",
     white:
       "bg-gradient-white text-black border border-border-agro hover:brightness-95 shadow-sm",
+    red: "bg-[#F04438] text-white hover:bg-red-600 shadow-sm",
   };
 
   const heights = {

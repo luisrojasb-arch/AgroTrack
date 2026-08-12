@@ -5,6 +5,7 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import AnimalSearchInput from "./AnimalSearchInput";
+import { toast } from "sonner";
 
 const getInitialState = (animal) => {
   if (animal) {
@@ -79,6 +80,12 @@ export default function AnimalFormModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.codigo) {
+      toast.error("El código es obligatorio.");
+      return;
+    }
+
     const dataToSend = { ...formData };
     delete dataToSend.madre_label;
     delete dataToSend.padre_label;

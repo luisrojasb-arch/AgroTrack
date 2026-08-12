@@ -1,6 +1,7 @@
 "use client";
 
 import Modal from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 
 export default function DeleteAnimalModal({
@@ -13,18 +14,16 @@ export default function DeleteAnimalModal({
 
   const modalFooter = (
     <>
-      <button
-        onClick={onClose}
-        className="w-full sm:w-auto px-6 h-10 rounded-lg border border-border-agro bg-white text-black text-[14px] font-medium hover:bg-gray-50 transition-colors cursor-pointer"
-      >
+      <Button variant="white" onClick={onClose} className="w-full sm:w-auto">
         Cancelar
-      </button>
-      <button
+      </Button>
+      <Button
+        variant="red"
         onClick={() => onConfirm(animal?._id)}
-        className="w-full sm:w-auto px-6 h-10 rounded-lg bg-[#F04438] text-white text-[14px] font-medium hover:bg-red-600 transition-colors shadow-sm cursor-pointer"
+        className="w-full sm:w-auto"
       >
         Eliminar Animal
-      </button>
+      </Button>
     </>
   );
 
@@ -35,7 +34,7 @@ export default function DeleteAnimalModal({
       width="max-w-xl"
       footer={modalFooter}
     >
-      <div className="flex flex-col items-center justify-center text-center px-6">
+      <div className="flex flex-col items-center justify-center text-center px-6 pb-2">
         <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4">
           <AlertTriangle className="text-[#F04438] w-7 h-7" strokeWidth={2} />
         </div>
