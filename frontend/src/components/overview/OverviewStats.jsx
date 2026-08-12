@@ -1,10 +1,11 @@
 import StatCard from '@/components/layout/StatCard';
-export default function OverviewStats({ stats }) {
-
-    
+export default function OverviewStats({ stats }) {    
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <p>{stats}</p>
+            <StatCard title="Total de animales" value={stats.animales_activos} subtitle="Activos" />
+            <StatCard title="Alertas pendientes" value={stats.alertas_pendientes} subtitle="Por atender" />
+            <StatCard title="Gastos del mes" value={stats.gastos_mes} subtitle="Actual" />
+            <StatCard title="Ingresos del mes" value={stats.ingresos_mes} subtitle="Actual" />
         </div>
     );
 }

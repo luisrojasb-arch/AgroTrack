@@ -1,9 +1,9 @@
 import Finca from "../models/finca.model.js";
 import MiembroFinca from "../models/miembroFinca.model.js";
-//import Animal from "../models/animal.model.js";
-//import Lote from "../models/lote.model.js";
-//import Salud from "../models/salud.model.js";
-//import Finanzas from "../models/finanzas.model.js";
+import Animal from "../models/animal.model.js";
+import Lote from "../models/lote.model.js";
+import Salud from "../models/salud.model.js";
+import Finanzas from "../models/finanzas.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**
@@ -118,7 +118,7 @@ export const obtenerTasasCambio = catchAsync(async (req, res) => {
 /**
  * @description Obtener toda la información general para la pantalla de inicio (Dashboard).
  */
-/**
+
 export const obtenerDashboardGeneral = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const tasas = req.finca.tasas_cambio || {};
@@ -230,11 +230,10 @@ export const obtenerDashboardGeneral = catchAsync(async (req, res) => {
     ingresos_vs_gastos: grafico6Meses,
   });
 });
-*/
+
 /**
  * @description Obtener la lista paginada (de 5 en 5) de alertas de salud para el Dashboard.
  */
-/**
 export const obtenerAlertasDashboard = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const { page = 1, limit = 5 } = req.query;
@@ -313,4 +312,3 @@ export const obtenerAlertasDashboard = catchAsync(async (req, res) => {
     },
   });
 });
-*/

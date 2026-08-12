@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
 
 // RUTAS DE LA API
 app.use("/api/usuarios", usuarioRoutes);
-app.use("/api/fincas", fincaRoutes);
+app.use("/api/finca", fincaRoutes);
 app.use("/api/animales", animalRoutes);
 app.use("/api/lotes", loteRoutes);
 app.use("/api/selecciones", seleccionRoutes);

@@ -7,8 +7,8 @@ const router = Router();
 router.use(authMid.verificarAcceso);
 router.use(authMid.validarFincaSeleccionada);
 
-//router.get("/dashboard", fincaCtrl.obtenerDashboardGeneral);
-//router.get("/dashboard/alertas", fincaCtrl.obtenerAlertasDashboard);
+router.get("/dashboard", fincaCtrl.obtenerDashboardGeneral);
+router.get("/dashboard/alertas", fincaCtrl.obtenerAlertasDashboard);
 router.get("/", fincaCtrl.obtenerFinca);
 
 router.put("/", authMid.permitirRoles("admin"), fincaCtrl.actualizarFinca);
