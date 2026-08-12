@@ -18,7 +18,7 @@ export const fincaService = {
 
   actualizarFinca: async (token, payload) => {
     const res = await fetch(`${API_URL}/finca`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ export const fincaService = {
 
   actualizarTasasCambio: async (token, payload) => {
     const res = await fetch(`${API_URL}/finca/tasas-cambio`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -86,7 +86,6 @@ export const fincaService = {
       },
       cache: "no-store",
     });
-
     const data = await res.json();
     if (!res.ok)
       throw new Error(data.msg || "Error al obtener el dashboard");
