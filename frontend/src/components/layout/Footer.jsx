@@ -18,6 +18,7 @@ export default function Footer() {
                   alt="Logo AgroTrack"
                   width={121}
                   height={34}
+                  unoptimized
                   className="object-contain"
                 />
               </Link>

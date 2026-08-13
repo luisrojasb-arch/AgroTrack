@@ -12,8 +12,6 @@ export default function OverviewDonutGraph({ data }) {
           Hembras vs machos (animales vivos)
         </p>
       </div>
-
-      {/* Se agregó w-full y un min-h para asegurar que la gráfica tenga espacio para crecer y encogerse */}
       <div className="flex grow justify-center items-center w-full min-h-62.5 relative">
         <Doughnut
           data={{
@@ -21,7 +19,7 @@ export default function OverviewDonutGraph({ data }) {
             datasets: [
               {
                 label: "Cantidad",
-                data: [6, 7],
+                data: [data.distribucion_sexo.machos, data.distribucion_sexo.hembras],
                 backgroundColor: [
                   '#157937', 
                   '#0084ff', 

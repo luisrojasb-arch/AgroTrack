@@ -29,6 +29,7 @@ export default function Navbar({ isAuthenticated = false }) {
               alt="Logo AgroTrack"
               width={121}
               height={34}
+              unoptimized
               className="object-contain"
             />
           </Link>
