@@ -64,3 +64,24 @@ export async function deleteMiembroAction(id) {
     return { success: false, error: error.message };
   }
 }
+
+export async function getPerfilAction() {
+  try {
+    const token = await getToken();
+    const result = await userService.obtenerPerfil(token);
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updatePerfilAction(data) {
+  try {
+    const token = await getToken();
+    const result = await userService.actualizarPerfil(token, data);
+    revalidatePath("/settings");
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}

@@ -80,4 +80,29 @@ export const userService = {
     if (!res.ok) throw new Error(result.msg || "Error al eliminar miembro");
     return result;
   },
+
+  obtenerPerfil: async (token) => {
+    const res = await fetch(`${API_URL}/usuarios/perfil`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.msg || "Error al obtener perfil");
+    return data;
+  },
+
+  actualizarPerfil: async (token, payload) => {
+    const res = await fetch(`${API_URL}/usuarios/actualizar`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.msg || "Error al actualizar perfil");
+    return data;
+  },
 };
