@@ -7,18 +7,18 @@ import {getAlertasDashboardAction, getDashboardGeneralAction} from '@/actions/fi
 export default async function OverviewPage() {
   const dashboard = await getDashboardGeneralAction();
   const info_animales = await getAlertasDashboardAction({page: 1, limit: 5});
-  const data_alertas = info_animales.data.alertas;
-  const data_pag = info_animales.data.pagination;
-  console.log(dashboard);
-  console.log(info_animales);
+
+
+  console.log(info_animales.data);
+  console.log(info_animales.data.alertas);
   const user = await getSession();
   return (
-    <div>
+    <div >
       <OverviewHeader name={user.nombre} />
       <OverviewStats stats={dashboard.data.tarjetas} />
       <OverviewDataSect1 
-        datagraph={{male: 6, female: 7}} 
-        datalist={[]} 
+        datagraph={dashboard.data} 
+        datalist={info_animales.data} 
       />
     </div>
     
