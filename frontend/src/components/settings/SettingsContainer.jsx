@@ -28,7 +28,7 @@ export default function SettingsContainer({ initialData }) {
   return (
     <div className="bg-gradient-card border border-border-agro rounded-2xl p-6 w-full shadow-sm">
       <div className="mb-6">
-        <h2 className="text-[24px] font-bold text-black">
+        <h2 className="text-[24px] font-bold text-black leading-tight">
           {tabTitles[activeTab]?.title}
         </h2>
         <p className="text-[14px] text-gray-agro mt-1">
