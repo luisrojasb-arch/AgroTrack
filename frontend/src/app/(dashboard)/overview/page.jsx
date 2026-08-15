@@ -14,12 +14,9 @@ export default async function OverviewPage() {
   const user = await getSession();
   return (
     <div >
-      <OverviewHeader name={user.nombre} />
-      <OverviewStats stats={dashboard.data.tarjetas} />
-      <OverviewDataSect1 
-        datagraph={dashboard.data} 
-        datalist={info_animales.data} 
-      />
+      <OverviewHeader name={user.nombre}/>
+      <OverviewStats stats={dashboard.data.tarjetas}/>
+      <OverviewDataSect1 datagraph={dashboard.data} datalist={info_animales.data}/>
     </div>
     
   );
