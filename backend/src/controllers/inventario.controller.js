@@ -1,18 +1,29 @@
+import mongoose from "mongoose";
 import Inventario from "../models/inventario.model.js";
 import Finanzas from "../models/finanzas.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**
- * @description Listar artículos del inventario con paginación y filtros.
+ * @description Listar artículos del inventario con paginación y filtros. (No formateado)
  */
 export const obtenerInventario = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
-  const { page = 1, limit = 10, search = "", categoria = "" } = req.query;
+  
+  // CORRECCIÓN: Agregamos "filter" para capturar lo que envía Next.js
+  const { page = 1, limit = 10, search = "", categoria = "", filter = "" } = req.query;
 
   const query = { finca_id: fincaId, esta_eliminado: false };
 
-  if (categoria && categoria !== "Todas" && categoria !== "Todos") {
-    query.categoria = categoria;
+  // CORRECCIÓN: Unificamos el filtro
+  const categoriaFiltro = filter || categoria;
+
+  if (
+    categoriaFiltro &&
+    categoriaFiltro !== "Todas" &&
+    categoriaFiltro !== "Todos" &&
+    categoriaFiltro !== "Todas las categorías"
+  ) {
+    query.categoria = categoriaFiltro;
   }
 
   if (search) {
@@ -44,7 +55,7 @@ export const obtenerInventario = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Registrar un nuevo artículo y generar automáticamente el egreso en Finanzas conservando su moneda original.
+ * @description Registrar un nuevo artículo y generar automáticamente el egreso en Finanzas.
  */
 export const registrarArticulo = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -82,49 +93,73 @@ export const registrarArticulo = catchAsync(async (req, res) => {
 
     if (!tasaCambio || tasaCambio <= 0) {
       return res.status(400).json({
-        msg: `No se puede registrar en ${tipo_moneda}. Debe configurar primero la tasa de cambio en la sección de configuración de la finca.`,
+        msg: `No se puede registrar en ${tipo_moneda}. Debe configurar primero la tasa de cambio.`,
       });
     }
   }
 
-  const nuevoArticulo = await Inventario.create({
-    ...restoDatos,
-    codigo,
-    nombre,
-    categoria,
-    unidad,
-    cantidad,
-    costo_unitario: costo_unitario || 0,
-    tipo_moneda,
-    finca_id: fincaId,
-  });
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  if (cantidad > 0 && costo_unitario > 0) {
-    const montoTotalOriginal = cantidad * costo_unitario;
+  try {
+    // 1. Crear el artículo de inventario ligado a la sesión
+    const [nuevoArticulo] = await Inventario.create(
+      [
+        {
+          ...restoDatos,
+          codigo,
+          nombre,
+          categoria,
+          unidad,
+          cantidad,
+          costo_unitario: costo_unitario || 0,
+          tipo_moneda,
+          finca_id: fincaId,
+        },
+      ],
+      { session }
+    );
 
-    const categoriaFinanza = ["Alimento", "Vacuna", "Medicamento"].includes(
-      categoria,
-    )
-      ? categoria
-      : "Insumos";
+    // 2. Crear movimiento en Finanzas si hay costo y cantidad
+    if (cantidad > 0 && costo_unitario > 0) {
+      const montoTotalOriginal = cantidad * costo_unitario;
 
-    await Finanzas.create({
-      finca_id: fincaId,
-      concepto: `Compra inventario: ${nombre} (${cantidad} ${unidad})`,
-      tipo_moneda: tipo_moneda,
-      monto: montoTotalOriginal,
-      tipo_movimiento: "Egreso",
-      categoria: categoriaFinanza,
-      metodo_pago: "Efectivo",
-      fecha_pago: new Date(),
-      nota: `Generado automáticamente por el módulo de inventario.`,
+      const categoriaFinanza = ["Alimento", "Vacuna", "Medicamento"].includes(categoria)
+        ? categoria
+        : "Insumos";
+
+      await Finanzas.create(
+        [
+          {
+            finca_id: fincaId,
+            concepto: `Compra inventario: ${nombre} (${cantidad} ${unidad})`,
+            tipo_moneda: tipo_moneda,
+            monto: montoTotalOriginal,
+            tipo_movimiento: "Egreso",
+            categoria: categoriaFinanza,
+            metodo_pago: "Efectivo",
+            fecha_pago: new Date(),
+            nota: `Generado automáticamente por el módulo de inventario.`,
+          },
+        ],
+        { session }
+      );
+    }
+
+    // 3. Si todo salió perfecto, guardamos definitivamente en la base de datos
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(201).json({
+      msg: "Artículo registrado y movimiento financiero generado exitosamente.",
+      articulo: nuevoArticulo,
     });
+  } catch (error) {
+    // Si la validación de finanzas falla, se cancela TODO (rollback) automáticamente
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
   }
-
-  res.status(201).json({
-    msg: "Artículo registrado y movimiento financiero generado exitosamente.",
-    articulo: nuevoArticulo,
-  });
 });
 
 /**
@@ -171,7 +206,7 @@ export const editarArticulo = catchAsync(async (req, res) => {
   const articuloActualizado = await Inventario.findOneAndUpdate(
     { _id: id, finca_id: fincaId, esta_eliminado: false },
     req.body,
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   );
 
   if (!articuloActualizado) {
@@ -238,7 +273,7 @@ export const eliminarArticulo = catchAsync(async (req, res) => {
   const articuloEliminado = await Inventario.findOneAndUpdate(
     { _id: id, finca_id: fincaId, esta_eliminado: false },
     { esta_eliminado: true, eliminado_at: new Date() },
-    { new: true },
+    { new: true }
   );
 
   if (!articuloEliminado) {
@@ -251,17 +286,27 @@ export const eliminarArticulo = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Obtener el resumen del inventario formateado para la tabla principal (Convirtiendo a pesos al vuelo).
+ * @description Obtener el resumen del inventario formateado.
  */
 export const obtenerResumenInventario = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const finca = req.finca;
-  const { page = 1, limit = 10, search = "", categoria = "" } = req.query;
+  
+  // CORRECCIÓN: Agregamos "filter" aquí también
+  const { page = 1, limit = 10, search = "", categoria = "", filter = "" } = req.query;
 
   const query = { finca_id: fincaId, esta_eliminado: false };
 
-  if (categoria && categoria !== "Todas" && categoria !== "Todos") {
-    query.categoria = categoria;
+  // CORRECCIÓN: Unificamos el filtro
+  const categoriaFiltro = filter || categoria;
+
+  if (
+    categoriaFiltro &&
+    categoriaFiltro !== "Todas" &&
+    categoriaFiltro !== "Todos" &&
+    categoriaFiltro !== "Todas las categorías"
+  ) {
+    query.categoria = categoriaFiltro;
   }
 
   if (search) {
@@ -324,7 +369,7 @@ export const obtenerResumenInventario = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Obtener estadísticas generales del inventario (Tarjetas resumen).
+ * @description Obtener estadísticas generales del inventario.
  */
 export const obtenerEstadisticasInventario = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -344,7 +389,7 @@ export const obtenerEstadisticasInventario = catchAsync(async (req, res) => {
       alertas_stock_bajo++;
     }
 
-    if (item.fecha_vencimiento && new Date(item.fecha_vencimiento) < ahora) {
+    if (item.vencimiento && new Date(item.vencimiento) < ahora) {
       articulos_vencidos++;
     }
 
