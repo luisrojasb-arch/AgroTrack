@@ -79,7 +79,7 @@ export default function UsersTableContainer({ initialData }) {
       <div className="bg-gradient-card border border-border-agro rounded-2xl p-6 w-full shadow-sm relative">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex flex-col">
-            <h2 className="text-[20px] font-bold text-black leading-tight">
+            <h2 className="text-[24px] font-bold text-black leading-tight">
               Usuarios
             </h2>
             <p className="text-[14px] font-medium text-gray-agro mt-1">

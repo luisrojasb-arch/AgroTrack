@@ -5,7 +5,7 @@ import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**
  * @description Registrar el inicio del celo para una hembra.
- * Calcula automáticamente el próximo celo esperado a los 21 días.
+ * Calcula automáticamente el próximo celo esperado a los 21 días y valida que no tenga ciclos activos.
  */
 export const registrarCelo = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -22,7 +22,27 @@ export const registrarCelo = catchAsync(async (req, res) => {
     });
   }
 
+  const cicloActivo = await CicloReproductivo.findOne({
+    hembra_id,
+    finca_id: fincaId,
+    estado: { $in: ["Celo", "Preñez"] },
+    esta_eliminado: false,
+  });
+
+  if (cicloActivo) {
+    return res.status(400).json({
+      msg: `Esta hembra ya tiene un registro activo en etapa de ${cicloActivo.estado}. Complete el ciclo (Nacimiento) o elimínelo para registrar un nuevo celo.`,
+    });
+  }
+
   const fechaCeloDate = new Date(fecha_celo);
+
+  const hoy = new Date();
+  if (fechaCeloDate > hoy) {
+    return res.status(400).json({
+      msg: "La fecha del celo no puede ser una fecha futura.",
+    });
+  }
 
   const proximoCeloEsperado = new Date(fechaCeloDate);
   proximoCeloEsperado.setDate(proximoCeloEsperado.getDate() + 21);
@@ -65,6 +85,14 @@ export const editarCelo = catchAsync(async (req, res) => {
 
   if (fecha_celo) {
     const nuevaFechaCelo = new Date(fecha_celo);
+
+    const hoy = new Date();
+    if (nuevaFechaCelo > hoy) {
+      return res.status(400).json({
+        msg: "La fecha del celo no puede ser una fecha futura.",
+      });
+    }
+
     ciclo.fecha_celo = nuevaFechaCelo;
 
     const proximoCelo = new Date(nuevaFechaCelo);
@@ -197,9 +225,16 @@ export const confirmarNacimiento = catchAsync(async (req, res) => {
   const numMachos = Number(machos || 0);
   const numHembras = Number(hembras || 0);
   const numVivos = Number(lechones_vivos || 0);
+  const numMuertos = Number(lechones_muertos || 0);
 
   let tipoPartoFinal = tipo_parto;
   if (tipo_parto === "Natural") tipoPartoFinal = "Normal";
+
+  if (numVivos + numMuertos === 0) {
+    return res.status(400).json({
+      msg: "Debe registrar al menos un animal nacido (vivo o muerto).",
+    });
+  }
 
   if (numVivos !== numMachos + numHembras) {
     return res.status(400).json({
@@ -211,7 +246,7 @@ export const confirmarNacimiento = catchAsync(async (req, res) => {
   ciclo.fecha_parto = new Date(fecha_parto);
   ciclo.tipo_parto = tipoPartoFinal;
   ciclo.lechones_vivos = numVivos;
-  ciclo.lechones_muertos = Number(lechones_muertos || 0);
+  ciclo.lechones_muertos = numMuertos;
   ciclo.machos = numMachos;
   ciclo.hembras = numHembras;
   ciclo.peso_promedio = peso_promedio ? Number(peso_promedio) : null;
@@ -274,6 +309,16 @@ export const editarNacimiento = catchAsync(async (req, res) => {
     lechones_vivos !== undefined
       ? Number(lechones_vivos)
       : ciclo.lechones_vivos;
+  const numMuertos =
+    lechones_muertos !== undefined
+      ? Number(lechones_muertos)
+      : ciclo.lechones_muertos;
+
+  if (numVivos + numMuertos === 0) {
+    return res.status(400).json({
+      msg: "Debe registrar al menos un animal nacido (vivo o muerto).",
+    });
+  }
 
   if (numVivos !== numMachos + numHembras) {
     return res.status(400).json({
@@ -287,8 +332,7 @@ export const editarNacimiento = catchAsync(async (req, res) => {
   ciclo.lechones_vivos = numVivos;
   ciclo.machos = numMachos;
   ciclo.hembras = numHembras;
-  if (lechones_muertos !== undefined)
-    ciclo.lechones_muertos = Number(lechones_muertos);
+  if (lechones_muertos !== undefined) ciclo.lechones_muertos = numMuertos;
   if (peso_promedio !== undefined) ciclo.peso_promedio = Number(peso_promedio);
   if (nota_nacimiento !== undefined) ciclo.nota_nacimiento = nota_nacimiento;
 
@@ -378,7 +422,7 @@ export const obtenerTablaCelos = catchAsync(async (req, res) => {
   const resultado = await CicloReproductivo.paginate(query, options);
 
   const celosFormateados = resultado.docs.map((item) => ({
-    id: item._id,
+    _id: item._id,
     codigo: item.hembra_id?.codigo || "-",
     nombre: item.hembra_id?.nombre || "-",
     fecha_celo: item.fecha_celo
@@ -452,7 +496,7 @@ export const obtenerTablaPreneces = catchAsync(async (req, res) => {
   const resultado = await CicloReproductivo.paginate(query, options);
 
   const prenecesFormateadas = resultado.docs.map((item) => ({
-    id: item._id,
+    _id: item._id,
     madre: `${item.hembra_id?.codigo || "-"} - ${item.hembra_id?.nombre || "-"}`,
     padrote: item.padrote_id
       ? `${item.padrote_id.codigo} - ${item.padrote_id.nombre}`
@@ -532,7 +576,7 @@ export const obtenerTablaNacimientos = catchAsync(async (req, res) => {
   const resultado = await CicloReproductivo.paginate(query, options);
 
   const nacimientosFormateados = resultado.docs.map((item) => ({
-    id: item._id,
+    _id: item._id,
     madre: `${item.hembra_id?.codigo || "-"} - ${item.hembra_id?.nombre || "-"}`,
     padrote: item.padrote_id
       ? `${item.padrote_id.codigo} - ${item.padrote_id.nombre}`
