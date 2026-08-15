@@ -8,7 +8,7 @@ export default function Pagination({
   totalPaginas = 1,
   paginaActual = 1,
   limite = 10,
-  compact = false, 
+  compact = false,
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -52,8 +52,8 @@ export default function Pagination({
     <div
       className={`flex items-center gap-4 pt-6 ${
         compact
-          ? "flex-col justify-center" // Modo tarjeta: apilado y centrado
-          : "flex-col sm:flex-row justify-between" // Modo tabla: extendido
+          ? "flex-col justify-center"
+          : "flex-col sm:flex-row justify-between"
       }`}
     >
       <p className="text-[14px] text-gray-500 text-center">

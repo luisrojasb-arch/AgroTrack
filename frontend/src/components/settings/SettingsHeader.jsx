@@ -1,11 +1,11 @@
-export default function OverviewHeader({ name }) {
+export default function SettingsHeader() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mb-6">
       <h1 className="text-[30px] font-bold text-black leading-tight">
-        ¡Bienvenido de nuevo, {name}!
+        Configuración
       </h1>
       <p className="text-[16px] font-medium text-gray-agro leading-tight mt-1">
-        Esto es lo que está pasando en tu granja hoy
+        Gestiona tu perfil, los datos de la finca y las tasas de cambio
       </p>
     </div>
   );

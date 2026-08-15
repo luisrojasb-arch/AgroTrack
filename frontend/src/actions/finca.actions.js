@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { fincaService } from "@/services/finca.service";
+import { revalidatePath } from "next/cache";
 
 async function getToken() {
   const cookieStore = await cookies();
@@ -24,6 +25,9 @@ export async function actualizarFincaAction(payload) {
   try {
     const token = await getToken();
     const result = await fincaService.actualizarFinca(token, payload);
+
+    revalidatePath("/settings");
+
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -54,6 +58,9 @@ export async function actualizarTasasCambioAction(payload) {
   try {
     const token = await getToken();
     const result = await fincaService.actualizarTasasCambio(token, payload);
+
+    revalidatePath("/settings");
+
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
