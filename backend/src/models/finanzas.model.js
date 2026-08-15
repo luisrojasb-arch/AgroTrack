@@ -31,13 +31,15 @@ const finanzasSchema = new mongoose.Schema(
       maxlength: [100, "El concepto no puede exceder los 100 caracteres"],
       validate: {
         validator: function (v) {
-          return /^[a-zA-ZÀ-ÿ0-9\s,.\-]+$/.test(v);
+          
+          return /^[a-zA-ZÀ-ÿ0-9\s,.\-%():/&]+$/.test(v);
         },
         message: "El concepto contiene caracteres no permitidos",
       },
     },
     tipo_moneda: {
       type: String,
+      trim: true,
       enum: {
         values: ["COP", "USD", "Bs"],
         message: "{VALUE} no es un tipo de moneda válido",
@@ -53,6 +55,7 @@ const finanzasSchema = new mongoose.Schema(
     },
     tipo_movimiento: {
       type: String,
+      trim: true,
       enum: {
         values: ["Ingreso", "Egreso"],
         message: "{VALUE} no es un tipo de movimiento válido",
@@ -61,10 +64,12 @@ const finanzasSchema = new mongoose.Schema(
     },
     categoria: {
       type: String,
+      trim: true,
       enum: {
         values: [
           "Alimento",
           "Medicina",
+          "Medicamento", //para compatibilidad con el Inventario
           "Vacuna",
           "Desparasitante",
           "Venta Animal",
@@ -82,6 +87,7 @@ const finanzasSchema = new mongoose.Schema(
     },
     metodo_pago: {
       type: String,
+      trim: true,
       enum: {
         values: ["Efectivo", "Transferencia", "Otro"],
         message: "{VALUE} no es un método de pago válido",

@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { User, Mail, FileText, MessageSquare, Phone } from "lucide-react";
 import { enviarMensajeContacto } from "@/actions/contacto.actions";
+<<<<<<< Updated upstream
+=======
+import Button from "@/components/ui/Button";
+import { toast } from "sonner"; // Toaster
+>>>>>>> Stashed changes
 
 export default function ContactForm() {
   // Estado del formulario
@@ -26,7 +31,7 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     const respuesta = await enviarMensajeContacto(formData);
-
+    //Alertas con toaster
     if (respuesta.success) {
       alert(respuesta.message);
       setFormData({ nombre: "", apellido: "", correo: "", asunto: "", mensaje: "" });

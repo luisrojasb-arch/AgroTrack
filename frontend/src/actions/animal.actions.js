@@ -9,7 +9,6 @@ async function getToken() {
   const token = cookieStore.get("token")?.value;
   if (!token) throw new Error("No estás autenticado");
   return token;
-  
 }
 
 export async function getEstadisticasAnimalesAction() {

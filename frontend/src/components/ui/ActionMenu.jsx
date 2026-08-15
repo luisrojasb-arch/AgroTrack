@@ -20,7 +20,6 @@ export default function ActionMenu({ opciones = [] }) {
   const buttonRef = useRef(null);
   const menuRef = useRef(null);
 
-  // Controlar clics fuera del menú y scroll
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -33,7 +32,6 @@ export default function ActionMenu({ opciones = [] }) {
       }
     }
 
-    // Si el usuario hace scroll, cerramos el menú para que no se quede flotando
     function handleScroll() {
       if (isOpen) setIsOpen(false);
     }
@@ -54,8 +52,6 @@ export default function ActionMenu({ opciones = [] }) {
       const rect = buttonRef.current.getBoundingClientRect();
       const alturaEstimadaMenu = opciones.length * 40 + 16;
       const espacioAbajo = window.innerHeight - rect.bottom;
-
-      // Si no hay suficiente espacio abajo, lo abrimos hacia arriba
       const abrirHaciaArriba = espacioAbajo < alturaEstimadaMenu;
 
       setCoords({
@@ -71,7 +67,6 @@ export default function ActionMenu({ opciones = [] }) {
 
   return (
     <>
-      {/* Botón de los 3 puntos */}
       <button
         ref={buttonRef}
         onClick={toggleMenu}
@@ -80,7 +75,6 @@ export default function ActionMenu({ opciones = [] }) {
         <MoreVertical size={20} />
       </button>
 
-      {/* Portal del menú (Se renderiza en el body solo si está abierto y el documento existe) */}
       {isOpen &&
         typeof document !== "undefined" &&
         createPortal(
