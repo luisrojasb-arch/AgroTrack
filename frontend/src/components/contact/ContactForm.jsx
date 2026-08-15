@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { User, Mail, FileText, MessageSquare, Phone } from "lucide-react";
 import { enviarMensajeContacto } from "@/actions/contacto.actions";
-
+<<<<<<< Updated upstream
+=======
 import Button from "@/components/ui/Button";
 import { toast } from "sonner"; // Toaster
-
+>>>>>>> Stashed changes
 
 export default function ContactForm() {
   // Estado del formulario
