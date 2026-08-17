@@ -105,4 +105,45 @@ export const userService = {
     if (!res.ok) throw new Error(data.msg || "Error al actualizar perfil");
     return data;
   },
+
+  solicitarRecuperacion: async (correo) => {
+    const res = await fetch(`${API_URL}/usuarios/olvide-contrasenha`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ correo }),
+    });
+    const result = await res.json();
+    if (!res.ok)
+      throw new Error(result.msg || "Error al solicitar recuperación");
+    return result;
+  },
+
+  restablecerContrasenha: async (token, data) => {
+    const res = await fetch(
+      `${API_URL}/usuarios/restablecer-contrasenha/${token}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      },
+    );
+    const result = await res.json();
+    if (!res.ok)
+      throw new Error(result.msg || "Error al restablecer contraseña");
+    return result;
+  },
+
+  activarCuenta: async (tokenAuth, data) => {
+    const res = await fetch(`${API_URL}/usuarios/activar-cuenta`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tokenAuth}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.msg || "Error al activar cuenta");
+    return result;
+  },
 };

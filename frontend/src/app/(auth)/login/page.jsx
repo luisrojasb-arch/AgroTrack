@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useActionState } from "react";
+import Link from "next/link";
 import AuthSplitLayout from "@/components/auth/AuthSplitLayout";
 import AuthCard from "@/components/auth/AuthCard";
 import Button from "@/components/ui/Button";
@@ -84,12 +85,12 @@ export default function LoginPage() {
           </div>
 
           <div className="flex justify-end mt-2">
-            <a
+            <Link
               href="/forgot-password"
               className="text-[14px] font-medium text-primary hover:underline"
             >
               ¿Olvidaste tu clave?
-            </a>
+            </Link>
           </div>
 
           <div className="mt-4">

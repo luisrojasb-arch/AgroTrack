@@ -78,4 +78,20 @@ export const loteService = {
     if (!res.ok) throw new Error(result.msg || "Error al eliminar el lote");
     return result;
   },
+
+  registrarSituacion: async (token, id, payload) => {
+    const res = await fetch(`${API_URL}/lotes/${id}/situacion`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    if (!res.ok)
+      throw new Error(data.msg || "Error al registrar la situación del lote");
+    return data;
+  },
 };

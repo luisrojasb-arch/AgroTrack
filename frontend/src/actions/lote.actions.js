@@ -63,3 +63,21 @@ export async function deleteLoteAction(id) {
     return { success: false, error: error.message };
   }
 }
+
+export async function registrarSituacionLoteAction(id, payload) {
+  try {
+    const token = await getToken();
+    const result = await loteService.registrarSituacion(token, id, payload);
+
+    revalidatePath("/animals");
+
+    if (payload.estado === "Vendido") {
+      revalidatePath("/finances");
+      revalidatePath("/overview");
+    }
+
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}

@@ -1,7 +1,13 @@
 import { Eye, Edit, ClipboardList, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
-export default function LotesTable({ lotes = [], onView, onEdit, onDelete }) {
+export default function LotesTable({
+  lotes = [],
+  onView,
+  onEdit,
+  onDelete,
+  onSituation,
+}) {
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
       <table className="w-full text-left border-collapse min-w-200">
@@ -86,7 +92,10 @@ export default function LotesTable({ lotes = [], onView, onEdit, onDelete }) {
                       {
                         label: "Situaciones",
                         icono: <ClipboardList size={16} />,
-                        accion: () => console.log("Situaciones lote", lote._id),
+                        accion: () =>
+                          onSituation
+                            ? onSituation(lote)
+                            : console.log("Situaciones lote", lote._id),
                       },
                       {
                         label: "Eliminar",

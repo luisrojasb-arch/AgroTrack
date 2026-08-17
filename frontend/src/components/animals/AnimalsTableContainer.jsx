@@ -13,21 +13,25 @@ import Pagination from "@/components/ui/Pagination";
 import AnimalFormModal from "./modalsAnimals/AnimalFormModal";
 import AnimalDetailsModal from "./modalsAnimals/AnimalDetailsModal";
 import DeleteAnimalModal from "./modalsAnimals/DeleteAnimalModal";
+import AnimalSituationModal from "./modalsAnimals/AnimalSituationModal";
 import {
   createAnimalAction,
   updateAnimalAction,
   deleteAnimalAction,
   getAnimalDetailsAction,
+  registrarSituacionAction,
 } from "@/actions/animal.actions";
 
 import LoteFormModal from "./modalsLote/LoteFormModal";
 import LoteDetailsModal from "./modalsLote/LoteDetailsModal";
 import DeleteLoteModal from "./modalsLote/DeleteLoteModal";
+import LoteSituationModal from "./modalsLote/LoteSituationModal";
 import {
   createLoteAction,
   updateLoteAction,
   deleteLoteAction,
   getLoteDetailsAction,
+  registrarSituacionLoteAction,
 } from "@/actions/lote.actions";
 
 import SeleccionFormModal from "./modalsSeleccion/SeleccionFormModal";
@@ -59,6 +63,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   const [isAnimalFormOpen, setIsAnimalFormOpen] = useState(false);
   const [isAnimalDetailsOpen, setIsAnimalDetailsOpen] = useState(false);
   const [isAnimalDeleteOpen, setIsAnimalDeleteOpen] = useState(false);
+  const [isAnimalSituationOpen, setIsAnimalSituationOpen] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [animalDetailsData, setAnimalDetailsData] = useState(null);
 
@@ -73,6 +78,10 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   const handleDeleteAnimalClick = (animal) => {
     setSelectedAnimal(animal);
     setIsAnimalDeleteOpen(true);
+  };
+  const handleSituationAnimalClick = (animal) => {
+    setSelectedAnimal(animal);
+    setIsAnimalSituationOpen(true);
   };
 
   const handleViewAnimalDetails = async (id) => {
@@ -119,9 +128,24 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     }
   };
 
+  const handleSubmitAnimalSituation = async (payload) => {
+    const dataToSend = { ...payload };
+    delete dataToSend.animal_id;
+    const res = await registrarSituacionAction(selectedAnimal._id, dataToSend);
+
+    if (res.success) {
+      setIsAnimalSituationOpen(false);
+      setSelectedAnimal(null);
+      toast.success("Situación registrada correctamente");
+    } else {
+      toast.error(res.error);
+    }
+  };
+
   const [isLoteFormOpen, setIsLoteFormOpen] = useState(false);
   const [isLoteDetailsOpen, setIsLoteDetailsOpen] = useState(false);
   const [isLoteDeleteOpen, setIsLoteDeleteOpen] = useState(false);
+  const [isLoteSituationOpen, setIsLoteSituationOpen] = useState(false);
   const [selectedLote, setSelectedLote] = useState(null);
   const [loteDetailsData, setLoteDetailsData] = useState(null);
 
@@ -136,6 +160,10 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   const handleDeleteLoteClick = (lote) => {
     setSelectedLote(lote);
     setIsLoteDeleteOpen(true);
+  };
+  const handleSituationLoteClick = (lote) => {
+    setSelectedLote(lote);
+    setIsLoteSituationOpen(true);
   };
 
   const handleViewLoteDetails = async (id) => {
@@ -172,6 +200,23 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
       setIsLoteDeleteOpen(false);
       setSelectedLote(null);
       toast.success("Lote eliminado correctamente");
+    } else {
+      toast.error(res.error);
+    }
+  };
+
+  const handleSubmitLoteSituation = async (payload) => {
+    const dataToSend = { ...payload };
+    delete dataToSend.lote_id;
+    const res = await registrarSituacionLoteAction(
+      selectedLote._id,
+      dataToSend,
+    );
+
+    if (res.success) {
+      setIsLoteSituationOpen(false);
+      setSelectedLote(null);
+      toast.success("Situación registrada correctamente");
     } else {
       toast.error(res.error);
     }
@@ -303,6 +348,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
           onView={handleViewAnimalDetails}
           onEdit={handleEditAnimal}
           onDelete={handleDeleteAnimalClick}
+          onSituation={handleSituationAnimalClick}
         />
       )}
       {activeTab === "lotes" && (
@@ -311,6 +357,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
           onView={handleViewLoteDetails}
           onEdit={handleEditLote}
           onDelete={handleDeleteLoteClick}
+          onSituation={handleSituationLoteClick}
         />
       )}
       {activeTab === "madre" && (
@@ -346,6 +393,12 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
         animal={selectedAnimal}
         onConfirm={handleConfirmDeleteAnimal}
       />
+      <AnimalSituationModal
+        isOpen={isAnimalSituationOpen}
+        onClose={() => setIsAnimalSituationOpen(false)}
+        animal={selectedAnimal}
+        onSubmit={handleSubmitAnimalSituation}
+      />
 
       <LoteFormModal
         isOpen={isLoteFormOpen}
@@ -363,6 +416,12 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
         onClose={() => setIsLoteDeleteOpen(false)}
         lote={selectedLote}
         onConfirm={handleConfirmDeleteLote}
+      />
+      <LoteSituationModal
+        isOpen={isLoteSituationOpen}
+        onClose={() => setIsLoteSituationOpen(false)}
+        lote={selectedLote}
+        onSubmit={handleSubmitLoteSituation}
       />
 
       <SeleccionFormModal

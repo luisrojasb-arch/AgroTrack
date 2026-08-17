@@ -15,10 +15,11 @@ export const generarToken = (usuario, fincaId = null, rol = null) => {
       apellido: usuario.apellido,
       finca_actual_id: fincaId,
       rol: rol,
+      requiere_cambio_contrasenha: usuario.requiere_cambio_contrasenha,
     },
     process.env.JWT_SECRET,
     {
       expiresIn: "7d",
-    }
+    },
   );
 };

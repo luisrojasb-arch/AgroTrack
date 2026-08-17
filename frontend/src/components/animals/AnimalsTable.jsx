@@ -19,7 +19,9 @@ const calcularEdad = (fecha) => {
   const mesesSobrantes = mesesTotales % 12;
 
   if (mesesSobrantes === 0) return `${anios} ${anios === 1 ? "Año" : "Años"}`;
-  return `${anios} ${anios === 1 ? "Año" : "Años"} y ${mesesSobrantes} ${mesesSobrantes === 1 ? "Mes" : "Meses"}`;
+  return `${anios} ${anios === 1 ? "Año" : "Años"} y ${mesesSobrantes} ${
+    mesesSobrantes === 1 ? "Mes" : "Meses"
+  }`;
 };
 
 export default function AnimalsTable({
@@ -27,6 +29,7 @@ export default function AnimalsTable({
   onView,
   onEdit,
   onDelete,
+  onSituation,
 }) {
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
@@ -112,7 +115,7 @@ export default function AnimalsTable({
                       {
                         label: "Situaciones",
                         icono: <ClipboardList size={16} />,
-                        accion: () => console.log("Situaciones", animal._id),
+                        accion: () => onSituation(animal),
                       },
                       {
                         label: "Eliminar",
