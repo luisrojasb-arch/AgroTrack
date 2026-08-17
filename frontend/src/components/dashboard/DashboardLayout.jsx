@@ -22,7 +22,7 @@ export default function DashboardLayout({ children, usuario }) {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <Sidebar onClose={() => setIsSidebarOpen(false)} />
+        <Sidebar onClose={() => setIsSidebarOpen(false)} usuario={usuario} />
       </div>
 
       <div className="flex flex-col flex-1 min-w-0 h-full">

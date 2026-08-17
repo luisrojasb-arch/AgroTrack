@@ -2,6 +2,7 @@ import Usuario from "../models/usuario.model.js";
 import Finca from "../models/finca.model.js";
 import MiembroFinca from "../models/miembroFinca.model.js";
 import { generarToken } from "../utils/jwt.util.js";
+import { enviarCorreoRecuperacion } from "../utils/email.util.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 import crypto from "crypto";
 
@@ -168,7 +169,12 @@ export const activarCuenta = catchAsync(async (req, res) => {
 
   await usuario.save();
 
-  res.status(200).json({ msg: "Cuenta activada con éxito." });
+  const nuevoToken = generarToken(usuario, req.finca?._id, req.rol_finca);
+
+  res.status(200).json({
+    msg: "Cuenta activada con éxito.",
+    token: nuevoToken, // <-- Se lo enviamos al frontend
+  });
 });
 
 /**
@@ -228,8 +234,9 @@ export const solicitarRecuperacion = catchAsync(async (req, res) => {
 
   await usuario.save({ validateBeforeSave: false });
 
-  const url = `${process.env.FRONTEND_URL}/recuperar-password/${tokenLimpio}`;
-  console.log(`URL de recuperación: ${url}`);
+  const url = `${process.env.FRONTEND_URL}/reset-password/${tokenLimpio}`;
+
+  await enviarCorreoRecuperacion(usuario.correo, url);
 
   res.status(200).json({
     msg: "Si el correo está registrado, recibirás un enlace de recuperación.",
@@ -274,7 +281,6 @@ export const restablecerContrasenha = catchAsync(async (req, res) => {
     msg: "Tu contraseña ha sido restablecida con éxito. Ya puedes iniciar sesión.",
   });
 });
-
 
 /**
  * @description Editar un miembro (Cambiar rol o corregir nombre/apellido).

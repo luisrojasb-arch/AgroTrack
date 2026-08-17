@@ -13,5 +13,6 @@ router.get("/", animalCtrl.obtenerAnimales);
 router.get("/:id", animalCtrl.obtenerDetalleAnimal);
 router.put("/:id", animalCtrl.editarAnimal);
 router.delete("/:id", animalCtrl.eliminarAnimal);
+router.patch("/:id/situacion", animalCtrl.registrarSituacionAnimal);
 
 export default router;

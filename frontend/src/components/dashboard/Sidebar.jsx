@@ -23,18 +23,60 @@ const menuItems = [
     name: "Panel Principal",
     href: "/overview",
     icon: LayoutDashboard,
+    roles: ["admin", "trabajador", "veterinario"],
   },
-  { name: "Animales", href: "/animals", icon: PawPrint },
-  { name: "Salud", href: "/health", icon: Heart },
-  { name: "Reproducción", href: "/breeding", icon: Activity },
-  { name: "Inventario", href: "/inventory", icon: Package },
-  { name: "Finanzas", href: "/finances", icon: DollarSign },
-  { name: "Reportes", href: "/reports", icon: FileText },
-  { name: "Usuarios", href: "/users", icon: Users },
+  {
+    name: "Animales",
+    href: "/animals",
+    icon: PawPrint,
+    roles: ["admin", "trabajador", "veterinario"],
+  },
+  {
+    name: "Salud",
+    href: "/health",
+    icon: Heart,
+    roles: ["admin", "trabajador", "veterinario"],
+  },
+  {
+    name: "Reproducción",
+    href: "/breeding",
+    icon: Activity,
+    roles: ["admin", "trabajador", "veterinario"],
+  },
+  {
+    name: "Inventario",
+    href: "/inventory",
+    icon: Package,
+    roles: ["admin", "trabajador"],
+  },
+  {
+    name: "Finanzas",
+    href: "/finances",
+    icon: DollarSign,
+    roles: ["admin"],
+  },
+  {
+    name: "Reportes",
+    href: "/reports",
+    icon: FileText,
+    roles: ["admin"],
+  },
+  {
+    name: "Usuarios",
+    href: "/users",
+    icon: Users,
+    roles: ["admin"],
+  },
 ];
 
-export default function Sidebar({ onClose }) {
+export default function Sidebar({ onClose, usuario }) {
   const pathname = usePathname();
+
+  const userRole = usuario?.rol || "admin";
+
+  const filteredMenu = menuItems.filter((item) =>
+    item.roles.includes(userRole),
+  );
 
   return (
     <aside className="flex flex-col h-full bg-bg-nav border-r border-border-agro w-72">
@@ -57,7 +99,8 @@ export default function Sidebar({ onClose }) {
       </div>
 
       <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
-        {menuItems.map((item) => {
+        {/* Renderizamos la lista filtrada */}
+        {filteredMenu.map((item) => {
           const isActive = pathname.startsWith(item.href);
           const Icon = item.icon;
 

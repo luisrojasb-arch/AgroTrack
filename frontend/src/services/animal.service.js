@@ -99,4 +99,20 @@ export const animalService = {
     if (!res.ok) throw new Error(data.msg || "Error al eliminar el animal");
     return data;
   },
+
+  registrarSituacion: async (token, id, payload) => {
+    const res = await fetch(`${API_URL}/animales/${id}/situacion`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    if (!res.ok)
+      throw new Error(data.msg || "Error al registrar la situación del animal");
+    return data;
+  },
 };

@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Button from "@/components/ui/Button";
 import { Menu, X } from "lucide-react";
+import { logoutAction } from "@/actions/auth.actions";
 
 /**
  * @description Barra de navegación pública principal de AgroTrack.
@@ -12,12 +14,19 @@ import { Menu, X } from "lucide-react";
  */
 export default function Navbar({ isAuthenticated = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isCompleteProfile = pathname === "/complete-profile";
 
   const navLinks = [
     { name: "Inicio", href: "/" },
     { name: "Sobre Nosotros", href: "/about" },
     { name: "Contacto", href: "/contact" },
   ];
+
+  const handleLogout = async () => {
+    setIsMenuOpen(false);
+    await logoutAction();
+  };
 
   return (
     <>
@@ -48,11 +57,25 @@ export default function Navbar({ isAuthenticated = false }) {
           </div>
 
           <div className="flex items-center gap-4">
+            {/* Desktop Buttons */}
             <div className="hidden lg:flex items-center gap-4">
               {isAuthenticated ? (
-                <Button variant="green" size="36" href="/overview">
-                  Ir al Panel
-                </Button>
+                <>
+                  {!isCompleteProfile && (
+                    <Button variant="green" size="36" href="/overview">
+                      Ir al Panel
+                    </Button>
+                  )}
+                  <form action={handleLogout}>
+                    <Button
+                      variant={isCompleteProfile ? "green" : "white"}
+                      size="36"
+                      type="submit"
+                    >
+                      Cerrar Sesión
+                    </Button>
+                  </form>
+                </>
               ) : (
                 <>
                   <Button variant="white" size="36" href="/login">
@@ -65,11 +88,22 @@ export default function Navbar({ isAuthenticated = false }) {
               )}
             </div>
 
+            {/* Tablet Buttons (MD) */}
             <div className="hidden md:flex lg:hidden">
               {isAuthenticated ? (
-                <Button variant="green" size="36" href="/overview">
-                  Ir al Panel
-                </Button>
+                <>
+                  {!isCompleteProfile ? (
+                    <Button variant="green" size="36" href="/overview">
+                      Ir al Panel
+                    </Button>
+                  ) : (
+                    <form action={handleLogout}>
+                      <Button variant="green" size="36" type="submit">
+                        Cerrar Sesión
+                      </Button>
+                    </form>
+                  )}
+                </>
               ) : (
                 <Button variant="white" size="36" href="/login">
                   Iniciar Sesión
@@ -77,6 +111,7 @@ export default function Navbar({ isAuthenticated = false }) {
               )}
             </div>
 
+            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="flex lg:hidden flex-col justify-center items-center w-9 h-9 rounded-lg bg-gradient-green shadow-sm cursor-pointer hover:opacity-90 transition-opacity"
@@ -92,6 +127,7 @@ export default function Navbar({ isAuthenticated = false }) {
         </div>
       </nav>
 
+      {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
         <div className="lg:hidden">
           <div
@@ -118,9 +154,28 @@ export default function Navbar({ isAuthenticated = false }) {
 
               <div className="flex flex-col gap-4">
                 {isAuthenticated ? (
-                  <Button variant="green" size="36" href="/overview" fullWidth>
-                    Ir al Panel
-                  </Button>
+                  <>
+                    {!isCompleteProfile && (
+                      <Button
+                        variant="green"
+                        size="36"
+                        href="/overview"
+                        fullWidth
+                      >
+                        Ir al Panel
+                      </Button>
+                    )}
+                    <form action={handleLogout} className="w-full">
+                      <Button
+                        variant={isCompleteProfile ? "green" : "white"}
+                        size="36"
+                        type="submit"
+                        fullWidth
+                      >
+                        Cerrar Sesión
+                      </Button>
+                    </form>
+                  </>
                 ) : (
                   <>
                     <div className="md:hidden w-full">
