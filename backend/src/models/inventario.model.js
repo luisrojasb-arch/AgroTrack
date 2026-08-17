@@ -1,23 +1,6 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
-/**
- * @description Esquema para representar el inventario de artículos en una finca.
- * @typedef {Object} Inventario
- * @property {mongoose.Schema.Types.ObjectId} finca_id - ID de la finca a la que pertenece el artículo.
- * @property {string} codigo - Código del producto (opcional, ej: código de barras).
- * @property {string} nombre - Nombre del artículo.
- * @property {string} categoria - Categoría del artículo (Alimento, Vacuna, Herramienta, etc.).
- * @property {string} unidad - Unidad de medida (Unidad, kg, l, etc.).
- * @property {number} cantidad - Cantidad actual en stock.
- * @property {number} stock_minimo - Cantidad mínima recomendada para emitir alertas (opcional).
- * @property {number} costo_unitario - Costo por unidad del artículo (opcional).
- * @property {Date} vencimiento - Fecha de caducidad del artículo (opcional).
- * @property {string} nota - Observaciones adicionales.
- * @property {boolean} esta_eliminado - Indica si el registro ha sido eliminado lógicamente.
- * @property {Date} eliminado_at - Fecha en que el registro fue eliminado.
- */
-
 const inventarioSchema = new mongoose.Schema(
   {
     finca_id: {
@@ -33,7 +16,7 @@ const inventarioSchema = new mongoose.Schema(
       validate: {
         validator: function (v) {
           if (!v) return true;
-          return /^[a-zA-Z0-9\-]+$/.test(v);
+          return /^[a-zA-Z0-9\-]+$/.test(v); // Nota: Esto no permite espacios en el código. Ej: "COD 01" fallará.
         },
         message: "El código solo puede contener letras, números y guiones (-)",
       },
@@ -45,13 +28,15 @@ const inventarioSchema = new mongoose.Schema(
       maxlength: [100, "El nombre no puede exceder los 100 caracteres"],
       validate: {
         validator: function (v) {
-          return /^[a-zA-ZÀ-ÿ0-9\s,.\-]+$/.test(v);
+          // CORRECCIÓN: Se añadieron caracteres comunes de inventario: % ( ) / &
+          return /^[a-zA-ZÀ-ÿ0-9\s,.\-%()/&]+$/.test(v);
         },
         message: "El nombre contiene caracteres no permitidos",
       },
     },
     categoria: {
       type: String,
+      trim: true, // Limpia espacios
       enum: {
         values: [
           "Alimento",
@@ -69,6 +54,7 @@ const inventarioSchema = new mongoose.Schema(
     },
     unidad: {
       type: String,
+      trim: true, // Limpia espacios
       enum: {
         values: ["Unidad", "kg", "g", "l", "ml", "Saco", "Rollo", "Otro"],
         message: "{VALUE} no es una unidad de medida válida",
@@ -93,6 +79,7 @@ const inventarioSchema = new mongoose.Schema(
     },
     tipo_moneda: {
       type: String,
+      trim: true,
       enum: {
         values: ["COP", "USD", "Bs"],
         message: "{VALUE} no es un tipo de moneda válido",
@@ -106,6 +93,14 @@ const inventarioSchema = new mongoose.Schema(
       validate: {
         validator: function (v) {
           if (!v) return true;
+          
+          // Solo exige que la fecha sea futura si el documento es nuevo
+          // o si el usuario está modificando la fecha de vencimiento.
+          // Para que no bloquee actualizaciones de artículos ya vencidos.
+          if (this && typeof this.isModified === "function" && !this.isModified("vencimiento")) {
+            return true;
+          }
+
           const hoy = new Date();
           hoy.setHours(0, 0, 0, 0);
           return v.getTime() >= hoy.getTime();
@@ -131,7 +126,7 @@ const inventarioSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 inventarioSchema.index({ finca_id: 1, categoria: 1 });

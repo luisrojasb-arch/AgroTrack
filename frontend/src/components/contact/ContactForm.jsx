@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { User, Mail, FileText, MessageSquare, Phone } from "lucide-react";
 import { enviarMensajeContacto } from "@/actions/contacto.actions";
+import Button from "@/components/ui/Button";
+import { toast } from "sonner"; 
 
 export default function ContactForm() {
   // Estado del formulario
@@ -15,12 +17,12 @@ export default function ContactForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Manejador de inputs
+  // Inputs
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Manejador de envío
+  // envío
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -28,10 +30,12 @@ export default function ContactForm() {
     const respuesta = await enviarMensajeContacto(formData);
 
     if (respuesta.success) {
-      alert(respuesta.message);
+      
+      toast.success(respuesta.message || "¡Mensaje enviado con éxito!");
       setFormData({ nombre: "", apellido: "", correo: "", asunto: "", mensaje: "" });
     } else {
-      alert(respuesta.message);
+      // toast de error
+      toast.error(respuesta.message || "Hubo un error al enviar el mensaje.");
     }
 
     setIsSubmitting(false);
@@ -87,9 +91,14 @@ export default function ContactForm() {
             </div>
           </div>
 
-          <button type="submit" disabled={isSubmitting} className="w-full bg-[#157937] hover:bg-green-700 text-white font-medium py-3 rounded-md transition-colors disabled:opacity-70">
+          <Button 
+            type="submit" 
+            variant="green" 
+            disabled={isSubmitting} 
+            className="w-full py-3 text-[16px]"
+          >
             {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
-          </button>
+          </Button>
         </form>
       </div>
 
