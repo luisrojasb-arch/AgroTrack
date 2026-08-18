@@ -22,7 +22,13 @@ export default function FarmTab({ data }) {
 
   const handleSave = async () => {
     setIsLoading(true);
-    const res = await actualizarFincaAction(formData);
+
+    const payload = { ...formData };
+    if (payload.telefono_finca === "") {
+      payload.telefono_finca = null;
+    }
+
+    const res = await actualizarFincaAction(payload);
 
     if (res.success) {
       toast.success("Finca actualizada correctamente");

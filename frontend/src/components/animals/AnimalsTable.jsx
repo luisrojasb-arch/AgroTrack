@@ -30,7 +30,10 @@ export default function AnimalsTable({
   onEdit,
   onDelete,
   onSituation,
+  userRole,
 }) {
+  const isVeterinario = userRole?.toLowerCase() === "veterinario";
+
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
       <table className="w-full text-left border-collapse min-w-200">
@@ -87,6 +90,37 @@ export default function AnimalsTable({
                 estadoEstilos = "bg-red-50 text-red-600 border-red-200";
               }
 
+              let opcionesMenu = [
+                {
+                  label: "Ver Detalles",
+                  icono: <Eye size={16} />,
+                  accion: () => onView(animal._id),
+                },
+              ];
+
+              if (!isVeterinario) {
+                if (isVivo) {
+                  opcionesMenu.push(
+                    {
+                      label: "Editar",
+                      icono: <Edit size={16} />,
+                      accion: () => onEdit(animal),
+                    },
+                    {
+                      label: "Situaciones",
+                      icono: <ClipboardList size={16} />,
+                      accion: () => onSituation(animal),
+                    },
+                  );
+                }
+                opcionesMenu.push({
+                  label: "Eliminar",
+                  icono: <Trash2 size={16} />,
+                  esDestructivo: true,
+                  accion: () => onDelete(animal),
+                });
+              }
+
               return (
                 <tr
                   key={animal._id}
@@ -123,35 +157,7 @@ export default function AnimalsTable({
                     {animal.sexo === "Hembra" ? animal.cantidad_pezones : "-"}
                   </td>
                   <td className="py-4 px-2 text-center">
-                    <ActionMenu
-                      opciones={[
-                        {
-                          label: "Ver Detalles",
-                          icono: <Eye size={16} />,
-                          accion: () => onView(animal._id),
-                        },
-                        ...(isVivo
-                          ? [
-                              {
-                                label: "Editar",
-                                icono: <Edit size={16} />,
-                                accion: () => onEdit(animal),
-                              },
-                              {
-                                label: "Situaciones",
-                                icono: <ClipboardList size={16} />,
-                                accion: () => onSituation(animal),
-                              },
-                            ]
-                          : []),
-                        {
-                          label: "Eliminar",
-                          icono: <Trash2 size={16} />,
-                          esDestructivo: true,
-                          accion: () => onDelete(animal),
-                        },
-                      ]}
-                    />
+                    <ActionMenu opciones={opcionesMenu} />
                   </td>
                 </tr>
               );

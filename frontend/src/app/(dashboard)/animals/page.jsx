@@ -10,6 +10,7 @@ import {
   getSeleccionesAction,
   getSeleccionDashboardAction,
 } from "@/actions/seleccion.actions";
+import { getSession } from "@/actions/auth.actions";
 
 export const metadata = {
   title: "Animales | AgroTrack",
@@ -18,6 +19,9 @@ export const metadata = {
 
 export default async function AnimalsPage(props) {
   const searchParams = await props.searchParams;
+
+  const session = await getSession();
+  const userRole = session?.rol || "";
 
   const page = searchParams?.page || 1;
   const search = searchParams?.search || "";
@@ -60,7 +64,11 @@ export default async function AnimalsPage(props) {
     <div className="flex flex-col gap-6 w-full">
       <AnimalsHeader />
       <AnimalsStats stats={estadisticas} />
-      <AnimalsTableContainer initialData={tablaDatos} activeTab={tab} />
+      <AnimalsTableContainer
+        initialData={tablaDatos}
+        activeTab={tab}
+        userRole={userRole}
+      />
     </div>
   );
 }
