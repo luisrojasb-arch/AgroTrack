@@ -1,6 +1,7 @@
 import Animal from "../models/animal.model.js";
 import CicloReproductivo from "../models/reproduccion.model.js";
 import Lote from "../models/lote.model.js";
+import Finanzas from "../models/finanzas.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**
@@ -123,11 +124,26 @@ export const editarAnimal = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
 
-  if (req.body.codigo) {
+  const animalActual = await Animal.findOne({
+    _id: id,
+    finca_id: fincaId,
+    esta_eliminado: false,
+  });
+
+  if (!animalActual) {
+    return res.status(404).json({ msg: "Animal no encontrado." });
+  }
+
+  if (animalActual.estado !== "Vivo") {
+    return res.status(400).json({
+      msg: `No se puede editar un animal que se encuentra en estado: ${animalActual.estado}.`,
+    });
+  }
+
+  if (req.body.codigo && req.body.codigo !== animalActual.codigo) {
     const existeCodigo = await Animal.findOne({
       codigo: req.body.codigo,
       finca_id: fincaId,
-      _id: { $ne: id },
       esta_eliminado: false,
     });
     if (existeCodigo) {
@@ -137,15 +153,10 @@ export const editarAnimal = catchAsync(async (req, res) => {
     }
   }
 
-  const animalActualizado = await Animal.findOneAndUpdate(
-    { _id: id, finca_id: fincaId, esta_eliminado: false },
-    req.body,
-    { new: true, runValidators: true },
-  );
-
-  if (!animalActualizado) {
-    return res.status(404).json({ msg: "Animal no encontrado." });
-  }
+  const animalActualizado = await Animal.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     msg: "Animal actualizado correctamente.",
@@ -201,7 +212,7 @@ export const obtenerAnimales = catchAsync(async (req, res) => {
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
     sort: { createdAt: -1 },
-    select: "codigo nombre sexo raza fecha_nacimiento peso cantidad_pezones",
+    select: "codigo nombre sexo estado raza fecha_nacimiento peso cantidad_pezones",
   };
 
   const resultado = await Animal.paginate(query, options);
@@ -273,5 +284,63 @@ export const obtenerEstadisticasAnimales = catchAsync(async (req, res) => {
         animales_en_lotes: statsLotes.total_animales_lote,
       },
     },
+  });
+});
+
+/**
+ * @description Registrar la situación de un animal (Vendido o Muerto) y generar finanza automáticamente.
+ */
+export const registrarSituacionAnimal = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const fincaId = req.finca._id;
+  const { estado, fecha, nota, finanza, causa_muerte } = req.body;
+
+  const animal = await Animal.findOne({
+    _id: id,
+    finca_id: fincaId,
+    esta_eliminado: false,
+  });
+
+  if (!animal) {
+    return res.status(404).json({ msg: "Animal no encontrado." });
+  }
+
+  if (animal.estado !== "Vivo") {
+    return res.status(400).json({
+      msg: `Este animal ya se encuentra registrado como ${animal.estado} y no admite nuevas situaciones.`,
+    });
+  }
+
+  let notaActualizada = animal.nota || "";
+  const separador = notaActualizada ? "\n\n" : "";
+
+  let detalleNota = `[Situación: ${estado} - Fecha: ${fecha}]`;
+  if (estado === "Muerto" && causa_muerte) {
+    detalleNota += `\nCausa: ${causa_muerte}`;
+  }
+  if (nota) {
+    detalleNota += `\nDetalles: ${nota}`;
+  }
+
+  animal.estado = estado;
+  animal.nota = notaActualizada + separador + detalleNota;
+  await animal.save();
+
+  if (estado === "Vendido" && finanza) {
+    await Finanzas.create({
+      finca_id: fincaId,
+      concepto: finanza.concepto,
+      monto: finanza.monto,
+      tipo_moneda: "COP",
+      tipo_movimiento: finanza.tipo_movimiento,
+      categoria: finanza.categoria,
+      metodo_pago: finanza.metodo_pago,
+      fecha_pago: finanza.fecha_pago,
+    });
+  }
+
+  res.status(200).json({
+    msg: `El animal ha sido marcado como ${estado} exitosamente.`,
+    animal,
   });
 });

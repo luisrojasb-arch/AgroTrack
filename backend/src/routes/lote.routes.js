@@ -12,5 +12,6 @@ router.get("/", loteCtrl.obtenerLotes);
 router.get("/:id", loteCtrl.obtenerDetalleLote);
 router.put("/:id", loteCtrl.editarLote);
 router.delete("/:id", loteCtrl.eliminarLote);
+router.patch("/:id/situacion", loteCtrl.registrarSituacionLote);
 
 export default router;

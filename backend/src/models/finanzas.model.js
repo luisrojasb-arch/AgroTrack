@@ -31,7 +31,6 @@ const finanzasSchema = new mongoose.Schema(
       maxlength: [100, "El concepto no puede exceder los 100 caracteres"],
       validate: {
         validator: function (v) {
-          
           return /^[a-zA-ZÀ-ÿ0-9\s,.\-%():/&]+$/.test(v);
         },
         message: "El concepto contiene caracteres no permitidos",
@@ -69,7 +68,7 @@ const finanzasSchema = new mongoose.Schema(
         values: [
           "Alimento",
           "Medicina",
-          "Medicamento", //para compatibilidad con el Inventario
+          "Medicamento",
           "Vacuna",
           "Desparasitante",
           "Venta Animal",
@@ -121,7 +120,7 @@ const finanzasSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 finanzasSchema.index({ finca_id: 1, fecha_pago: -1 });

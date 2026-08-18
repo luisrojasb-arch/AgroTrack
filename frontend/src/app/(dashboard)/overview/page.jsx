@@ -14,7 +14,7 @@ export default async function OverviewPage() {
   const dashboard = await getDashboardGeneralAction();
   const info_animales = await getAlertasDashboardAction({ page: 1, limit: 5 });
  
-  console.log(dashboard);
+  console.log(dashboard.data.ingresos_vs_gastos);
   const user = await getSession();
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -26,6 +26,7 @@ export default async function OverviewPage() {
       />
       <OverviewDataSect2 
         datagraph1={dashboard.data}
+
       />
     </div>
   );

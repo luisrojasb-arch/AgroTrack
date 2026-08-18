@@ -5,13 +5,16 @@ export default function AnimalsTableHeader({
   onAddAnimal,
   onAddLote,
   onAddSeleccion,
+  userRole,
 }) {
+  const isVeterinario = userRole?.toLowerCase() === "veterinario";
+
   const getHeaderContent = () => {
     switch (activeTab) {
       case "lotes":
         return {
           title: "Registro de Lotes",
-          buttons: (
+          buttons: isVeterinario ? null : (
             <>
               <Button
                 variant="white"
@@ -35,7 +38,7 @@ export default function AnimalsTableHeader({
       case "madre":
         return {
           title: "Registro de Selección de Madre",
-          buttons: (
+          buttons: isVeterinario ? null : (
             <Button
               variant="green"
               size="42"
@@ -49,7 +52,7 @@ export default function AnimalsTableHeader({
       default:
         return {
           title: "Registro de Animales",
-          buttons: (
+          buttons: isVeterinario ? null : (
             <>
               <Button
                 variant="white"

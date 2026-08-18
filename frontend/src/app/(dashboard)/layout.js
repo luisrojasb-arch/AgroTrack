@@ -14,5 +14,9 @@ export default async function DashboardRootLayout({ children }) {
     redirect("/login");
   }
 
+  if (session.requiere_cambio_contrasenha) {
+    redirect("/complete-profile");
+  }
+
   return <DashboardLayout usuario={session}>{children}</DashboardLayout>;
 }

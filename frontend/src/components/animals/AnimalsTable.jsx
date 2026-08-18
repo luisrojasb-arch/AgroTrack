@@ -19,7 +19,9 @@ const calcularEdad = (fecha) => {
   const mesesSobrantes = mesesTotales % 12;
 
   if (mesesSobrantes === 0) return `${anios} ${anios === 1 ? "Año" : "Años"}`;
-  return `${anios} ${anios === 1 ? "Año" : "Años"} y ${mesesSobrantes} ${mesesSobrantes === 1 ? "Mes" : "Meses"}`;
+  return `${anios} ${anios === 1 ? "Año" : "Años"} y ${mesesSobrantes} ${
+    mesesSobrantes === 1 ? "Mes" : "Meses"
+  }`;
 };
 
 export default function AnimalsTable({
@@ -27,7 +29,11 @@ export default function AnimalsTable({
   onView,
   onEdit,
   onDelete,
+  onSituation,
+  userRole,
 }) {
+  const isVeterinario = userRole?.toLowerCase() === "veterinario";
+
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
       <table className="w-full text-left border-collapse min-w-200">
@@ -38,6 +44,9 @@ export default function AnimalsTable({
             </th>
             <th className="py-4 px-2 text-[12px] font-bold text-gray-500 uppercase tracking-wider">
               Nombre
+            </th>
+            <th className="py-4 px-2 text-[12px] font-bold text-gray-500 uppercase tracking-wider">
+              Estado
             </th>
             <th className="py-4 px-2 text-[12px] font-bold text-gray-500 uppercase tracking-wider">
               Sexo
@@ -63,68 +72,96 @@ export default function AnimalsTable({
           {animales.length === 0 ? (
             <tr>
               <td
-                colSpan="8"
+                colSpan="9"
                 className="py-12 text-center text-gray-500 text-[14px]"
               >
                 No tienes animales registrados en esta finca aún.
               </td>
             </tr>
           ) : (
-            animales.map((animal) => (
-              <tr
-                key={animal._id}
-                className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
-              >
-                <td className="py-4 px-2 text-[14px] text-black">
-                  <div className="flex items-center gap-2">{animal.codigo}</div>
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black font-medium">
-                  {animal.nombre || "-"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {animal.sexo}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {animal.raza}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {calcularEdad(animal.fecha_nacimiento)}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {animal.peso ? `${animal.peso} kg` : "-"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {animal.sexo === "Hembra" ? animal.cantidad_pezones : "-"}
-                </td>
-                <td className="py-4 px-2 text-center">
-                  <ActionMenu
-                    opciones={[
-                      {
-                        label: "Ver Detalles",
-                        icono: <Eye size={16} />,
-                        accion: () => onView(animal._id),
-                      },
-                      {
-                        label: "Editar",
-                        icono: <Edit size={16} />,
-                        accion: () => onEdit(animal),
-                      },
-                      {
-                        label: "Situaciones",
-                        icono: <ClipboardList size={16} />,
-                        accion: () => console.log("Situaciones", animal._id),
-                      },
-                      {
-                        label: "Eliminar",
-                        icono: <Trash2 size={16} />,
-                        esDestructivo: true,
-                        accion: () => onDelete(animal),
-                      },
-                    ]}
-                  />
-                </td>
-              </tr>
-            ))
+            animales.map((animal) => {
+              const isVivo = animal.estado === "Vivo" || !animal.estado;
+              const estadoTexto = animal.estado || "Vivo";
+
+              let estadoEstilos = "bg-green-50 text-green-600 border-green-200";
+              if (estadoTexto === "Vendido") {
+                estadoEstilos = "bg-blue-50 text-blue-600 border-blue-200";
+              } else if (estadoTexto === "Muerto") {
+                estadoEstilos = "bg-red-50 text-red-600 border-red-200";
+              }
+
+              let opcionesMenu = [
+                {
+                  label: "Ver Detalles",
+                  icono: <Eye size={16} />,
+                  accion: () => onView(animal._id),
+                },
+              ];
+
+              if (!isVeterinario) {
+                if (isVivo) {
+                  opcionesMenu.push(
+                    {
+                      label: "Editar",
+                      icono: <Edit size={16} />,
+                      accion: () => onEdit(animal),
+                    },
+                    {
+                      label: "Situaciones",
+                      icono: <ClipboardList size={16} />,
+                      accion: () => onSituation(animal),
+                    },
+                  );
+                }
+                opcionesMenu.push({
+                  label: "Eliminar",
+                  icono: <Trash2 size={16} />,
+                  esDestructivo: true,
+                  accion: () => onDelete(animal),
+                });
+              }
+
+              return (
+                <tr
+                  key={animal._id}
+                  className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
+                >
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    <div className="flex items-center gap-2">
+                      {animal.codigo}
+                    </div>
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black font-medium">
+                    {animal.nombre || "-"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px]">
+                    <span
+                      className={`text-[11px] px-2 py-0.5 rounded-full font-semibold border ${estadoEstilos}`}
+                    >
+                      {estadoTexto}
+                    </span>
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {animal.sexo}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {animal.raza}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {calcularEdad(animal.fecha_nacimiento)}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {animal.peso ? `${animal.peso} kg` : "-"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {animal.sexo === "Hembra" ? animal.cantidad_pezones : "-"}
+                  </td>
+                  <td className="py-4 px-2 text-center">
+                    <ActionMenu opciones={opcionesMenu} />
+                  </td>
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>

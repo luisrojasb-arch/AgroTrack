@@ -13,21 +13,25 @@ import Pagination from "@/components/ui/Pagination";
 import AnimalFormModal from "./modalsAnimals/AnimalFormModal";
 import AnimalDetailsModal from "./modalsAnimals/AnimalDetailsModal";
 import DeleteAnimalModal from "./modalsAnimals/DeleteAnimalModal";
+import AnimalSituationModal from "./modalsAnimals/AnimalSituationModal";
 import {
   createAnimalAction,
   updateAnimalAction,
   deleteAnimalAction,
   getAnimalDetailsAction,
+  registrarSituacionAction,
 } from "@/actions/animal.actions";
 
 import LoteFormModal from "./modalsLote/LoteFormModal";
 import LoteDetailsModal from "./modalsLote/LoteDetailsModal";
 import DeleteLoteModal from "./modalsLote/DeleteLoteModal";
+import LoteSituationModal from "./modalsLote/LoteSituationModal";
 import {
   createLoteAction,
   updateLoteAction,
   deleteLoteAction,
   getLoteDetailsAction,
+  registrarSituacionLoteAction,
 } from "@/actions/lote.actions";
 
 import SeleccionFormModal from "./modalsSeleccion/SeleccionFormModal";
@@ -35,6 +39,7 @@ import SeleccionDetailsModal from "./modalsSeleccion/SeleccionDetailsModal";
 import RegistrarPesoModal from "./modalsSeleccion/RegistrarPesoModal";
 import DeleteSeleccionModal from "./modalsSeleccion/DeleteSeleccionModal";
 import AprobarMadreModal from "./modalsSeleccion/AprobarMadreModal";
+import SeleccionDashboard from "./SeleccionDashboard";
 import {
   createSeleccionAction,
   updateSeleccionAction,
@@ -44,7 +49,11 @@ import {
   aprobarSeleccionAction,
 } from "@/actions/seleccion.actions";
 
-export default function AnimalsTableContainer({ initialData, activeTab }) {
+export default function AnimalsTableContainer({
+  initialData,
+  activeTab,
+  userRole,
+}) {
   const animales = initialData?.animales || [];
   const lotes = initialData?.lotes || [];
   const selecciones = initialData?.selecciones || [];
@@ -59,6 +68,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   const [isAnimalFormOpen, setIsAnimalFormOpen] = useState(false);
   const [isAnimalDetailsOpen, setIsAnimalDetailsOpen] = useState(false);
   const [isAnimalDeleteOpen, setIsAnimalDeleteOpen] = useState(false);
+  const [isAnimalSituationOpen, setIsAnimalSituationOpen] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [animalDetailsData, setAnimalDetailsData] = useState(null);
 
@@ -73,6 +83,10 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   const handleDeleteAnimalClick = (animal) => {
     setSelectedAnimal(animal);
     setIsAnimalDeleteOpen(true);
+  };
+  const handleSituationAnimalClick = (animal) => {
+    setSelectedAnimal(animal);
+    setIsAnimalSituationOpen(true);
   };
 
   const handleViewAnimalDetails = async (id) => {
@@ -119,9 +133,24 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
     }
   };
 
+  const handleSubmitAnimalSituation = async (payload) => {
+    const dataToSend = { ...payload };
+    delete dataToSend.animal_id;
+    const res = await registrarSituacionAction(selectedAnimal._id, dataToSend);
+
+    if (res.success) {
+      setIsAnimalSituationOpen(false);
+      setSelectedAnimal(null);
+      toast.success("Situación registrada correctamente");
+    } else {
+      toast.error(res.error);
+    }
+  };
+
   const [isLoteFormOpen, setIsLoteFormOpen] = useState(false);
   const [isLoteDetailsOpen, setIsLoteDetailsOpen] = useState(false);
   const [isLoteDeleteOpen, setIsLoteDeleteOpen] = useState(false);
+  const [isLoteSituationOpen, setIsLoteSituationOpen] = useState(false);
   const [selectedLote, setSelectedLote] = useState(null);
   const [loteDetailsData, setLoteDetailsData] = useState(null);
 
@@ -136,6 +165,10 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   const handleDeleteLoteClick = (lote) => {
     setSelectedLote(lote);
     setIsLoteDeleteOpen(true);
+  };
+  const handleSituationLoteClick = (lote) => {
+    setSelectedLote(lote);
+    setIsLoteSituationOpen(true);
   };
 
   const handleViewLoteDetails = async (id) => {
@@ -172,6 +205,23 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
       setIsLoteDeleteOpen(false);
       setSelectedLote(null);
       toast.success("Lote eliminado correctamente");
+    } else {
+      toast.error(res.error);
+    }
+  };
+
+  const handleSubmitLoteSituation = async (payload) => {
+    const dataToSend = { ...payload };
+    delete dataToSend.lote_id;
+    const res = await registrarSituacionLoteAction(
+      selectedLote._id,
+      dataToSend,
+    );
+
+    if (res.success) {
+      setIsLoteSituationOpen(false);
+      setSelectedLote(null);
+      toast.success("Situación registrada correctamente");
     } else {
       toast.error(res.error);
     }
@@ -287,47 +337,59 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   };
 
   return (
-    <div className="bg-gradient-card border border-border-agro rounded-2xl p-6 w-full shadow-sm relative">
-      <AnimalsTableHeader
-        activeTab={activeTab}
-        onAddAnimal={handleAddAnimal}
-        onAddLote={handleAddLote}
-        onAddSeleccion={handleAddSeleccion}
-      />
-      <AnimalsTabs />
-      <AnimalsTableControls activeTab={activeTab} />
+    <div className="flex flex-col gap-6 w-full">
+      <div className="bg-gradient-card border border-border-agro rounded-2xl p-6 w-full shadow-sm relative">
+        <AnimalsTableHeader
+          activeTab={activeTab}
+          onAddAnimal={handleAddAnimal}
+          onAddLote={handleAddLote}
+          onAddSeleccion={handleAddSeleccion}
+          userRole={userRole}
+        />
+        <AnimalsTabs />
+        <AnimalsTableControls activeTab={activeTab} />
 
-      {activeTab === "individuales" && (
-        <AnimalsTable
-          animales={animales}
-          onView={handleViewAnimalDetails}
-          onEdit={handleEditAnimal}
-          onDelete={handleDeleteAnimalClick}
+        {activeTab === "individuales" && (
+          <AnimalsTable
+            animales={animales}
+            onView={handleViewAnimalDetails}
+            onEdit={handleEditAnimal}
+            onDelete={handleDeleteAnimalClick}
+            onSituation={handleSituationAnimalClick}
+            userRole={userRole}
+          />
+        )}
+        {activeTab === "lotes" && (
+          <LotesTable
+            lotes={lotes}
+            onView={handleViewLoteDetails}
+            onEdit={handleEditLote}
+            onDelete={handleDeleteLoteClick}
+            onSituation={handleSituationLoteClick}
+            userRole={userRole}
+          />
+        )}
+        {activeTab === "madre" && (
+          <SeleccionTable
+            selecciones={selecciones}
+            onView={handleViewSeleccionDetails}
+            onEdit={handleEditSeleccion}
+            onDelete={handleDeleteSeleccionClick}
+            userRole={userRole}
+          />
+        )}
+
+        <Pagination
+          totalRegistros={paginacion.totalRegistros}
+          totalPaginas={paginacion.totalPaginas}
+          paginaActual={paginacion.paginaActual}
+          limite={paginacion.limite}
         />
-      )}
-      {activeTab === "lotes" && (
-        <LotesTable
-          lotes={lotes}
-          onView={handleViewLoteDetails}
-          onEdit={handleEditLote}
-          onDelete={handleDeleteLoteClick}
-        />
-      )}
+      </div>
+
       {activeTab === "madre" && (
-        <SeleccionTable
-          selecciones={selecciones}
-          onView={handleViewSeleccionDetails}
-          onEdit={handleEditSeleccion}
-          onDelete={handleDeleteSeleccionClick}
-        />
+        <SeleccionDashboard dashboardData={initialData?.seleccionDashboard} />
       )}
-
-      <Pagination
-        totalRegistros={paginacion.totalRegistros}
-        totalPaginas={paginacion.totalPaginas}
-        paginaActual={paginacion.paginaActual}
-        limite={paginacion.limite}
-      />
 
       <AnimalFormModal
         isOpen={isAnimalFormOpen}
@@ -346,6 +408,12 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
         animal={selectedAnimal}
         onConfirm={handleConfirmDeleteAnimal}
       />
+      <AnimalSituationModal
+        isOpen={isAnimalSituationOpen}
+        onClose={() => setIsAnimalSituationOpen(false)}
+        animal={selectedAnimal}
+        onSubmit={handleSubmitAnimalSituation}
+      />
 
       <LoteFormModal
         isOpen={isLoteFormOpen}
@@ -363,6 +431,12 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
         onClose={() => setIsLoteDeleteOpen(false)}
         lote={selectedLote}
         onConfirm={handleConfirmDeleteLote}
+      />
+      <LoteSituationModal
+        isOpen={isLoteSituationOpen}
+        onClose={() => setIsLoteSituationOpen(false)}
+        lote={selectedLote}
+        onSubmit={handleSubmitLoteSituation}
       />
 
       <SeleccionFormModal

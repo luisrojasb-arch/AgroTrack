@@ -5,18 +5,14 @@ import Select from "./Select";
 import BarGraph from "./BarGraph"; 
 
 export default function BargraphContainer({ data, title }) {
-
   const rawData = data?.ingresos_vs_gastos || [];
 
-  
   const [disp, setDisp] = useState("pc");
   const [opcionTablet, setOpcionTablet] = useState("Trimestre Actual");
-  
   const [opcionTelefono, setOpcionTelefono] = useState(
     rawData.length > 0 ? rawData[rawData.length - 1].mes : ""
   );
 
-  
   useEffect(() => {
     const evaluarTamaño = () => {
       const ancho = window.innerWidth;
@@ -34,63 +30,56 @@ export default function BargraphContainer({ data, title }) {
     return () => window.removeEventListener("resize", evaluarTamaño);
   }, []);
 
-  
   let datosFiltrados = [];
   let opcionesSelect = [];
   let valorSeleccionado = "";
   let handleChangeSelect = () => {};
 
   if (disp === "pc") {
-    
     datosFiltrados = rawData;
   } else if (disp === "tablet") {
-   
     opcionesSelect = ["Trimestre Anterior", "Trimestre Actual"];
     valorSeleccionado = opcionTablet;
     handleChangeSelect = setOpcionTablet;
 
     if (opcionTablet === "Trimestre Actual") {
-      datosFiltrados = rawData.slice(-3); // Los últimos 3 elementos
+      datosFiltrados = rawData.slice(-3); 
     } else {
-      datosFiltrados = rawData.slice(0, 3); // Los primeros 3 elementos
+      datosFiltrados = rawData.slice(0, 3);
     }
   } else if (disp === "telefono") {
-    
-    opcionesSelect = rawData.map((item) => item.mes); // ['Mar', 'Abr', ...]
+    opcionesSelect = rawData.map((item) => item.mes);
     valorSeleccionado = opcionTelefono;
     handleChangeSelect = setOpcionTelefono;
 
-   
     datosFiltrados = rawData.filter((item) => item.mes === opcionTelefono);
-    
     
     if (datosFiltrados.length === 0 && rawData.length > 0) {
       datosFiltrados = [rawData[rawData.length - 1]];
     }
   }
 
-  
   const chartData = {
     labels: datosFiltrados.map((d) => d.mes),
     datasets: [
       {
         label: "Ingresos",
         data: datosFiltrados.map((d) => d.ingresos),
-        backgroundColor:  "#0084ff", 
-        borderRadius: 4, 
+        backgroundColor: "#157937", 
+        borderRadius: 4,
         barPercentage: 0.6,
       },
       {
         label: "Gastos",
         data: datosFiltrados.map((d) => d.gastos),
-        backgroundColor:"#157937", 
+        backgroundColor: "#0084ff", 
         borderRadius: 4,
         barPercentage: 0.6,
       },
     ],
   };
 
-  
+ 
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -98,10 +87,10 @@ export default function BargraphContainer({ data, title }) {
       legend: {
         position: "bottom",
         labels: {
-          usePointStyle: true, 
+          usePointStyle: true,
           boxWidth: 8,
           padding: 20,
-          color: "#157937", 
+          color: "#157937",
           font: { weight: "bold" }
         },
       },
@@ -125,7 +114,6 @@ export default function BargraphContainer({ data, title }) {
   return (
     <div className="bg-white rounded-3xl border border-[var(--color-border-agro)] p-6 flex flex-col w-full h-full shadow-sm min-h-[400px]">
       
-     
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
           <h2 className="text-xl font-bold text-black mb-1">{title}</h2>
@@ -138,7 +126,6 @@ export default function BargraphContainer({ data, title }) {
           </p>
         </div>
 
-       
         {disp !== "pc" && (
           <div className="w-full sm:w-48 z-10">
             <Select
@@ -151,7 +138,6 @@ export default function BargraphContainer({ data, title }) {
         )}
       </div>
 
-     
       <div className="flex-grow w-full relative">
         <BarGraph data={chartData} options={chartOptions} />
       </div>

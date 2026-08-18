@@ -1,5 +1,6 @@
 import Lote from "../models/lote.model.js";
 import Salud from "../models/salud.model.js";
+import Finanzas from "../models/finanzas.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**
@@ -169,12 +170,26 @@ export const editarLote = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
 
-  // Ajustado a codigo_lote
-  if (req.body.codigo_lote) {
+  const loteActual = await Lote.findOne({
+    _id: id,
+    finca_id: fincaId,
+    esta_eliminado: false,
+  });
+
+  if (!loteActual) {
+    return res.status(404).json({ msg: "Lote no encontrado." });
+  }
+
+  if (loteActual.cantidad_total === 0) {
+    return res.status(400).json({
+      msg: "No se puede editar un lote que ya no tiene animales (cantidad cero).",
+    });
+  }
+
+  if (req.body.codigo_lote && req.body.codigo_lote !== loteActual.codigo_lote) {
     const existeLote = await Lote.findOne({
       codigo_lote: req.body.codigo_lote,
       finca_id: fincaId,
-      _id: { $ne: id },
       esta_eliminado: false,
     });
     if (existeLote) {
@@ -184,15 +199,10 @@ export const editarLote = catchAsync(async (req, res) => {
     }
   }
 
-  const loteActualizado = await Lote.findOneAndUpdate(
-    { _id: id, finca_id: fincaId, esta_eliminado: false },
-    req.body,
-    { new: true, runValidators: true },
-  );
-
-  if (!loteActualizado) {
-    return res.status(404).json({ msg: "Lote no encontrado." });
-  }
+  const loteActualizado = await Lote.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     msg: "Lote actualizado correctamente.",
@@ -225,4 +235,96 @@ export const eliminarLote = catchAsync(async (req, res) => {
   res
     .status(200)
     .json({ msg: "El lote y su cronograma sanitario han sido eliminados." });
+});
+
+/**
+ * @description Registrar la situación de un lote (Vendido o Muerto) restando animales.
+ */
+export const registrarSituacionLote = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const fincaId = req.finca._id;
+  const {
+    estado,
+    fecha,
+    nota,
+    cantidad_machos = 0,
+    cantidad_hembras = 0,
+    finanza,
+    causa_muerte,
+  } = req.body;
+
+  const machosARestar = Number(cantidad_machos) || 0;
+  const hembrasARestar = Number(cantidad_hembras) || 0;
+
+  if (machosARestar <= 0 && hembrasARestar <= 0) {
+    return res.status(400).json({
+      msg: "Debe especificar una cantidad mayor a cero de machos o hembras para registrar la situación.",
+    });
+  }
+
+  const lote = await Lote.findOne({
+    _id: id,
+    finca_id: fincaId,
+    esta_eliminado: false,
+  });
+
+  if (!lote) {
+    return res.status(404).json({ msg: "Lote no encontrado." });
+  }
+
+  if (lote.cantidad_total === 0) {
+    return res.status(400).json({
+      msg: "Este lote ya no tiene animales para registrar nuevas situaciones.",
+    });
+  }
+
+  if (machosARestar > (lote.cantidad_machos || 0)) {
+    return res.status(400).json({
+      msg: `No puede restar ${machosARestar} machos. El lote solo tiene ${lote.cantidad_machos}.`,
+    });
+  }
+
+  if (hembrasARestar > (lote.cantidad_hembras || 0)) {
+    return res.status(400).json({
+      msg: `No puede restar ${hembrasARestar} hembras. El lote solo tiene ${lote.cantidad_hembras}.`,
+    });
+  }
+
+  lote.cantidad_machos = (lote.cantidad_machos || 0) - machosARestar;
+  lote.cantidad_hembras = (lote.cantidad_hembras || 0) - hembrasARestar;
+  lote.cantidad_total = lote.cantidad_machos + lote.cantidad_hembras;
+
+  let notaActualizada = lote.nota || "";
+  const separador = notaActualizada ? "\n\n" : "";
+
+  let detalleNota = `[Situación: ${estado} - Fecha: ${fecha}]\nDescontados: ${machosARestar} Machos, ${hembrasARestar} Hembras.`;
+
+  if (estado === "Muerto" && causa_muerte) {
+    detalleNota += `\nCausa: ${causa_muerte}`;
+  }
+
+  if (nota) {
+    detalleNota += `\nDetalles: ${nota}`;
+  }
+
+  lote.nota = notaActualizada + separador + detalleNota;
+  await lote.save();
+
+  if (estado === "Vendido" && finanza) {
+    await Finanzas.create({
+      finca_id: fincaId,
+      concepto: finanza.concepto,
+      monto: finanza.monto,
+      tipo_moneda: "COP",
+      tipo_movimiento: finanza.tipo_movimiento,
+      categoria: finanza.categoria,
+      metodo_pago: finanza.metodo_pago,
+      fecha_pago: finanza.fecha_pago,
+    });
+  }
+
+  res.status(200).json({
+    msg: `Situación registrada exitosamente. Lote actualizado a ${lote.cantidad_total} animales.`,
+    lote,
+  });
 });

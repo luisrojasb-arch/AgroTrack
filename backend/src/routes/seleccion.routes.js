@@ -9,6 +9,7 @@ router.use(authMid.validarFincaSeleccionada);
 
 router.post("/", seleccionCtrl.registrarSeleccion);
 router.get("/", seleccionCtrl.obtenerSelecciones);
+router.get("/dashboard", seleccionCtrl.obtenerDashboardSeleccion);
 router.get("/:id", seleccionCtrl.obtenerDetalleSeleccion);
 router.put("/:id", seleccionCtrl.editarSeleccion);
 router.delete("/:id", seleccionCtrl.eliminarSeleccion);
