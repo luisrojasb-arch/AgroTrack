@@ -21,6 +21,16 @@ export async function getSeleccionesAction(params) {
   }
 }
 
+export async function getSeleccionDashboardAction() {
+  try {
+    const token = await getToken();
+    const result = await seleccionService.obtenerDashboardSeleccion(token);
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
 export async function createSeleccionAction(data) {
   try {
     const token = await getToken();

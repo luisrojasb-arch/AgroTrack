@@ -15,20 +15,6 @@ export default function SeleccionDetailsModal({
   const grupo = data.datos_basicos;
   const animales = data.animales || [];
 
-  const calcularPesoPromedioGrupo = () => {
-    if (animales.length === 0) return 0;
-    let sumaPesos = 0;
-    animales.forEach((a) => {
-      sumaPesos +=
-        a.historial_pesos?.length > 0
-          ? a.historial_pesos[a.historial_pesos.length - 1].peso
-          : a.peso_inicial || 0;
-    });
-    return (sumaPesos / animales.length).toFixed(1);
-  };
-
-  const pesoPromedioTotal = calcularPesoPromedioGrupo();
-
   const detailsFooter = (
     <Button variant="green" onClick={onClose} className="w-full sm:w-auto">
       Cerrar
@@ -82,10 +68,10 @@ export default function SeleccionDetailsModal({
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-[13px] font-bold text-gray-500">
-                      Peso Promedio
+                      Peso Inicial
                     </span>
                     <span className="text-[15px] text-black font-medium">
-                      {pesoPromedioTotal} kg
+                      {animal.peso_inicial || 0} kg
                     </span>
                   </div>
 

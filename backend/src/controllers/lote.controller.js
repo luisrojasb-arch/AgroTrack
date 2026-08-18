@@ -170,12 +170,26 @@ export const editarLote = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
 
-  // Ajustado a codigo_lote
-  if (req.body.codigo_lote) {
+  const loteActual = await Lote.findOne({
+    _id: id,
+    finca_id: fincaId,
+    esta_eliminado: false,
+  });
+
+  if (!loteActual) {
+    return res.status(404).json({ msg: "Lote no encontrado." });
+  }
+
+  if (loteActual.cantidad_total === 0) {
+    return res.status(400).json({
+      msg: "No se puede editar un lote que ya no tiene animales (cantidad cero).",
+    });
+  }
+
+  if (req.body.codigo_lote && req.body.codigo_lote !== loteActual.codigo_lote) {
     const existeLote = await Lote.findOne({
       codigo_lote: req.body.codigo_lote,
       finca_id: fincaId,
-      _id: { $ne: id },
       esta_eliminado: false,
     });
     if (existeLote) {
@@ -185,15 +199,10 @@ export const editarLote = catchAsync(async (req, res) => {
     }
   }
 
-  const loteActualizado = await Lote.findOneAndUpdate(
-    { _id: id, finca_id: fincaId, esta_eliminado: false },
-    req.body,
-    { new: true, runValidators: true },
-  );
-
-  if (!loteActualizado) {
-    return res.status(404).json({ msg: "Lote no encontrado." });
-  }
+  const loteActualizado = await Lote.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     msg: "Lote actualizado correctamente.",
@@ -228,9 +237,8 @@ export const eliminarLote = catchAsync(async (req, res) => {
     .json({ msg: "El lote y su cronograma sanitario han sido eliminados." });
 });
 
-
 /**
- * @description Registrar la situacion de un animal del lote (vendido/muerto) y generar finanzas automaticas
+ * @description Registrar la situación de un lote (Vendido o Muerto) restando animales.
  */
 export const registrarSituacionLote = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -264,6 +272,12 @@ export const registrarSituacionLote = catchAsync(async (req, res) => {
     return res.status(404).json({ msg: "Lote no encontrado." });
   }
 
+  if (lote.cantidad_total === 0) {
+    return res.status(400).json({
+      msg: "Este lote ya no tiene animales para registrar nuevas situaciones.",
+    });
+  }
+
   if (machosARestar > (lote.cantidad_machos || 0)) {
     return res.status(400).json({
       msg: `No puede restar ${machosARestar} machos. El lote solo tiene ${lote.cantidad_machos}.`,
@@ -294,7 +308,6 @@ export const registrarSituacionLote = catchAsync(async (req, res) => {
   }
 
   lote.nota = notaActualizada + separador + detalleNota;
-
   await lote.save();
 
   if (estado === "Vendido" && finanza) {

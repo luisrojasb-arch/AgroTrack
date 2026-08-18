@@ -6,7 +6,10 @@ import {
   getAnimalesAction,
 } from "@/actions/animal.actions";
 import { getLotesAction } from "@/actions/lote.actions";
-import { getSeleccionesAction } from "@/actions/seleccion.actions";
+import {
+  getSeleccionesAction,
+  getSeleccionDashboardAction,
+} from "@/actions/seleccion.actions";
 
 export const metadata = {
   title: "Animales | AgroTrack",
@@ -24,6 +27,8 @@ export default async function AnimalsPage(props) {
   const statsPromise = getEstadisticasAnimalesAction();
 
   let tablePromise;
+  let dashboardPromise = Promise.resolve(null);
+
   if (tab === "lotes") {
     tablePromise = getLotesAction({ page, limit: 10, search });
   } else if (tab === "madre") {
@@ -33,17 +38,23 @@ export default async function AnimalsPage(props) {
       search,
       estado: filter || "Todos",
     });
+    dashboardPromise = getSeleccionDashboardAction();
   } else {
     tablePromise = getAnimalesAction({ page, limit: 10, search, sexo: filter });
   }
 
-  const [statsResponse, tableResponse] = await Promise.all([
+  const [statsResponse, tableResponse, dashboardResponse] = await Promise.all([
     statsPromise,
     tablePromise,
+    dashboardPromise,
   ]);
 
   const estadisticas = statsResponse.success ? statsResponse.data : null;
-  const tablaDatos = tableResponse.success ? tableResponse.data : null;
+
+  const tablaDatos = tableResponse.success ? { ...tableResponse.data } : {};
+  if (tab === "madre" && dashboardResponse?.success) {
+    tablaDatos.seleccionDashboard = dashboardResponse.data;
+  }
 
   return (
     <div className="flex flex-col gap-6 w-full">
