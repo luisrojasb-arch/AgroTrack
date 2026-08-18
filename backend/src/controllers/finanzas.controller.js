@@ -1,9 +1,6 @@
 import Finanzas from "../models/finanzas.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
-/**
- * @description Obtener el resumen de transacciones financieras para la tabla principal (Mostrando todo convertido a COP al vuelo).
- */
 export const obtenerResumenFinanzas = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const finca = req.finca;
@@ -24,7 +21,8 @@ export const obtenerResumenFinanzas = catchAsync(async (req, res) => {
   if (
     categoria &&
     categoria !== "Todas" &&
-    categoria !== "Todas las categorias"
+    categoria !== "Todas las categorias" &&
+    categoria !== "Todas las categorías"
   ) {
     query.categoria = categoria;
   }
@@ -88,9 +86,6 @@ export const obtenerResumenFinanzas = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * @description Registrar una nueva transacción financiera guardando su moneda original.
- */
 export const registrarTransaccion = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const finca = req.finca;
@@ -123,9 +118,6 @@ export const registrarTransaccion = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * @description Obtener el detalle de una transacción específica.
- */
 export const obtenerDetalleTransaccion = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
@@ -143,9 +135,6 @@ export const obtenerDetalleTransaccion = catchAsync(async (req, res) => {
   res.status(200).json({ transaccion });
 });
 
-/**
- * @description Editar una transacción existente.
- */
 export const editarTransaccion = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
@@ -153,7 +142,7 @@ export const editarTransaccion = catchAsync(async (req, res) => {
   const transaccionActualizada = await Finanzas.findOneAndUpdate(
     { _id: id, finca_id: fincaId, esta_eliminado: false },
     req.body,
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   );
 
   if (!transaccionActualizada) {
@@ -166,9 +155,6 @@ export const editarTransaccion = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * @description Eliminar una transacción (Soft Delete).
- */
 export const eliminarTransaccion = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
@@ -176,21 +162,16 @@ export const eliminarTransaccion = catchAsync(async (req, res) => {
   const transaccionEliminada = await Finanzas.findOneAndUpdate(
     { _id: id, finca_id: fincaId, esta_eliminado: false },
     { esta_eliminado: true, eliminado_at: new Date() },
-    { new: true },
+    { new: true }
   );
 
   if (!transaccionEliminada) {
     return res.status(404).json({ msg: "Transacción no encontrada." });
   }
 
-  res
-    .status(200)
-    .json({ msg: "La transacción ha sido eliminada exitosamente." });
+  res.status(200).json({ msg: "La transacción ha sido eliminada exitosamente." });
 });
 
-/**
- * @description Obtener estadísticas financieras para el Dashboard (Tarjetas, Desglose y Gráficos).
- */
 export const obtenerEstadisticasFinanzas = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const tasas = req.finca.tasas_cambio || {};
@@ -239,6 +220,7 @@ export const obtenerEstadisticasFinanzas = catchAsync(async (req, res) => {
       if (t.tipo_movimiento === "Egreso") gastosMes += montoCOP;
     }
 
+    // Acumulamos únicamente si es un Egreso para el desglose
     if (t.tipo_movimiento === "Egreso") {
       if (!desgloseGastos[t.categoria]) {
         desgloseGastos[t.categoria] = 0;
@@ -247,13 +229,14 @@ export const obtenerEstadisticasFinanzas = catchAsync(async (req, res) => {
     }
 
     const mesIndex = ultimos6Meses.findIndex(
-      (m) => m.mesNum === tMes && m.anio === tAnio,
+      (m) => m.mesNum === tMes && m.anio === tAnio
     );
     if (mesIndex !== -1) {
-      if (t.tipo_movimiento === "Ingreso")
+      if (t.tipo_movimiento === "Ingreso") {
         ultimos6Meses[mesIndex].ingresos += montoCOP;
-      if (t.tipo_movimiento === "Egreso")
+      } else if (t.tipo_movimiento === "Egreso") {
         ultimos6Meses[mesIndex].gastos += montoCOP;
+      }
     }
   });
 
