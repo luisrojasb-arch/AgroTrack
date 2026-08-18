@@ -21,7 +21,13 @@ export default function ProfileTab({ data }) {
 
   const handleSave = async () => {
     setIsLoading(true);
-    const res = await updatePerfilAction(formData);
+
+    const payload = { ...formData };
+    if (payload.telefono === "") {
+      payload.telefono = null;
+    }
+
+    const res = await updatePerfilAction(payload);
 
     if (res.success) {
       toast.success("Perfil actualizado correctamente");

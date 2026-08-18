@@ -6,7 +6,10 @@ export default function SeleccionTable({
   onView,
   onEdit,
   onDelete,
+  userRole,
 }) {
+  const isVeterinario = userRole?.toLowerCase() === "veterinario";
+
   const formatearFecha = (fechaString) => {
     if (!fechaString) return "-";
     const fecha = new Date(fechaString);
@@ -69,53 +72,60 @@ export default function SeleccionTable({
               </td>
             </tr>
           ) : (
-            selecciones.map((grupo) => (
-              <tr
-                key={grupo._id}
-                className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
-              >
-                <td className="py-4 px-2 text-[14px] text-black font-medium">
-                  {grupo.codigo_grupo}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {grupo.animales?.length || 0}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {calcularPesoPromedio(grupo.animales)}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {grupo.lote_origen_id?.madre_id?.codigo || "-"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {grupo.lote_origen_id?.padre_id?.codigo || "-"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {formatearFecha(grupo.createdAt)}
-                </td>
-                <td className="py-4 px-2 text-center">
-                  <ActionMenu
-                    opciones={[
-                      {
-                        label: "Ver Detalles",
-                        icono: <Eye size={16} />,
-                        accion: () => onView(grupo._id),
-                      },
-                      {
-                        label: "Editar Grupo",
-                        icono: <Edit size={16} />,
-                        accion: () => onEdit(grupo),
-                      },
-                      {
-                        label: "Eliminar Grupo",
-                        icono: <Trash2 size={16} />,
-                        esDestructivo: true,
-                        accion: () => onDelete(grupo),
-                      },
-                    ]}
-                  />
-                </td>
-              </tr>
-            ))
+            selecciones.map((grupo) => {
+              let opcionesMenu = [
+                {
+                  label: "Ver Detalles",
+                  icono: <Eye size={16} />,
+                  accion: () => onView(grupo._id),
+                },
+              ];
+
+              if (!isVeterinario) {
+                opcionesMenu.push(
+                  {
+                    label: "Editar Grupo",
+                    icono: <Edit size={16} />,
+                    accion: () => onEdit(grupo),
+                  },
+                  {
+                    label: "Eliminar Grupo",
+                    icono: <Trash2 size={16} />,
+                    esDestructivo: true,
+                    accion: () => onDelete(grupo),
+                  },
+                );
+              }
+
+              return (
+                <tr
+                  key={grupo._id}
+                  className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
+                >
+                  <td className="py-4 px-2 text-[14px] text-black font-medium">
+                    {grupo.codigo_grupo}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {grupo.animales?.length || 0}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {calcularPesoPromedio(grupo.animales)}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {grupo.lote_origen_id?.madre_id?.codigo || "-"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {grupo.lote_origen_id?.padre_id?.codigo || "-"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {formatearFecha(grupo.createdAt)}
+                  </td>
+                  <td className="py-4 px-2 text-center">
+                    <ActionMenu opciones={opcionesMenu} />
+                  </td>
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>

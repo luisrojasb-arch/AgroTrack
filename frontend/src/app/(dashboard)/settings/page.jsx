@@ -2,8 +2,12 @@ import SettingsHeader from "@/components/settings/SettingsHeader";
 import SettingsContainer from "@/components/settings/SettingsContainer";
 import { getPerfilAction } from "@/actions/user.actions";
 import { getFincaAction } from "@/actions/finca.actions";
+import { getSession } from "@/actions/auth.actions";
 
 export default async function SettingsPage() {
+  const session = await getSession();
+  const userRole = session?.rol || "";
+
   const [perfilRes, fincaRes] = await Promise.all([
     getPerfilAction(),
     getFincaAction(),
@@ -17,7 +21,7 @@ export default async function SettingsPage() {
   return (
     <div className="flex flex-col gap-6 w-full">
       <SettingsHeader />
-      <SettingsContainer initialData={initialData} />
+      <SettingsContainer initialData={initialData} userRole={userRole} />
     </div>
   );
 }

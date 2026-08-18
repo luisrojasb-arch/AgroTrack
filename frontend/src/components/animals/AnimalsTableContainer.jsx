@@ -49,7 +49,11 @@ import {
   aprobarSeleccionAction,
 } from "@/actions/seleccion.actions";
 
-export default function AnimalsTableContainer({ initialData, activeTab }) {
+export default function AnimalsTableContainer({
+  initialData,
+  activeTab,
+  userRole,
+}) {
   const animales = initialData?.animales || [];
   const lotes = initialData?.lotes || [];
   const selecciones = initialData?.selecciones || [];
@@ -340,6 +344,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
           onAddAnimal={handleAddAnimal}
           onAddLote={handleAddLote}
           onAddSeleccion={handleAddSeleccion}
+          userRole={userRole}
         />
         <AnimalsTabs />
         <AnimalsTableControls activeTab={activeTab} />
@@ -351,6 +356,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
             onEdit={handleEditAnimal}
             onDelete={handleDeleteAnimalClick}
             onSituation={handleSituationAnimalClick}
+            userRole={userRole}
           />
         )}
         {activeTab === "lotes" && (
@@ -360,6 +366,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
             onEdit={handleEditLote}
             onDelete={handleDeleteLoteClick}
             onSituation={handleSituationLoteClick}
+            userRole={userRole}
           />
         )}
         {activeTab === "madre" && (
@@ -368,6 +375,7 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
             onView={handleViewSeleccionDetails}
             onEdit={handleEditSeleccion}
             onDelete={handleDeleteSeleccionClick}
+            userRole={userRole}
           />
         )}
 

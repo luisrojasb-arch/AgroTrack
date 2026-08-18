@@ -7,7 +7,10 @@ export default function LotesTable({
   onEdit,
   onDelete,
   onSituation,
+  userRole,
 }) {
+  const isVeterinario = userRole?.toLowerCase() === "veterinario";
+
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
       <table className="w-full text-left border-collapse min-w-200">
@@ -53,6 +56,37 @@ export default function LotesTable({
             lotes.map((lote) => {
               const hasAnimals = lote.cantidad_total > 0;
 
+              let opcionesMenu = [
+                {
+                  label: "Ver Detalles",
+                  icono: <Eye size={16} />,
+                  accion: () => onView(lote._id),
+                },
+              ];
+
+              if (!isVeterinario) {
+                if (hasAnimals) {
+                  opcionesMenu.push(
+                    {
+                      label: "Editar",
+                      icono: <Edit size={16} />,
+                      accion: () => onEdit(lote),
+                    },
+                    {
+                      label: "Situaciones",
+                      icono: <ClipboardList size={16} />,
+                      accion: () => onSituation && onSituation(lote),
+                    },
+                  );
+                }
+                opcionesMenu.push({
+                  label: "Eliminar",
+                  icono: <Trash2 size={16} />,
+                  esDestructivo: true,
+                  accion: () => onDelete(lote),
+                });
+              }
+
               return (
                 <tr
                   key={lote._id}
@@ -80,35 +114,7 @@ export default function LotesTable({
                     {lote.padre_id ? lote.padre_id.codigo : "-"}
                   </td>
                   <td className="py-4 px-2 text-center">
-                    <ActionMenu
-                      opciones={[
-                        {
-                          label: "Ver Detalles",
-                          icono: <Eye size={16} />,
-                          accion: () => onView(lote._id),
-                        },
-                        ...(hasAnimals
-                          ? [
-                              {
-                                label: "Editar",
-                                icono: <Edit size={16} />,
-                                accion: () => onEdit(lote),
-                              },
-                              {
-                                label: "Situaciones",
-                                icono: <ClipboardList size={16} />,
-                                accion: () => onSituation && onSituation(lote),
-                              },
-                            ]
-                          : []),
-                        {
-                          label: "Eliminar",
-                          icono: <Trash2 size={16} />,
-                          esDestructivo: true,
-                          accion: () => onDelete(lote),
-                        },
-                      ]}
-                    />
+                    <ActionMenu opciones={opcionesMenu} />
                   </td>
                 </tr>
               );
