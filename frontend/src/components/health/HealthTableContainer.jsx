@@ -2,7 +2,6 @@ import {getTareasSaludAction, getResumenSaludLotesAction, getResumenSaludAnimale
 import Select from "@/components/ui/Select";
 import Pagination from "@/components/ui/Pagination";
 
-
 export default async function HealthTableContainer() {
     const tareas = await getTareasSaludAction({ page: 1, limit: 10});
     const resumenLotes = await getResumenSaludLotesAction({ page: 1, limit: 10, search: "" });

@@ -16,7 +16,7 @@ import saludRoutes from "./routes/salud.routes.js";
 import inventarioRoutes from "./routes/inventario.routes.js";
 import finanzasRoutes from "./routes/finanzas.routes.js";
 import reproduccionRoutes from "./routes/reproduccion.routes.js";
-
+import reportesRoutes from "./routes/reportes.routes.js";
 dotenv.config();
 
 const app = express();
@@ -45,6 +45,7 @@ app.get("/", (req, res) => {
 });
 
 // RUTAS DE LA API
+app.use("/api/reportes", reportesRoutes);
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/finca", fincaRoutes);
 app.use("/api/animales", animalRoutes);
