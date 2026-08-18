@@ -15,7 +15,7 @@ export default function HealthTableControls({ activeTab }) {
   const [searchValue, setSearchValue] = useState(urlSearch);
   const [selectedValue, setSelectedValue] = useState(urlFilter);
 
-  const opcionesSelect = ["Todos los estados", "Proximo", "Aplicado"];
+  const opcionesSelect = ["Todos los estados", "Proximo", "Aplicado", "Sin registros"];
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -35,10 +35,7 @@ export default function HealthTableControls({ activeTab }) {
     setSelectedValue(nuevoValor);
 
     const params = new URLSearchParams(searchParams.toString());
-    if (
-      nuevoValor &&
-      nuevoValor !== "Todos los estados"
-    ) {
+    if (nuevoValor && nuevoValor !== "Todos los estados") {
       params.set("filter", nuevoValor);
     } else {
       params.delete("filter");
@@ -48,34 +45,29 @@ export default function HealthTableControls({ activeTab }) {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const showSelect = activeTab !== "cronograma";
-  const showSearch = activeTab !== "cronograma";
+  if (activeTab === "cronograma") return null;
 
   return (
     <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
-      {showSearch && (
-        <div className="relative w-full flex-1">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search size={18} className="text-gray-400" />
-          </div>
-          <input
-            type="text"
-            placeholder="Buscar por nombre o código"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="w-full pl-10 pr-4 h-10.5 bg-white border border-border-agro rounded-lg text-[14px] text-black placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
-          />
+      <div className="relative w-full flex-1">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search size={18} className="text-gray-400" />
         </div>
-      )}
-
-      {showSelect && (
-        <Select
-          opciones={opcionesSelect}
-          valorSeleccionado={selectedValue}
-          onChange={handleSelectChange}
-          className="w-full md:w-50 shrink-0"
+        <input
+          type="text"
+          placeholder="Buscar por nombre o código"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          className="w-full pl-10 pr-4 h-10.5 bg-white border border-border-agro rounded-lg text-[14px] text-black placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
         />
-      )}
+      </div>
+
+      <Select
+        opciones={opcionesSelect}
+        valorSeleccionado={selectedValue}
+        onChange={handleSelectChange}
+        className="w-full md:w-50 shrink-0"
+      />
     </div>
   );
 }
