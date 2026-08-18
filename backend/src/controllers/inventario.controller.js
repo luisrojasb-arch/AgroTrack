@@ -3,18 +3,11 @@ import Inventario from "../models/inventario.model.js";
 import Finanzas from "../models/finanzas.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
-/**
- * @description Listar artículos del inventario con paginación y filtros. (No formateado)
- */
 export const obtenerInventario = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
-  
-  // CORRECCIÓN: Agregamos "filter" para capturar lo que envía Next.js
   const { page = 1, limit = 10, search = "", categoria = "", filter = "" } = req.query;
 
   const query = { finca_id: fincaId, esta_eliminado: false };
-
-  // CORRECCIÓN: Unificamos el filtro
   const categoriaFiltro = filter || categoria;
 
   if (
@@ -54,9 +47,6 @@ export const obtenerInventario = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * @description Registrar un nuevo artículo y generar automáticamente el egreso en Finanzas.
- */
 export const registrarArticulo = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const finca = req.finca;
@@ -102,7 +92,6 @@ export const registrarArticulo = catchAsync(async (req, res) => {
   session.startTransaction();
 
   try {
-    // 1. Crear el artículo de inventario ligado a la sesión
     const [nuevoArticulo] = await Inventario.create(
       [
         {
@@ -120,13 +109,17 @@ export const registrarArticulo = catchAsync(async (req, res) => {
       { session }
     );
 
-    // 2. Crear movimiento en Finanzas si hay costo y cantidad
     if (cantidad > 0 && costo_unitario > 0) {
       const montoTotalOriginal = cantidad * costo_unitario;
 
-      const categoriaFinanza = ["Alimento", "Vacuna", "Medicamento"].includes(categoria)
-        ? categoria
-        : "Insumos";
+      let categoriaFinanza = "Insumos";
+      if (["Alimento", "Vacuna", "Medicamento"].includes(categoria)) {
+        categoriaFinanza = categoria;
+      } else if (categoria === "Herramienta") {
+        categoriaFinanza = "Herramientas";
+      } else if (categoria === "Insumo") {
+        categoriaFinanza = "Insumos";
+      }
 
       await Finanzas.create(
         [
@@ -146,7 +139,6 @@ export const registrarArticulo = catchAsync(async (req, res) => {
       );
     }
 
-    // 3. Si todo salió perfecto, guardamos definitivamente en la base de datos
     await session.commitTransaction();
     session.endSession();
 
@@ -155,16 +147,12 @@ export const registrarArticulo = catchAsync(async (req, res) => {
       articulo: nuevoArticulo,
     });
   } catch (error) {
-    // Si la validación de finanzas falla, se cancela TODO (rollback) automáticamente
     await session.abortTransaction();
     session.endSession();
     throw error;
   }
 });
 
-/**
- * @description Obtener detalles de un artículo específico.
- */
 export const obtenerDetalleArticulo = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
@@ -182,9 +170,6 @@ export const obtenerDetalleArticulo = catchAsync(async (req, res) => {
   res.status(200).json({ articulo });
 });
 
-/**
- * @description Editar un artículo del inventario.
- */
 export const editarArticulo = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
@@ -219,9 +204,6 @@ export const editarArticulo = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * @description Ajustar el Stock (Entrada / Salida rápida).
- */
 export const ajustarStock = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
@@ -263,9 +245,6 @@ export const ajustarStock = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * @description Eliminar un artículo (Soft Delete).
- */
 export const eliminarArticulo = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
@@ -280,24 +259,15 @@ export const eliminarArticulo = catchAsync(async (req, res) => {
     return res.status(404).json({ msg: "Artículo no encontrado." });
   }
 
-  res
-    .status(200)
-    .json({ msg: "El artículo ha sido eliminado del inventario." });
+  res.status(200).json({ msg: "El artículo ha sido eliminado del inventario." });
 });
 
-/**
- * @description Obtener el resumen del inventario formateado.
- */
 export const obtenerResumenInventario = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const finca = req.finca;
-  
-  // CORRECCIÓN: Agregamos "filter" aquí también
   const { page = 1, limit = 10, search = "", categoria = "", filter = "" } = req.query;
 
   const query = { finca_id: fincaId, esta_eliminado: false };
-
-  // CORRECCIÓN: Unificamos el filtro
   const categoriaFiltro = filter || categoria;
 
   if (
@@ -368,9 +338,6 @@ export const obtenerResumenInventario = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * @description Obtener estadísticas generales del inventario.
- */
 export const obtenerEstadisticasInventario = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
   const finca = req.finca;
