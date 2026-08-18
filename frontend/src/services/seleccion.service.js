@@ -25,6 +25,22 @@ export const seleccionService = {
     return data;
   },
 
+  obtenerDashboardSeleccion: async (token) => {
+    const res = await fetch(`${API_URL}/selecciones/dashboard`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    const data = await res.json();
+    if (!res.ok)
+      throw new Error(data.msg || "Error al obtener dashboard de selección");
+    return data;
+  },
+
   registrarSeleccion: async (token, data) => {
     const res = await fetch(`${API_URL}/selecciones`, {
       method: "POST",

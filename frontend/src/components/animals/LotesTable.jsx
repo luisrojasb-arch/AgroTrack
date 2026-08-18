@@ -50,64 +50,69 @@ export default function LotesTable({
               </td>
             </tr>
           ) : (
-            lotes.map((lote) => (
-              <tr
-                key={lote._id}
-                className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
-              >
-                <td className="py-4 px-2 text-[14px] text-black font-medium">
-                  {lote.codigo_lote}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {lote.cantidad_total || "-"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {lote.cantidad_machos || "0"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {lote.cantidad_hembras || "0"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {lote.peso_promedio ? `${lote.peso_promedio} kg` : "-"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {lote.madre_id ? lote.madre_id.codigo : "-"}
-                </td>
-                <td className="py-4 px-2 text-[14px] text-black">
-                  {lote.padre_id ? lote.padre_id.codigo : "-"}
-                </td>
-                <td className="py-4 px-2 text-center">
-                  <ActionMenu
-                    opciones={[
-                      {
-                        label: "Ver Detalles",
-                        icono: <Eye size={16} />,
-                        accion: () => onView(lote._id),
-                      },
-                      {
-                        label: "Editar",
-                        icono: <Edit size={16} />,
-                        accion: () => onEdit(lote),
-                      },
-                      {
-                        label: "Situaciones",
-                        icono: <ClipboardList size={16} />,
-                        accion: () =>
-                          onSituation
-                            ? onSituation(lote)
-                            : console.log("Situaciones lote", lote._id),
-                      },
-                      {
-                        label: "Eliminar",
-                        icono: <Trash2 size={16} />,
-                        esDestructivo: true,
-                        accion: () => onDelete(lote),
-                      },
-                    ]}
-                  />
-                </td>
-              </tr>
-            ))
+            lotes.map((lote) => {
+              const hasAnimals = lote.cantidad_total > 0;
+
+              return (
+                <tr
+                  key={lote._id}
+                  className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
+                >
+                  <td className="py-4 px-2 text-[14px] text-black font-medium">
+                    {lote.codigo_lote}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {lote.cantidad_total || "0"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {lote.cantidad_machos || "0"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {lote.cantidad_hembras || "0"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {lote.peso_promedio ? `${lote.peso_promedio} kg` : "-"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {lote.madre_id ? lote.madre_id.codigo : "-"}
+                  </td>
+                  <td className="py-4 px-2 text-[14px] text-black">
+                    {lote.padre_id ? lote.padre_id.codigo : "-"}
+                  </td>
+                  <td className="py-4 px-2 text-center">
+                    <ActionMenu
+                      opciones={[
+                        {
+                          label: "Ver Detalles",
+                          icono: <Eye size={16} />,
+                          accion: () => onView(lote._id),
+                        },
+                        ...(hasAnimals
+                          ? [
+                              {
+                                label: "Editar",
+                                icono: <Edit size={16} />,
+                                accion: () => onEdit(lote),
+                              },
+                              {
+                                label: "Situaciones",
+                                icono: <ClipboardList size={16} />,
+                                accion: () => onSituation && onSituation(lote),
+                              },
+                            ]
+                          : []),
+                        {
+                          label: "Eliminar",
+                          icono: <Trash2 size={16} />,
+                          esDestructivo: true,
+                          accion: () => onDelete(lote),
+                        },
+                      ]}
+                    />
+                  </td>
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>

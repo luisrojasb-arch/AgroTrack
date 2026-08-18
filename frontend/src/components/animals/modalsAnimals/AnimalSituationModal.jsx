@@ -78,7 +78,7 @@ export default function AnimalSituationModal({
         concepto: `Venta de animal - Cód: ${animal?.codigo || "N/A"}`,
         monto: Number(formData.monto),
         tipo_movimiento: "Ingreso",
-        categoria: "Venta de Animales",
+        categoria: "Venta Animal",
         metodo_pago: formData.metodo_pago,
         fecha_pago: formData.fecha,
       };
