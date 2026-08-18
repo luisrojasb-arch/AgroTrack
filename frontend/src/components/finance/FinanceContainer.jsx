@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation"; // <-- IMPORTANTE: Para refrescar los datos automáticamente
+import { useRouter } from "next/navigation"; 
 import FinanceStats from "./FinanceStats";
 import FinanceCharts from "./FinanceCharts";
 import FinanceTableControls from "./FinanceTableControls";
@@ -13,7 +13,6 @@ import FinanceFormModal from "./modalsFinance/FinanceFormModal";
 import FinanceViewModal from "./modalsFinance/FinanceViewModal";
 import FinanceDeleteModal from "./modalsFinance/FinanceDeleteModal";
 
-// Importamos todas las acciones del servidor
 import { 
   deleteTransaccionAction, 
   createTransaccionAction, 
@@ -35,15 +34,12 @@ export default function FinanceContainer({ initialData }) {
   
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Lógica REAL para Crear y Editar transacciones
   const handleSubmitForm = async (formData) => {
     let respuesta;
 
-    // Si hay un selectedItem, significa que estamos editando
     if (selectedItem) {
       respuesta = await updateTransaccionAction(selectedItem.id, formData);
     } else {
-      // Si no, estamos creando una nueva
       respuesta = await createTransaccionAction(formData);
     }
 
@@ -51,14 +47,12 @@ export default function FinanceContainer({ initialData }) {
       toast.success(selectedItem ? "Transacción actualizada exitosamente" : "Transacción registrada exitosamente");
       setIsFormOpen(false);
       setSelectedItem(null);
-      // MAGIA: Esto hace que Next.js vuelva a consultar la base de datos sin recargar la página entera
       router.refresh(); 
     } else {
       toast.error(respuesta.error || "Ocurrió un error al guardar la transacción");
     }
   };
 
-  // Lógica REAL para Eliminar transacciones
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     
@@ -68,7 +62,6 @@ export default function FinanceContainer({ initialData }) {
       toast.success("Transacción eliminada exitosamente");
       setIsDeleteOpen(false);
       setSelectedItem(null);
-      // MAGIA: Recarga los datos al instante
       router.refresh(); 
     } else {
       toast.error(respuesta.error || "Ocurrió un error al eliminar");

@@ -4,7 +4,11 @@ import { useState } from "react";
 import { User, Mail, FileText, MessageSquare, Phone } from "lucide-react";
 import { enviarMensajeContacto } from "@/actions/contacto.actions";
 import Button from "@/components/ui/Button";
+<<<<<<< HEAD
 import { toast } from "sonner"; 
+=======
+import { toast } from "sonner"; // <-- 1. Importamos toast de sonner
+>>>>>>> mariana
 
 export default function ContactForm() {
   // Estado del formulario
@@ -34,7 +38,11 @@ export default function ContactForm() {
       toast.success(respuesta.message || "¡Mensaje enviado con éxito!");
       setFormData({ nombre: "", apellido: "", correo: "", asunto: "", mensaje: "" });
     } else {
+<<<<<<< HEAD
       // toast de error
+=======
+
+>>>>>>> mariana
       toast.error(respuesta.message || "Hubo un error al enviar el mensaje.");
     }
 
