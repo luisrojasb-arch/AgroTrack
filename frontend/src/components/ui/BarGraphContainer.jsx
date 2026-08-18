@@ -65,14 +65,14 @@ export default function BargraphContainer({ data, title }) {
       {
         label: "Ingresos",
         data: datosFiltrados.map((d) => d.ingresos),
-        backgroundColor: "#157937", 
+        backgroundColor: "#0084ff", 
         borderRadius: 4,
         barPercentage: 0.6,
       },
       {
         label: "Gastos",
         data: datosFiltrados.map((d) => d.gastos),
-        backgroundColor: "#0084ff", 
+        backgroundColor: "#157937", 
         borderRadius: 4,
         barPercentage: 0.6,
       },
