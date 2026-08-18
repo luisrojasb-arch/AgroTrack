@@ -101,7 +101,7 @@ export default function LoteSituationModal({
         concepto: `Venta de lote - Cód: ${lote?.codigo_lote || "N/A"} (${machos}M, ${hembras}H)`,
         monto: Number(formData.monto),
         tipo_movimiento: "Ingreso",
-        categoria: "Venta de Animales",
+        categoria: "Venta Animal",
         metodo_pago: formData.metodo_pago,
         fecha_pago: formData.fecha,
       };

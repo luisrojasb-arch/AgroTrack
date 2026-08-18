@@ -2,17 +2,22 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-export default function SettingsTabs() {
+export default function SettingsTabs({ userRole }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const activeTab = searchParams.get("tab") || "perfil";
+  const isAdmin = userRole?.toLowerCase() === "admin";
 
   const tabs = [
     { id: "perfil", label: "Mi Perfil" },
-    { id: "granja", label: "Mi Granja" },
-    { id: "tasas", label: "Tasas de Cambio" },
+    ...(isAdmin
+      ? [
+          { id: "granja", label: "Mi Granja" },
+          { id: "tasas", label: "Tasas de Cambio" },
+        ]
+      : []),
   ];
 
   const handleTabChange = (tabId) => {

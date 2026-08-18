@@ -160,6 +160,10 @@ export const editarSeleccion = catchAsync(async (req, res) => {
   const { id } = req.params;
   const fincaId = req.finca._id;
 
+  if (!req.body.lote_origen_id || req.body.lote_origen_id === "") {
+    delete req.body.lote_origen_id;
+  }
+
   const seleccionActualizada = await Seleccion.findOneAndUpdate(
     { _id: id, finca_id: fincaId, esta_eliminado: false },
     req.body,
@@ -252,5 +256,111 @@ export const aprobarSeleccion = catchAsync(async (req, res) => {
   res.status(200).json({
     msg: `¡${animalEvaluado.codigo} seleccionada con éxito! Agregada a reproductoras.`,
     animal: nuevaMadre,
+  });
+});
+
+/**
+ * @description Obtener datos del Dashboard de Selección (Gráfica de rendimiento y Top 10 Prospectos)
+ */
+export const obtenerDashboardSeleccion = catchAsync(async (req, res) => {
+  const fincaId = req.finca._id;
+
+  const graficaData = await Seleccion.find({
+    finca_id: fincaId,
+    esta_eliminado: false,
+  })
+    .select(
+      "codigo_grupo animales.codigo animales.peso_inicial animales.historial_pesos createdAt",
+    )
+    .sort({ createdAt: -1 });
+
+  const topProspectos = await Seleccion.aggregate([
+    { $match: { finca_id: fincaId, esta_eliminado: false } },
+    { $unwind: "$animales" },
+    {
+      $match: {
+        "animales.estado_evaluacion": {
+          $in: ["En Evaluación", "Seleccionada"],
+        },
+      },
+    },
+    {
+      $addFields: {
+        peso_actual: {
+          $cond: {
+            if: {
+              $gt: [
+                { $size: { $ifNull: ["$animales.historial_pesos", []] } },
+                0,
+              ],
+            },
+            then: { $last: "$animales.historial_pesos.peso" },
+            else: { $ifNull: ["$animales.peso_inicial", 0] },
+          },
+        },
+        score_patas_d: {
+          $switch: {
+            branches: [
+              {
+                case: { $eq: ["$animales.patas_delanteras", "Buenas"] },
+                then: 10,
+              },
+              {
+                case: { $eq: ["$animales.patas_delanteras", "Regulares"] },
+                then: 5,
+              },
+            ],
+            default: 0,
+          },
+        },
+        score_patas_t: {
+          $switch: {
+            branches: [
+              {
+                case: { $eq: ["$animales.patas_traseras", "Buenas"] },
+                then: 10,
+              },
+              {
+                case: { $eq: ["$animales.patas_traseras", "Regulares"] },
+                then: 5,
+              },
+            ],
+            default: 0,
+          },
+        },
+      },
+    },
+    { $match: { peso_actual: { $gt: 0 } } },
+    {
+      $addFields: {
+        puntuacion: {
+          $add: [
+            { $multiply: [{ $ifNull: ["$animales.cantidad_pezones", 0] }, 5] },
+            "$score_patas_d",
+            "$score_patas_t",
+            { $multiply: ["$peso_actual", 0.5] },
+          ],
+        },
+      },
+    },
+    { $sort: { puntuacion: -1 } },
+    { $limit: 10 },
+    {
+      $project: {
+        _id: "$animales._id",
+        codigo: "$animales.codigo",
+        nombre: "$animales.nombre",
+        pezones: "$animales.cantidad_pezones",
+        patas_delanteras: "$animales.patas_delanteras",
+        patas_traseras: "$animales.patas_traseras",
+        peso: "$peso_actual",
+        puntuacion: { $round: ["$puntuacion", 1] },
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    grafica: graficaData,
+    top_prospectos: topProspectos,
   });
 });

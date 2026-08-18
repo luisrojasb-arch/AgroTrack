@@ -39,6 +39,7 @@ import SeleccionDetailsModal from "./modalsSeleccion/SeleccionDetailsModal";
 import RegistrarPesoModal from "./modalsSeleccion/RegistrarPesoModal";
 import DeleteSeleccionModal from "./modalsSeleccion/DeleteSeleccionModal";
 import AprobarMadreModal from "./modalsSeleccion/AprobarMadreModal";
+import SeleccionDashboard from "./SeleccionDashboard";
 import {
   createSeleccionAction,
   updateSeleccionAction,
@@ -48,7 +49,11 @@ import {
   aprobarSeleccionAction,
 } from "@/actions/seleccion.actions";
 
-export default function AnimalsTableContainer({ initialData, activeTab }) {
+export default function AnimalsTableContainer({
+  initialData,
+  activeTab,
+  userRole,
+}) {
   const animales = initialData?.animales || [];
   const lotes = initialData?.lotes || [];
   const selecciones = initialData?.selecciones || [];
@@ -332,49 +337,59 @@ export default function AnimalsTableContainer({ initialData, activeTab }) {
   };
 
   return (
-    <div className="bg-gradient-card border border-border-agro rounded-2xl p-6 w-full shadow-sm relative">
-      <AnimalsTableHeader
-        activeTab={activeTab}
-        onAddAnimal={handleAddAnimal}
-        onAddLote={handleAddLote}
-        onAddSeleccion={handleAddSeleccion}
-      />
-      <AnimalsTabs />
-      <AnimalsTableControls activeTab={activeTab} />
+    <div className="flex flex-col gap-6 w-full">
+      <div className="bg-gradient-card border border-border-agro rounded-2xl p-6 w-full shadow-sm relative">
+        <AnimalsTableHeader
+          activeTab={activeTab}
+          onAddAnimal={handleAddAnimal}
+          onAddLote={handleAddLote}
+          onAddSeleccion={handleAddSeleccion}
+          userRole={userRole}
+        />
+        <AnimalsTabs />
+        <AnimalsTableControls activeTab={activeTab} />
 
-      {activeTab === "individuales" && (
-        <AnimalsTable
-          animales={animales}
-          onView={handleViewAnimalDetails}
-          onEdit={handleEditAnimal}
-          onDelete={handleDeleteAnimalClick}
-          onSituation={handleSituationAnimalClick}
+        {activeTab === "individuales" && (
+          <AnimalsTable
+            animales={animales}
+            onView={handleViewAnimalDetails}
+            onEdit={handleEditAnimal}
+            onDelete={handleDeleteAnimalClick}
+            onSituation={handleSituationAnimalClick}
+            userRole={userRole}
+          />
+        )}
+        {activeTab === "lotes" && (
+          <LotesTable
+            lotes={lotes}
+            onView={handleViewLoteDetails}
+            onEdit={handleEditLote}
+            onDelete={handleDeleteLoteClick}
+            onSituation={handleSituationLoteClick}
+            userRole={userRole}
+          />
+        )}
+        {activeTab === "madre" && (
+          <SeleccionTable
+            selecciones={selecciones}
+            onView={handleViewSeleccionDetails}
+            onEdit={handleEditSeleccion}
+            onDelete={handleDeleteSeleccionClick}
+            userRole={userRole}
+          />
+        )}
+
+        <Pagination
+          totalRegistros={paginacion.totalRegistros}
+          totalPaginas={paginacion.totalPaginas}
+          paginaActual={paginacion.paginaActual}
+          limite={paginacion.limite}
         />
-      )}
-      {activeTab === "lotes" && (
-        <LotesTable
-          lotes={lotes}
-          onView={handleViewLoteDetails}
-          onEdit={handleEditLote}
-          onDelete={handleDeleteLoteClick}
-          onSituation={handleSituationLoteClick}
-        />
-      )}
+      </div>
+
       {activeTab === "madre" && (
-        <SeleccionTable
-          selecciones={selecciones}
-          onView={handleViewSeleccionDetails}
-          onEdit={handleEditSeleccion}
-          onDelete={handleDeleteSeleccionClick}
-        />
+        <SeleccionDashboard dashboardData={initialData?.seleccionDashboard} />
       )}
-
-      <Pagination
-        totalRegistros={paginacion.totalRegistros}
-        totalPaginas={paginacion.totalPaginas}
-        paginaActual={paginacion.paginaActual}
-        limite={paginacion.limite}
-      />
 
       <AnimalFormModal
         isOpen={isAnimalFormOpen}

@@ -6,9 +6,10 @@ import ProfileTab from "./tabs/ProfileTab";
 import FarmTab from "./tabs/FarmTab";
 import RatesTab from "./tabs/RatesTab";
 
-export default function SettingsContainer({ initialData }) {
+export default function SettingsContainer({ initialData, userRole }) {
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab") || "perfil";
+  const isAdmin = userRole?.toLowerCase() === "admin";
 
   const tabTitles = {
     perfil: {
@@ -36,12 +37,15 @@ export default function SettingsContainer({ initialData }) {
         </p>
       </div>
 
-      <SettingsTabs />
+      <SettingsTabs userRole={userRole} />
 
       <div className="mt-4">
         {activeTab === "perfil" && <ProfileTab data={initialData.perfil} />}
-        {activeTab === "granja" && <FarmTab data={initialData.finca} />}
-        {activeTab === "tasas" && (
+
+        {isAdmin && activeTab === "granja" && (
+          <FarmTab data={initialData.finca} />
+        )}
+        {isAdmin && activeTab === "tasas" && (
           <RatesTab data={initialData.finca?.tasas_cambio} />
         )}
       </div>
