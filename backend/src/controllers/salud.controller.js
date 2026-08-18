@@ -1,4 +1,6 @@
 import Salud from "../models/salud.model.js";
+import Animal from "../models/animal.model.js";
+import Lote from "../models/lote.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**

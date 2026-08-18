@@ -47,6 +47,7 @@ export async function getResumenSaludAnimalesAction(params) {
     const result = await saludService.obtenerResumenAnimales(token, params);
     return { success: true, data: result };
   } catch (error) {
+    console.log(error);
     return { success: false, error: error.message };
   }
 }

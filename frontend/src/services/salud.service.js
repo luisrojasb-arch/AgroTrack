@@ -47,8 +47,9 @@ export const saludService = {
       limit,
       search,
     }).toString();
+    console.log(query);
 
-    const res = await fetch(`${API_URL}/salud/resumen/lotes?${query}`, {
+    const res = await fetch(`${API_URL}/salud/resumen-lotes?${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +72,7 @@ export const saludService = {
       search,
     }).toString();
 
-    const res = await fetch(`${API_URL}/salud/resumen/animales?${query}`, {
+    const res = await fetch(`${API_URL}/salud/resumen-animales?${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
