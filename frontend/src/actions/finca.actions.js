@@ -4,6 +4,11 @@ import { cookies } from "next/headers";
 import { fincaService } from "@/services/finca.service";
 import { revalidatePath } from "next/cache";
 
+/**
+ * @description Obtiene el token de autenticación de las cookies.
+ * @returns {Promise<string>} Token de sesión.
+ * @throws {Error} Si no hay autenticación.
+ */
 async function getToken() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -11,6 +16,10 @@ async function getToken() {
   return token;
 }
 
+/**
+ * @description Obtiene la información general de la finca del usuario logueado.
+ * @returns {Promise<Object>} Datos de la finca.
+ */
 export async function getFincaAction() {
   try {
     const token = await getToken();
@@ -21,6 +30,11 @@ export async function getFincaAction() {
   }
 }
 
+/**
+ * @description Actualiza los detalles y configuración de la finca.
+ * @param {Object} payload - Nuevos datos de la finca.
+ * @returns {Promise<Object>} Resultado de la actualización.
+ */
 export async function actualizarFincaAction(payload) {
   try {
     const token = await getToken();
@@ -34,6 +48,10 @@ export async function actualizarFincaAction(payload) {
   }
 }
 
+/**
+ * @description Elimina por completo la finca y sus datos asociados.
+ * @returns {Promise<Object>} Resultado de la eliminación.
+ */
 export async function eliminarFincaAction() {
   try {
     const token = await getToken();
@@ -44,6 +62,10 @@ export async function eliminarFincaAction() {
   }
 }
 
+/**
+ * @description Obtiene las tasas de cambio configuradas para la finca.
+ * @returns {Promise<Object>} Información de las tasas de cambio.
+ */
 export async function getTasasCambioAction() {
   try {
     const token = await getToken();
@@ -54,6 +76,11 @@ export async function getTasasCambioAction() {
   }
 }
 
+/**
+ * @description Actualiza las tasas de cambio de la finca.
+ * @param {Object} payload - Nuevos valores de tasas de cambio.
+ * @returns {Promise<Object>} Resultado de la actualización.
+ */
 export async function actualizarTasasCambioAction(payload) {
   try {
     const token = await getToken();
@@ -67,6 +94,10 @@ export async function actualizarTasasCambioAction(payload) {
   }
 }
 
+/**
+ * @description Obtiene los datos principales para cargar el Dashboard (Overview).
+ * @returns {Promise<Object>} Datos consolidados del dashboard.
+ */
 export async function getDashboardGeneralAction() {
   try {
     const token = await getToken();
@@ -77,6 +108,11 @@ export async function getDashboardGeneralAction() {
   }
 }
 
+/**
+ * @description Obtiene las notificaciones y alertas pendientes del dashboard.
+ * @param {Object} params - Parámetros de consulta adicionales.
+ * @returns {Promise<Object>} Listado de alertas pendientes.
+ */
 export async function getAlertasDashboardAction(params) {
   try {
     const token = await getToken();

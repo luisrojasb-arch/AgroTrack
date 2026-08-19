@@ -4,6 +4,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { authService } from "@/services/auth.service";
 
+/**
+ * @description Registra un nuevo usuario dueño de finca en el sistema.
+ * @param {any} prevState - Estado previo del formulario (Next.js action).
+ * @param {FormData} formData - Datos del formulario de registro.
+ * @returns {Promise<Object|void>} Errores de validación o redirección en caso de éxito.
+ */
 export async function registrarUsuarioAction(prevState, formData) {
   const nombre = formData.get("nombre");
   const apellido = formData.get("apellido");
@@ -64,6 +70,12 @@ export async function registrarUsuarioAction(prevState, formData) {
   redirect("/overview");
 }
 
+/**
+ * @description Autentica al usuario en el sistema y establece la cookie de sesión.
+ * @param {any} prevState - Estado previo del formulario (Next.js action).
+ * @param {FormData} formData - Datos del formulario de inicio de sesión.
+ * @returns {Promise<Object|void>} Error de autenticación o redirección al dashboard.
+ */
 export async function loginAction(prevState, formData) {
   const correo = formData.get("correo");
   const contrasenha = formData.get("contrasenha");
@@ -87,12 +99,20 @@ export async function loginAction(prevState, formData) {
   redirect("/overview");
 }
 
+/**
+ * @description Cierra la sesión del usuario eliminando la cookie de autenticación.
+ * @returns {Promise<void>} Redirección a la página de login.
+ */
 export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete("token");
   redirect("/login");
 }
 
+/**
+ * @description Obtiene y decodifica la sesión activa del usuario desde la cookie.
+ * @returns {Promise<Object|null>} Objeto con los datos del payload del JWT o null si no hay sesión.
+ */
 export async function getSession() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;

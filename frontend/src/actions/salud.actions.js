@@ -4,6 +4,11 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { saludService } from "@/services/salud.service";
 
+/**
+ * @description Obtiene el token de autenticación.
+ * @returns {Promise<string>} Token de sesión.
+ * @throws {Error} Si no existe autenticación.
+ */
 async function getToken() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -11,6 +16,10 @@ async function getToken() {
   return token;
 }
 
+/**
+ * @description Obtiene las estadísticas principales de salud y tareas sanitarias.
+ * @returns {Promise<Object>} Estadísticas de salud.
+ */
 export async function getEstadisticasSaludAction() {
   try {
     const token = await getToken();
@@ -21,6 +30,11 @@ export async function getEstadisticasSaludAction() {
   }
 }
 
+/**
+ * @description Obtiene la lista de tareas sanitarias (vacunas, chequeos, etc).
+ * @param {Object} params - Parámetros de búsqueda o filtros.
+ * @returns {Promise<Object>} Listado de tareas de salud.
+ */
 export async function getTareasSaludAction(params) {
   try {
     const token = await getToken();
@@ -31,6 +45,11 @@ export async function getTareasSaludAction(params) {
   }
 }
 
+/**
+ * @description Obtiene el resumen del estado de salud enfocado a nivel de lotes.
+ * @param {Object} params - Parámetros de filtrado.
+ * @returns {Promise<Object>} Resumen sanitario por lotes.
+ */
 export async function getResumenSaludLotesAction(params) {
   try {
     const token = await getToken();
@@ -41,6 +60,11 @@ export async function getResumenSaludLotesAction(params) {
   }
 }
 
+/**
+ * @description Obtiene el resumen del estado de salud enfocado a nivel individual de animales.
+ * @param {Object} params - Parámetros de filtrado.
+ * @returns {Promise<Object>} Resumen sanitario por animales.
+ */
 export async function getResumenSaludAnimalesAction(params) {
   try {
     const token = await getToken();
@@ -52,6 +76,11 @@ export async function getResumenSaludAnimalesAction(params) {
   }
 }
 
+/**
+ * @description Registra una nueva tarea sanitaria o tratamiento a aplicar.
+ * @param {Object} data - Datos de la tarea a programar o registrar.
+ * @returns {Promise<Object>} Resultado del registro.
+ */
 export async function createTareaSaludAction(data) {
   try {
     const token = await getToken();
@@ -63,6 +92,11 @@ export async function createTareaSaludAction(data) {
   }
 }
 
+/**
+ * @description Obtiene la información detallada de una tarea sanitaria específica.
+ * @param {string|number} id - Identificador de la tarea.
+ * @returns {Promise<Object>} Detalles de la tarea.
+ */
 export async function getDetalleTareaSaludAction(id) {
   try {
     const token = await getToken();
@@ -73,6 +107,12 @@ export async function getDetalleTareaSaludAction(id) {
   }
 }
 
+/**
+ * @description Actualiza la información de una tarea sanitaria existente.
+ * @param {string|number} id - Identificador de la tarea a actualizar.
+ * @param {Object} data - Nuevos datos de la tarea.
+ * @returns {Promise<Object>} Resultado de la actualización.
+ */
 export async function updateTareaSaludAction(id, data) {
   try {
     const token = await getToken();
@@ -84,6 +124,11 @@ export async function updateTareaSaludAction(id, data) {
   }
 }
 
+/**
+ * @description Alterna el estado de una tarea sanitaria entre pendiente y completada.
+ * @param {string|number} id - Identificador de la tarea.
+ * @returns {Promise<Object>} Resultado de la modificación de estado.
+ */
 export async function toggleTareaSaludAction(id) {
   try {
     const token = await getToken();
@@ -95,6 +140,11 @@ export async function toggleTareaSaludAction(id) {
   }
 }
 
+/**
+ * @description Elimina una tarea sanitaria del registro.
+ * @param {string|number} id - Identificador de la tarea a eliminar.
+ * @returns {Promise<Object>} Resultado de la eliminación.
+ */
 export async function deleteTareaSaludAction(id) {
   try {
     const token = await getToken();

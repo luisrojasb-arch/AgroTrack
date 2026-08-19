@@ -2,16 +2,19 @@
 
 import nodemailer from "nodemailer";
 
+/**
+ * @description Envía un mensaje de contacto a través de correo electrónico (Nodemailer).
+ * @param {Object} datosContacto - Objeto con nombre, apellido, correo, asunto y mensaje.
+ * @returns {Promise<Object>} Resultado del envío del correo.
+ */
 export async function enviarMensajeContacto(datosContacto) {
   try {
     const { nombre, apellido, correo, asunto, mensaje } = datosContacto;
 
-    // Validaciones
     if (!nombre || !apellido || !correo || !asunto || !mensaje) {
       return { success: false, message: "Todos los campos son obligatorios." };
     }
 
-    // Configuración de nodemailer
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
