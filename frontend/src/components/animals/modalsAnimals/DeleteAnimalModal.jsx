@@ -26,6 +26,7 @@ export default function DeleteAnimalModal({
         variant="red"
         onClick={() => onConfirm(animal?._id)}
         className="w-full sm:w-auto"
+        aria-label="Cancelar eliminación de animal"
       >
         Eliminar Animal
       </Button>
@@ -38,8 +39,12 @@ export default function DeleteAnimalModal({
       onClose={onClose}
       width="max-w-xl"
       footer={modalFooter}
+      aria-labelledby="delete-modal-title"
+      aria-describedby="delete-modal-desc"
     >
-      <div className="flex flex-col items-center justify-center text-center px-6 pb-2">
+      <div className="flex flex-col items-center justify-center text-center px-6 pb-2"role="document"
+        aria-labelledby="delete-modal-title"
+        aria-describedby="delete-modal-desc">
         <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4">
           <AlertTriangle className="text-[#F04438] w-7 h-7" strokeWidth={2} />
         </div>
