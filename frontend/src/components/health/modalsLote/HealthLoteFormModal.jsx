@@ -3,16 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
 import { Search } from "lucide-react";
 
-export default function HealthLoteFormModal({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  lotesDisponibles = [] 
+export default function HealthLoteFormModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  lotesDisponibles = [],
 }) {
   const [formData, setFormData] = useState({
-    lote_id: "", 
+    lote_id: "",
     tipo: "Vacuna",
     producto: "",
     dosis: "",
@@ -35,11 +36,13 @@ export default function HealthLoteFormModal({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const lotesFiltrados = lotesDisponibles.filter((lote) => {
-    const busqueda = searchTerm.toLowerCase();
-    const codigo = lote.codigo_lote?.toLowerCase() || "";
-    return codigo.includes(busqueda);
-  }).slice(0, 5); 
+  const lotesFiltrados = lotesDisponibles
+    .filter((lote) => {
+      const busqueda = searchTerm.toLowerCase();
+      const codigo = lote.codigo_lote?.toLowerCase() || "";
+      return codigo.includes(busqueda);
+    })
+    .slice(0, 5);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -75,10 +78,20 @@ export default function HealthLoteFormModal({
 
   const formFooter = (
     <>
-      <Button type="button" variant="white" onClick={onClose} className="w-full sm:w-auto">
+      <Button
+        type="button"
+        variant="white"
+        onClick={onClose}
+        className="w-full sm:w-auto"
+      >
         Cancelar
       </Button>
-      <Button type="submit" variant="green" form="lote-health-form" className="w-full sm:w-auto">
+      <Button
+        type="submit"
+        variant="green"
+        form="lote-health-form"
+        className="w-full sm:w-auto"
+      >
         Registrar Salud
       </Button>
     </>
@@ -93,8 +106,11 @@ export default function HealthLoteFormModal({
       footer={formFooter}
       width="max-w-2xl"
     >
-      <form id="lote-health-form" onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
-        
+      <form
+        id="lote-health-form"
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 p-6"
+      >
         <div className="flex flex-col gap-1.5 relative" ref={dropdownRef}>
           <label className="text-[13px] font-semibold text-black">Lote *</label>
           <div className="relative">
@@ -111,7 +127,7 @@ export default function HealthLoteFormModal({
               className="w-full h-10.5 pl-9 pr-3 border border-border-agro rounded-lg text-sm text-black focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
-          
+
           {isDropdownOpen && searchTerm && (
             <div className="absolute z-50 top-full mt-1 w-full bg-white border border-border-agro rounded-lg shadow-lg overflow-hidden">
               <ul className="py-1 max-h-48 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
@@ -135,29 +151,31 @@ export default function HealthLoteFormModal({
           )}
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 z-40">
           <label className="text-[13px] font-semibold text-black">Tipo *</label>
-          <select
-            name="tipo"
-            required
-            value={formData.tipo}
-            onChange={handleChange}
-            className="w-full h-10.5 px-3 border border-border-agro rounded-lg text-sm text-black focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white"
-          >
-            <option value="Vacuna">Vacuna</option>
-            <option value="Desparasitación">Desparasitación</option>
-            <option value="Descolmille">Descolmille</option>
-            <option value="Castración">Castración</option>
-            <option value="Cirugía">Cirugía</option>
-            <option value="Revisión">Revisión</option>
-            <option value="Tratamiento">Tratamiento</option>
-            <option value="Otro">Otro</option>
-          </select>
+          <Select
+            opciones={[
+              "Vacuna",
+              "Desparasitación",
+              "Descolmille",
+              "Castración",
+              "Cirugía",
+              "Revisión",
+              "Tratamiento",
+              "Otro",
+            ]}
+            valorSeleccionado={formData.tipo}
+            onChange={(valor) =>
+              setFormData((prev) => ({ ...prev, tipo: valor }))
+            }
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Producto *</label>
+            <label className="text-[13px] font-semibold text-black">
+              Producto *
+            </label>
             <input
               type="text"
               name="producto"
@@ -169,7 +187,9 @@ export default function HealthLoteFormModal({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Dosis (ml) *</label>
+            <label className="text-[13px] font-semibold text-black">
+              Dosis (ml) *
+            </label>
             <input
               type="number"
               name="dosis"
@@ -186,7 +206,9 @@ export default function HealthLoteFormModal({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Fecha *</label>
+            <label className="text-[13px] font-semibold text-black">
+              Fecha *
+            </label>
             <input
               type="date"
               name="fecha"
@@ -197,7 +219,9 @@ export default function HealthLoteFormModal({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Proxima dosis (Opcional)</label>
+            <label className="text-[13px] font-semibold text-black">
+              Proxima dosis (Opcional)
+            </label>
             <input
               type="date"
               name="proxima_dosis"

@@ -1,6 +1,6 @@
 export default function InventoryHeader() {
   return (
-    <div className="flex flex-col mb-6">
+    <div className="flex flex-col">
       <h1 className="text-[30px] font-bold text-black leading-tight">
         Inventario
       </h1>

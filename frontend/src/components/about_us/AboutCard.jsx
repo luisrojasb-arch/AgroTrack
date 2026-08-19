@@ -1,6 +1,6 @@
-export default function AboutCard({ icon: Icon, title, description }) {
+export default function AboutCard({ icon: Icon, title, description, className = "" }) {
   return (
-    <div className="bg-white border border-border-agro rounded-xl p-6 shadow-sm flex flex-col items-start text-left transition-all hover:shadow-md">
+    <div className={`bg-white border border-border-agro rounded-xl p-6 shadow-sm flex flex-col items-start text-left transition-all hover:shadow-md ${className}`}>
       {/* Ícono */}
       <div className="text-primary mb-4">
         {Icon && <Icon size={28} strokeWidth={2} />}

@@ -112,7 +112,7 @@ export default function BargraphContainer({ data, title }) {
   };
 
   return (
-    <div className="bg-white rounded-3xl border border-[var(--color-border-agro)] p-6 flex flex-col w-full h-full shadow-sm min-h-[400px]">
+    <div className="bg-gradient-card rounded-3xl border border-[var(--color-border-agro)] p-6 flex flex-col w-full h-full shadow-sm min-h-[400px]">
       
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>

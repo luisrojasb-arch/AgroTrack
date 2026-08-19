@@ -26,7 +26,6 @@ export default function SobreNosotrosPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-6 py-16 flex flex-col">
-      {/* Encabezado principal */}
       <div className="w-full mb-12">
         <h1 className="text-4xl sm:text-[44px] font-bold text-black mb-6 flex items-center justify-start gap-2 flex-wrap">
           Sobre
@@ -48,19 +47,18 @@ export default function SobreNosotrosPage() {
         </p>
       </div>
 
-      {/* Cuadrícula de 3 Tarjetas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-16">
+      <div className="flex flex-wrap justify-center gap-6 w-full mb-16">
         {cardData.map((card, index) => (
           <AboutCard
             key={index}
             icon={card.icon}
             title={card.title}
             description={card.description}
+            className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
           />
         ))}
       </div>
 
-      {/* Sección de Nuestra Historia */}
       <div className="w-full bg-white rounded-xl">
         <h2 className="text-2xl sm:text-3xl font-bold text-black mb-4">
           Nuestra Historia
