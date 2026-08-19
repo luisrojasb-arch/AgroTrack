@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio de inventario. Encargado de las operaciones de stock, ajustes, registro y eliminación de artículos en la API.
+ * @type {Object}
+ */
+
 export const inventoryService = {
   getResumen: async (token, params = "") => {
     const res = await fetch(`${API_URL}/inventario/resumen?${params}`, {

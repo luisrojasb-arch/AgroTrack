@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio de usuarios y permisos. Encargado de administrar el equipo de trabajo, perfiles personales y recuperación de cuentas en la API.
+ * @type {Object}
+ */
+
 export const userService = {
   obtenerEstadisticas: async (token) => {
     const res = await fetch(`${API_URL}/usuarios/estadisticas`, {

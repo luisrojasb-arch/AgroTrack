@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio de salud. Gestiona las tareas sanitarias, tratamientos, vacunaciones y resúmenes médicos de la finca en la API.
+ * @type {Object}
+ */
+
 export const saludService = {
   obtenerEstadisticas: async (token) => {
     const res = await fetch(`${API_URL}/salud/estadisticas`, {

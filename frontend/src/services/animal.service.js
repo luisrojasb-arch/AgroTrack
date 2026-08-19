@@ -1,5 +1,11 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+
+/**
+ * @description Servicio para la gestión de animales. Contiene los métodos para interactuar con la API (CRUD, situaciones y estadísticas).
+ * @type {Object}
+ */
+
 export const animalService = {
   obtenerEstadisticas: async (token) => {
     const res = await fetch(`${API_URL}/animales/estadisticas`, {

@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 
+/**
+ * @description Middleware principal de Next.js. Intercepta las peticiones HTTP para verificar la autenticación (tokens), proteger rutas privadas y gestionar redirecciones.
+ * @param {import('next/server').NextRequest} req - Objeto de la petición entrante.
+ * @returns {import('next/server').NextResponse|void} Respuesta con redirección o continuación de la ruta.
+ */
+
 export function middleware(req) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;

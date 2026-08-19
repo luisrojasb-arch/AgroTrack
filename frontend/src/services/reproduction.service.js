@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio de reproducción. Administra el historial y ciclo reproductivo (celos, preñeces, nacimientos y destetes) mediante peticiones a la API.
+ * @type {Object}
+ */
+
 export const reproductionService = {
   obtenerEstadisticas: async (token) => {
     const res = await fetch(`${API_URL}/reproduccion/estadisticas`, {

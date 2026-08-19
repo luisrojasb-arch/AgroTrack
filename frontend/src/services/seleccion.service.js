@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio de selección y engorde. Controla el progreso, pesajes, etapas y aprobación de animales en proceso de selección vía API.
+ * @type {Object}
+ */
+
 export const seleccionService = {
   obtenerSelecciones: async (token, params = {}) => {
     const { page = 1, limit = 10, search = "", estado = "Todos" } = params;

@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio de autenticación. Maneja el inicio de sesión, registro y validación de usuarios con la API.
+ * @type {Object}
+ */
+
 export const authService = {
   login: async (correo, contrasenha) => {
     const res = await fetch(`${API_URL}/usuarios/login`, {

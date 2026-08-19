@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio de configuración de la finca. Administra los datos generales, tasas de cambio, alertas y el dashboard principal a través de la API.
+ * @type {Object}
+ */
+
 export const fincaService = {
   obtenerFinca: async (token) => {
     const res = await fetch(`${API_URL}/finca`, {
