@@ -16,6 +16,12 @@ import HealthTareasModal from "@/components/health/modalsTareas/HealthTareasModa
 import HealthTareaDetailsModal from "@/components/health/modalsTareas/HealthTareaDetailsModal";
 import HealthTareaEditModal from "@/components/health/modalsTareas/HealthTareaEditModal";
 import HealthTareaDeleteModal from "@/components/health/modalsTareas/HealthTareaDeleteModal";
+
+/**
+ * @description Contenedor principal de las tablas de salud.
+ * @param {Object} props - Propiedades del contenedor.
+ */
+
 export default function HealthTableContainer({
   initialData,
   activeTab = "individuales",

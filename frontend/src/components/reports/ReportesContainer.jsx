@@ -19,6 +19,8 @@ import {
   getDatosAnualAction
 } from "@/actions/reportes.actions";
 
+
+
 const REPORTES_LIST = [
   { id: "produccion", title: "Resumen de Producción", description: "Métricas y tendencias de producción", icon: BarChart2 },
   { id: "salud", title: "Análisis de Salud", description: "Cobertura de vacunas y tratamientos", icon: HeartPulse },
@@ -27,6 +29,11 @@ const REPORTES_LIST = [
   { id: "reproductivo", title: "Rendimiento Reproductivo", description: "Tasas de éxito y partos", icon: Activity },
   { id: "anual", title: "Resumen Anual", description: "Reporte integral de fin de año", icon: Calendar },
 ];
+
+/**
+ * @description Contenedor principal que orquesta la lógica y el flujo de la vista de reportes.
+ * @param {Object} props - Propiedades iniciales del contenedor.
+ */
 
 export default function ReportesContainer() {
   const [selectedReportId, setSelectedReportId] = useState(REPORTES_LIST[0].id);

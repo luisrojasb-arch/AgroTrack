@@ -1,5 +1,7 @@
 "use client";
-
+/**
+ * @description Encabezado principal del módulo de reportes.
+ */
 export default function ReportesHeader() {
   return (
     <div className="mb-6">

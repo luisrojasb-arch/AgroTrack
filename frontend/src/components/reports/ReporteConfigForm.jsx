@@ -2,6 +2,13 @@
 
 import Button from "@/components/ui/Button";
 
+/**
+ * @description Formulario de configuración para filtrar, parametrizar y generar los reportes de la finca.
+ * @param {Object} props
+ * @param {Function} props.onSubmit - Función que procesa los parámetros de configuración.
+ * @param {Object} props.initialValues - Valores iniciales del formulario.
+ */
+
 export default function ReporteConfigForm({
   reportesDisponibles,
   selectedReportId,

@@ -2,6 +2,11 @@
 
 import Button from "@/components/ui/Button";
 
+/**
+ * @description Encabezado de la tabla de salud con botones de acción.
+ * @param {Object} props - Propiedades del encabezado.
+ */
+
 export default function HealthTableHeader({ activeTab, onAddAnimal, onAddLote }) {
   const getHeaderContent = () => {
     if (activeTab === "lotes" || activeTab === "individuales") {

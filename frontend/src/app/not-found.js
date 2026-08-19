@@ -4,6 +4,11 @@ import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
 import BackButton from "@/components/backbutton";
 
+export const metadata = {
+  title: "Página no encontrada | AgroTrack",
+  description: "La página que buscas no existe o ha sido movida.",
+};
+
 /**
  * @description Página personalizada para rutas no encontradas (Error 404 - Not Found).
  */

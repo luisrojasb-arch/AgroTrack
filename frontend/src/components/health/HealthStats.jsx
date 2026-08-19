@@ -1,6 +1,11 @@
 import { getEstadisticasSaludAction } from "@/actions/salud.actions";
 import StatCard from "@/components/layout/StatCard"; 
 
+/**
+ * @description Tarjetas de resumen estadístico para el módulo de salud.
+ * @param {Object} props - Objeto con las estadísticas.
+ */
+
 export default async function HealthStats() {
   const response = await getEstadisticasSaludAction();
   

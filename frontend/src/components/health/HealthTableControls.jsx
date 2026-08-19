@@ -5,6 +5,11 @@ import { Search } from "lucide-react";
 import Select from "@/components/ui/Select";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Controles de filtrado y búsqueda para las tablas de salud.
+ * @param {Object} props - Propiedades de control.
+ */
+
 export default function HealthTableControls({ activeTab }) {
   const router = useRouter();
   const pathname = usePathname();

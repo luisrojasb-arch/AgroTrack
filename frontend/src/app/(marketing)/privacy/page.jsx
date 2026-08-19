@@ -1,3 +1,8 @@
+export const metadata = {
+  title: "Políticas de Privacidad | AgroTrack",
+  description: "Conoce cómo protegemos y manejamos los datos en la plataforma.",
+};
+
 /**
  * @description Página de Políticas de Privacidad.
  */

@@ -4,6 +4,11 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { TriangleAlert } from "lucide-react";
 
+/**
+ * @description Modal de confirmación para eliminar una tarea de salud.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function HealthTareaDeleteModal({ isOpen, onClose, tarea, onConfirm }) {
   if (!tarea) return null;
 

@@ -6,6 +6,11 @@ import Button from "@/components/ui/Button";
 import { Circle, CheckCircle2, Eye, Edit, Trash2 } from "lucide-react";
 import { toast } from "sonner"; // Asegúrate de tener instalado sonner para las notificaciones
 
+/**
+ * @description Modal general para la gestión de tareas de salud.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function HealthTareasModal({
   isOpen,
   onClose,

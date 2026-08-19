@@ -4,6 +4,12 @@ import { getPerfilAction } from "@/actions/user.actions";
 import { getFincaAction } from "@/actions/finca.actions";
 import { getSession } from "@/actions/auth.actions";
 
+export const metadata = {
+  title: "Configuración | AgroTrack",
+  description: "Ajustes, tasas de cambio y preferencias de la finca.",
+};
+
+
 /**
  * @description Página de configuración general de la finca y preferencias del sistema.
  */

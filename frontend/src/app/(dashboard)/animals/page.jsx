@@ -12,9 +12,16 @@ import {
 } from "@/actions/seleccion.actions";
 import { getSession } from "@/actions/auth.actions";
 
+
+
 export const metadata = {
   title: "Animales | AgroTrack",
   description: "Gestión de animales y ganado porcino.",
+};
+
+export const metadata = {
+  title: "Animales | AgroTrack",
+  description: "Gestión de animales y ganado porcino de la finca.",
 };
 
 /**

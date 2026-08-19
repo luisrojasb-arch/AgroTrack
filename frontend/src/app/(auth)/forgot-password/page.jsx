@@ -7,6 +7,12 @@ import Button from "@/components/ui/Button";
 import { toast } from "sonner";
 import { solicitarRecuperacionAction } from "@/actions/user.actions";
 
+
+export const metadata = {
+  title: "Recuperar Contraseña | AgroTrack",
+  description: "Solicita un enlace para restablecer el acceso a tu cuenta.",
+};
+
 /**
  * @description Página para solicitar la recuperación de contraseña (envío de enlace).
  */

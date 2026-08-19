@@ -8,6 +8,11 @@ import Button from "@/components/ui/Button";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { loginAction } from "@/actions/auth.actions";
 
+export const metadata = {
+  title: "Iniciar Sesión | AgroTrack",
+  description: "Accede al sistema de gestión de tu finca porcina.",
+};
+
 /**
  * @description Página de inicio de sesión del sistema.
  */
