@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { BarChart2, HeartPulse, DollarSign, Package, Activity, Calendar } from "lucide-react";
-
+import { pdf } from '@react-pdf/renderer';
+import ReporteBasePDF from './ReporteBasePDF';
 import ReporteHeader from "@/components/reports/ReporteHeader";
 import ReporteCardContainer from "@/components/reports/ReporteCardContainer";
 import ReporteCard from "@/components/reports/ReporteCard";
@@ -75,6 +76,40 @@ export default function ReportesContainer() {
       if (response.success) {
         toast.success("Datos obtenidos. Construyendo PDF...");
         console.log("Data para el PDF en JSON crudo:", response.data);
+        let datosParaPdf = [];
+        let tituloReporte = REPORTES_LIST.find(r => r.id === selectedReportId)?.title || "Reporte";
+
+        if (selectedReportId === "financiero") {
+          datosParaPdf = [...(response.data.ingresos || []), ...(response.data.egresos || [])];
+        } else if (selectedReportId === "salud") {
+          datosParaPdf = response.data.registrosSalud || [];
+        } else if (selectedReportId === "produccion") {
+          datosParaPdf = response.data.animalesNacidos || [];
+        }
+        const doc = (
+          <ReporteBasePDF 
+            titulo={tituloReporte} 
+            rangoFechas={`${fechaInicio} al ${fechaFin}`} 
+            datos={datosParaPdf} 
+          />
+        );
+
+        const asPdf = pdf([]); 
+        asPdf.updateContainer(doc);
+        const blob = await asPdf.toBlob();
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${selectedReportId}_${fechaInicio}_al_${fechaFin}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        toast.success("¡Reporte descargado exitosamente!");
+
         
       
         
@@ -82,6 +117,7 @@ export default function ReportesContainer() {
         toast.error(response.error || "Error al obtener datos del servidor");
       }
     } catch (error) {
+      console.error(error);
       toast.error("Hubo un problema al generar el reporte");
     } finally {
       setIsLoading(false);
