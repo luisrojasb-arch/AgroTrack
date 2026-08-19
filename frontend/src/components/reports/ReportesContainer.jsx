@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { BarChart2, HeartPulse, DollarSign, Package, Activity, Calendar } from "lucide-react";
-
+import { pdf } from '@react-pdf/renderer';
+import ReporteBasePDF from './ReporteBasePDF';
 import ReporteHeader from "@/components/reports/ReporteHeader";
 import ReporteCardContainer from "@/components/reports/ReporteCardContainer";
 import ReporteCard from "@/components/reports/ReporteCard";
@@ -18,6 +19,8 @@ import {
   getDatosAnualAction
 } from "@/actions/reportes.actions";
 
+
+
 const REPORTES_LIST = [
   { id: "produccion", title: "Resumen de Producción", description: "Métricas y tendencias de producción", icon: BarChart2 },
   { id: "salud", title: "Análisis de Salud", description: "Cobertura de vacunas y tratamientos", icon: HeartPulse },
@@ -26,6 +29,11 @@ const REPORTES_LIST = [
   { id: "reproductivo", title: "Rendimiento Reproductivo", description: "Tasas de éxito y partos", icon: Activity },
   { id: "anual", title: "Resumen Anual", description: "Reporte integral de fin de año", icon: Calendar },
 ];
+
+/**
+ * @description Contenedor principal que orquesta la lógica y el flujo de la vista de reportes.
+ * @param {Object} props - Propiedades iniciales del contenedor.
+ */
 
 export default function ReportesContainer() {
   const [selectedReportId, setSelectedReportId] = useState(REPORTES_LIST[0].id);
@@ -75,6 +83,40 @@ export default function ReportesContainer() {
       if (response.success) {
         toast.success("Datos obtenidos. Construyendo PDF...");
         console.log("Data para el PDF en JSON crudo:", response.data);
+        let datosParaPdf = [];
+        let tituloReporte = REPORTES_LIST.find(r => r.id === selectedReportId)?.title || "Reporte";
+
+        if (selectedReportId === "financiero") {
+          datosParaPdf = [...(response.data.ingresos || []), ...(response.data.egresos || [])];
+        } else if (selectedReportId === "salud") {
+          datosParaPdf = response.data.registrosSalud || [];
+        } else if (selectedReportId === "produccion") {
+          datosParaPdf = response.data.animalesNacidos || [];
+        }
+        const doc = (
+          <ReporteBasePDF 
+            titulo={tituloReporte} 
+            rangoFechas={`${fechaInicio} al ${fechaFin}`} 
+            datos={datosParaPdf} 
+          />
+        );
+
+        const asPdf = pdf([]); 
+        asPdf.updateContainer(doc);
+        const blob = await asPdf.toBlob();
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${selectedReportId}_${fechaInicio}_al_${fechaFin}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        toast.success("¡Reporte descargado exitosamente!");
+
         
       
         
@@ -82,6 +124,7 @@ export default function ReportesContainer() {
         toast.error(response.error || "Error al obtener datos del servidor");
       }
     } catch (error) {
+      console.error(error);
       toast.error("Hubo un problema al generar el reporte");
     } finally {
       setIsLoading(false);

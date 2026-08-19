@@ -2,6 +2,11 @@
 
 import { TriangleAlert } from "lucide-react";
 
+/**
+ * @description Componente de cronograma base para la visualización de eventos de salud.
+ * @param {Object} props - Propiedades del cronograma.
+ */
+
 export default function HealthCronoBase() {
   const cronograma = [
     {

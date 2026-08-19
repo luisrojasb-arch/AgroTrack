@@ -1,3 +1,7 @@
+/**
+ * @description Encabezado principal del módulo de Salud.
+ */
+
 export default function HealthHeader() {
   return (
     <div className="flex flex-col">

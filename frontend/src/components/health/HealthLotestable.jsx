@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @description Tabla de control sanitario a nivel de lotes.
+ * @param {Object} props - Propiedades de la tabla.
+ */
+
 export default function HealthLotestable({
   data = [],
   onVerTareasClick,

@@ -10,6 +10,11 @@ import {
 import {getAnimalesAction} from "@/actions/animal.actions"
 import {getLotesAction} from "@/actions/lote.actions"
 
+export const metadata = {
+  title: "Salud | AgroTrack",
+  description: "Control sanitario, historial médico y vacunas de la finca.",
+};
+
 export default async function HealthPage({ searchParams }) {
   const params = await searchParams;
   

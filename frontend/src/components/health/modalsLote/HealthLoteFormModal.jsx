@@ -6,6 +6,11 @@ import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { Search } from "lucide-react";
 
+/**
+ * @description Modal de formulario para registrar o editar la salud a nivel de lote.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function HealthLoteFormModal({
   isOpen,
   onClose,

@@ -8,6 +8,12 @@ import {
   getDashboardGeneralAction,
 } from "@/actions/finca.actions";
 
+export const metadata = {
+  title: "Overview | AgroTrack",
+  description: "Vista general y estado actual de la finca.",
+};
+
+
 /**
  * @description Página del Panel Principal (Dashboard/Overview) con el resumen general de la finca.
  */

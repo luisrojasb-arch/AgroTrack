@@ -1,3 +1,8 @@
+export const metadata = {
+  title: "Términos y Condiciones | AgroTrack",
+  description: "Condiciones de uso y normativas de los servicios de AgroTrack.",
+};
+
 /**
  * @description Página de Términos y Condiciones de uso de la plataforma.
  */

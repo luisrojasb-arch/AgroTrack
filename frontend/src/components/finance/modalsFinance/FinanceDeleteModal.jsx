@@ -27,6 +27,7 @@ export default function FinanceDeleteModal({
         onClick={onClose}
         disabled={isDeleting}
         className="w-full sm:w-auto"
+        aria-label="Cancelar la eliminación de la transacción"
       >
         Cancelar
       </Button>
@@ -35,6 +36,7 @@ export default function FinanceDeleteModal({
         onClick={() => onConfirm(transaction?.id)}
         disabled={isDeleting}
         className="w-full sm:w-auto"
+        aria-label={isDeleting ? "Eliminando la transacción, por favor espere" : "Confirmar y eliminar la transacción"}
       >
         {isDeleting ? "Eliminando..." : "Eliminar Transacción"}
       </Button>
@@ -47,17 +49,28 @@ export default function FinanceDeleteModal({
       onClose={onClose}
       width="max-w-xl"
       footer={modalFooter}
+      aria-labelledby="modal-delete-title"
+      aria-describedby="modal-delete-description"
     >
       <div className="flex flex-col items-center justify-center text-center px-6 pb-2">
-        <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4">
+        <div 
+          className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4"
+          aria-hidden="true"
+        >
           <AlertTriangle className="text-[#F04438] w-7 h-7" strokeWidth={2} />
         </div>
 
-        <h3 className="text-[20px] font-bold text-black mb-2 leading-tight">
+        <h3 
+          id="modal-delete-title" 
+          className="text-[20px] font-bold text-black mb-2 leading-tight"
+        >
           ¿Seguro Que Quiere Eliminar la Transacción?
         </h3>
 
-        <p className="text-[14px] text-gray-500">
+        <p 
+          id="modal-delete-description" 
+          className="text-[14px] text-gray-500"
+        >
           Estás a punto de eliminar la transacción de{" "}
           <span className="font-bold text-black">{transaccionInfo}</span>. Esta
           acción no se puede deshacer y afectará los balances.

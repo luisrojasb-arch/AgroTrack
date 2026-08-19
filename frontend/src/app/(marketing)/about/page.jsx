@@ -2,6 +2,11 @@ import AboutCard from "@/components/about_us/AboutCard";
 import { Target, Eye, Heart } from "lucide-react";
 import Image from "next/image";
 
+export const metadata = {
+  title: "Sobre Nosotros | AgroTrack",
+  description: "Conoce nuestra historia, misión, visión y valores.",
+};
+
 /**
  * @description Página informativa "Sobre Nosotros" (historia, misión, visión, valores).
  */

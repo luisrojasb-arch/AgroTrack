@@ -5,6 +5,11 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { Search } from "lucide-react";
 
+/**
+ * @description Modal para editar una tarea sanitaria existente.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function HealthTareaEditModal({ isOpen, onClose, onSubmit, tareaToEdit }) {
   const [formData, setFormData] = useState({
     tipo: "Vacuna",

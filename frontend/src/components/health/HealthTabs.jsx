@@ -2,6 +2,10 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Pestañas de navegación interna del módulo de Salud.
+ */
+
 export default function HealthTabs() {
   const router = useRouter();
   const pathname = usePathname();

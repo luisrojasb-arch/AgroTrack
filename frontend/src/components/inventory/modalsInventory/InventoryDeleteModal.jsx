@@ -30,28 +30,54 @@ export default function InventoryDeleteModal({ isOpen, onClose, item, onConfirm 
 
   const modalFooter = (
     <>
-      <Button variant="white" onClick={onClose} className="w-full sm:w-auto">
+      <Button 
+        variant="white" 
+        onClick={onClose} 
+        className="w-full sm:w-auto"
+        aria-label="Cancelar la eliminación del artículo"
+      >
         Cancelar
       </Button>
       
-      <Button variant="red" onClick={handleConfirm} className="w-full sm:w-auto">
+      <Button 
+        variant="red" 
+        onClick={handleConfirm} 
+        className="w-full sm:w-auto"
+        aria-label="Confirmar y eliminar el artículo"
+      >
         Eliminar Artículo
       </Button>
     </>
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} width="max-w-xl" footer={modalFooter}>
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      width="max-w-xl" 
+      footer={modalFooter}
+      aria-labelledby="modal-inventory-delete-title"
+      aria-describedby="modal-inventory-delete-description"
+    >
       <div className="flex flex-col items-center justify-center text-center px-6 pb-2">
-        <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4">
+        <div 
+          className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mb-4"
+          aria-hidden="true"
+        >
           <AlertTriangle className="text-[#F04438] w-7 h-7" strokeWidth={2} />
         </div>
 
-        <h3 className="text-[20px] font-bold text-black mb-2 leading-tight">
+        <h3 
+          id="modal-inventory-delete-title"
+          className="text-[20px] font-bold text-black mb-2 leading-tight"
+        >
           ¿Seguro Que Quiere Eliminar el Artículo?
         </h3>
 
-        <p className="text-[14px] text-gray-500">
+        <p 
+          id="modal-inventory-delete-description"
+          className="text-[14px] text-gray-500"
+        >
           Estás a punto de eliminar a <span className="font-bold text-black">{nombreAEnseñar}</span>. Esta acción no se puede deshacer.
         </p>
       </div>

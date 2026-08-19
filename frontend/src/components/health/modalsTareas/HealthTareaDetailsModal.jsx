@@ -3,6 +3,11 @@
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
+/**
+ * @description Modal para visualizar los detalles completos de una tarea sanitaria.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function HealthTareaDetailsModal({ isOpen, onClose, tarea }) {
   if (!tarea) return null;
 

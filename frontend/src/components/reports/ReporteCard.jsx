@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * @description Tarjeta individual que representa una categoría o tipo de reporte disponible.
+ * @param {Object} props
+ * @param {string} props.title - Título del reporte.
+ * @param {string} props.description - Descripción del contenido del reporte.
+ * @param {Function} props.onSelect - Función que se ejecuta al seleccionar el reporte.
+ */
+// ReporteCard
+
 export default function ReporteCard({ title, description, icon: Icon, isSelected, onClick }) {
   return (
     <div
