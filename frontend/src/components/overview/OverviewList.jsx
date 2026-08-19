@@ -4,6 +4,12 @@ import { useSearchParams } from "next/navigation";
 import Pagination from "@/components/ui/Pagination";
 import AlertasContainer from "@/components/overview/AlertasContainer";
 
+/**
+ * @description Lista de actividades o registros recientes del dashboard.
+ * @param {Object} props
+ * @param {Array} props.data - Arreglo de ítems recientes.
+ */
+
 export default function OverviewList({ data }) {
   const searchParams = useSearchParams();
   

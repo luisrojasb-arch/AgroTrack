@@ -2,6 +2,13 @@
 
 import { useEffect } from "react";
 
+/**
+ * @description Plantilla de Next.js para el manejo y visualización de errores (error.js).
+ * @param {Object} props
+ * @param {Error} props.error - Objeto del error capturado.
+ * @param {Function} props.reset - Función para intentar recargar el componente fallido.
+ */
+
 export default function ErrorTemplate({ error, reset }) {
   useEffect(() => {
     console.error(error);

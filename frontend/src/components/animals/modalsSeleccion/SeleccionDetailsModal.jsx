@@ -3,6 +3,12 @@
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 
+/**
+ * @description Modal para ver detalles de un proceso de selección.
+ * @param {Object} props - Propiedades del modal.
+ */
+//
+
 export default function SeleccionDetailsModal({
   isOpen,
   onClose,

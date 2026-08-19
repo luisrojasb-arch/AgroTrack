@@ -8,6 +8,10 @@ import Button from "@/components/ui/Button";
 import { toast } from "sonner";
 import { restablecerContrasenhaAction } from "@/actions/user.actions";
 
+/**
+ * @description Página para restablecer la contraseña utilizando un token válido.
+ */
+
 export default function ResetPasswordPage() {
   const router = useRouter();
   const params = useParams();

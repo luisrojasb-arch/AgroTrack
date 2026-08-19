@@ -38,6 +38,11 @@ const getInitialState = (item) => {
   };
 };
 
+/**
+ * @description Modal de formulario para registrar o editar preñeces.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function PrenezFormModal({
   isOpen,
   onClose,

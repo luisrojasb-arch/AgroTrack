@@ -5,6 +5,10 @@ import { Search } from "lucide-react";
 import Select from "@/components/ui/Select";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Controles de filtrado (estado, rol) para usuarios.
+ */
+
 export default function UsersTableControls() {
   const router = useRouter();
   const pathname = usePathname();

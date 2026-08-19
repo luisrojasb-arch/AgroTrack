@@ -1,5 +1,11 @@
 import StatCard from "@/components/layout/StatCard";
 
+/**
+ * @description Tarjetas de resumen del inventario (valor total, alertas de stock).
+ * @param {Object} props
+ * @param {Object} props.stats - Datos estadísticos.
+ */
+
 export default function InventoryStats({ stats }) {
   const total = stats?.total_articulos || 0;
   const stockBajo = stats?.alertas_stock_bajo || 0;

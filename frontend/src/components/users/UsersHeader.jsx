@@ -1,3 +1,7 @@
+/**
+ * @description Encabezado del módulo de administración de usuarios.
+ */
+
 export default function UsersHeader() {
   return (
     <div className="flex flex-col">

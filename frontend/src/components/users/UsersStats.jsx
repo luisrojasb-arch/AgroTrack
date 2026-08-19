@@ -1,5 +1,11 @@
 import StatCard from "@/components/layout/StatCard";
 
+/**
+ * @description Tarjetas resumen de usuarios (Activos, Inactivos, Roles).
+ * @param {Object} props
+ * @param {Object} props.stats - Estadísticas de usuarios.
+ */
+
 export default function UsersStats({ stats }) {
   const total = stats?.total || 0;
   const admin = stats?.admin || 0;

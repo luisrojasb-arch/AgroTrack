@@ -4,6 +4,14 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { CheckCircle } from "lucide-react";
 
+/**
+ * @description Modal para aprobar el paso de un animal a madre.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Estado de visibilidad.
+ * @param {Function} props.onClose - Función para cerrar.
+ * @param {Function} props.onConfirm - Función que confirma la aprobación.
+ */
+
 export default function AprobarMadreModal({ isOpen, onClose, onConfirm }) {
   const footer = (
     <>

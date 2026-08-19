@@ -5,6 +5,13 @@ import { Search } from "lucide-react";
 import Select from "@/components/ui/Select";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Controles de filtrado y búsqueda para la tabla de animales.
+ * @param {Object} props
+ * @param {string} props.activeTab - Pestaña activa actualmente.
+ */
+//
+
 export default function AnimalsTableControls({ activeTab }) {
   const router = useRouter();
   const pathname = usePathname();

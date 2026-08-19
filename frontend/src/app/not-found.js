@@ -4,6 +4,10 @@ import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
 import BackButton from "@/components/backbutton";
 
+/**
+ * @description Página personalizada para rutas no encontradas (Error 404 - Not Found).
+ */
+
 export default async function NotFound() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;

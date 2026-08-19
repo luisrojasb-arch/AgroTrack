@@ -7,6 +7,12 @@ export const metadata = {
   description: "Gestión inteligente para granjas porcinas.",
 };
 
+/**
+ * @description Layout principal para todas las rutas internas y privadas del dashboard.
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Páginas y componentes anidados del dashboard.
+ */
+
 export default async function DashboardRootLayout({ children }) {
   const session = await getSession();
 

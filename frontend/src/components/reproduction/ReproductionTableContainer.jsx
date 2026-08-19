@@ -28,6 +28,13 @@ import {
   editarNacimientoAction,
 } from "@/actions/reproduction.actions";
 
+/**
+ * @description Contenedor principal de las tablas de reproducción por pestaña.
+ * @param {Object} props
+ * @param {Object} props.initialData - Datos iniciales.
+ * @param {string} props.activeTab - Pestaña activa actual.
+ */
+
 export default function ReproductionTableContainer({ initialData, activeTab }) {
   const datos = initialData?.docs || [];
   const paginacion = initialData?.paginacion || {

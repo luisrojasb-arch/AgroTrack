@@ -5,6 +5,14 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { toast } from "sonner";
 
+/**
+ * @description Modal para registrar un nuevo peso en el historial.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Estado de visibilidad.
+ * @param {Function} props.onClose - Función para cerrar.
+ * @param {Function} props.onSubmitPeso - Función para enviar el peso.
+ */
+
 export default function RegistrarPesoModal({ isOpen, onClose, onSubmitPeso }) {
   const [peso, setPeso] = useState("");
 

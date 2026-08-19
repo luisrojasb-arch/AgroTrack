@@ -2,6 +2,11 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Pestañas de navegación interna del módulo de Animales.
+ */
+//
+
 export default function AnimalsTabs() {
   const router = useRouter();
   const pathname = usePathname();

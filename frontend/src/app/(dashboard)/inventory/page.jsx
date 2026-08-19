@@ -12,10 +12,16 @@ export const metadata = {
   description: "Control de insumos, medicamentos y herramientas de la finca.",
 };
 
+/**
+ * @description Página del módulo de Inventario de la finca.
+ * @param {Object} props
+ * @param {Object} props.searchParams - Parámetros de búsqueda en la URL para filtros.
+ */
+
 export default async function InventoryPage({ searchParams }) {
+  
   const resolvedSearchParams = await searchParams;
 
- 
 
   const params = new URLSearchParams(resolvedSearchParams || {}).toString();
 
@@ -31,7 +37,7 @@ export default async function InventoryPage({ searchParams }) {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex flex-col w-full h-full p-6 md:p-8 max-w-[1400px] mx-auto gap-2">
       <InventoryHeader />
       <InventoryTableContainer initialData={initialData} />
     </div>

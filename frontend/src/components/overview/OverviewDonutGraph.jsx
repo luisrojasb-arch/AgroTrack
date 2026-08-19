@@ -1,6 +1,13 @@
 'use client'
 import {Chart as ChartJS} from 'chart.js/auto'
 import {Doughnut} from 'react-chartjs-2'
+
+/**
+ * @description Componente de gráfico circular tipo Donut para el dashboard.
+ * @param {Object} props
+ * @param {Array} props.data - Datos formateados para el Donut.
+ */
+
 export default function OverviewDonutGraph({ data }) {
   return (
     <div className="bg-white rounded-3xl border border-(--color-border-agro) p-6 flex flex-col w-full h-full shadow-sm">

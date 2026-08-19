@@ -19,6 +19,12 @@ import {
   updateTransaccionAction 
 } from "@/actions/finance.actions";
 
+/**
+ * @description Contenedor principal de la vista de finanzas.
+ * @param {Object} props
+ * @param {Object} props.initialData - Datos iniciales para poblar finanzas.
+ */
+
 export default function FinanceContainer({ initialData }) {
   const router = useRouter(); // Instanciamos el router
 

@@ -25,6 +25,11 @@ const getInitialState = () => ({
   nota: "",
 });
 
+/**
+ * @description Modal para actualizar la situación o estado de un animal.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function AnimalSituationModal({
   isOpen,
   onClose,

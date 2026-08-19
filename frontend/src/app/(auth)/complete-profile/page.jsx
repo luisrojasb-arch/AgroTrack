@@ -7,6 +7,10 @@ import Button from "@/components/ui/Button";
 import { toast } from "sonner";
 import { activarCuentaAction } from "@/actions/user.actions";
 
+/**
+ * @description Página para que el usuario complete los datos de su perfil tras el primer registro.
+ */
+
 export default function CompleteProfilePage() {
   const router = useRouter();
   const [formData, setFormData] = useState({

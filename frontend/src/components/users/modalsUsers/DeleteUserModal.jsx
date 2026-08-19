@@ -4,6 +4,15 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 
+/**
+ * @description Modal de confirmación para suspender o eliminar usuarios.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad.
+ * @param {Function} props.onClose - Cierre de modal.
+ * @param {Object} props.user - Usuario seleccionado.
+ * @param {Function} props.onConfirm - Procesador de eliminación.
+ */
+
 export default function DeleteUserModal({ isOpen, onClose, user, onConfirm }) {
   const nombreAEnseñar = user?.nombre || "este miembro";
 

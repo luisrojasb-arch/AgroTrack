@@ -5,6 +5,12 @@ import { createPortal } from "react-dom";
 import { Search, Loader2, X } from "lucide-react";
 import { getLotesAction } from "@/actions/lote.actions";
 
+/**
+ * @description Input con buscador para asignar o filtrar lotes.
+ * @param {Object} props - Propiedades del buscador.
+ */
+//
+
 export default function LoteSearchInput({
   valorInicial,
   onSelect,

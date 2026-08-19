@@ -8,6 +8,10 @@ import { User, Mail, Lock, Eye, EyeOff, Home, Check } from "lucide-react";
 import Link from "next/link";
 import { registrarUsuarioAction } from "@/actions/auth.actions";
 
+/**
+ * @description Página de registro para nuevos usuarios.
+ */
+
 export default function RegisterPage() {
   const [state, formAction, isPending] = useActionState(
     registrarUsuarioAction,

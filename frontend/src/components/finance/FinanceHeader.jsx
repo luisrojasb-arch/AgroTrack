@@ -1,3 +1,7 @@
+/**
+ * @description Encabezado del módulo de finanzas.
+ */
+
 export default function FinanceHeader() {
   return (
     <div className="flex flex-col">

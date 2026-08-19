@@ -1,5 +1,12 @@
 import StatCard from "@/components/layout/StatCard";
 
+/**
+ * @description Tarjetas de resumen financiero (Ingresos, Gastos, Margen).
+ * @param {Object} props
+ * @param {Object} props.stats - Objeto de estadísticas.
+ */
+
+
 export default function FinanceStats({ stats }) {
   const ingresos = stats?.ingresos_totales || "$0 COP";
   const gastos = stats?.gastos_totales || "$0 COP";

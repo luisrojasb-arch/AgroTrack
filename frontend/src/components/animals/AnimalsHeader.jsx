@@ -1,3 +1,7 @@
+/**
+ * @description Encabezado principal del módulo de Animales.
+ */
+
 export default function AnimalsHeader() {
   return (
     <div className="flex flex-col">

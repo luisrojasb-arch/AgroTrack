@@ -1,6 +1,14 @@
 import { Edit, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla de listado principal de usuarios.
+ * @param {Object} props
+ * @param {Array} props.usuarios - Lista de usuarios.
+ * @param {Function} props.onEdit - Acción editar.
+ * @param {Function} props.onDelete - Acción eliminar.
+ */
+
 export default function UsersTable({ usuarios = [], onEdit, onDelete }) {
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">

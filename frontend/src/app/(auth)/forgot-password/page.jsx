@@ -7,6 +7,10 @@ import Button from "@/components/ui/Button";
 import { toast } from "sonner";
 import { solicitarRecuperacionAction } from "@/actions/user.actions";
 
+/**
+ * @description Página para solicitar la recuperación de contraseña (envío de enlace).
+ */
+
 export default function ForgotPasswordPage() {
   const [correo, setCorreo] = useState("");
   const [isLoading, setIsLoading] = useState(false);

@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * @description Componente visual que desglosa los gastos por categoría en barras de progreso.
+ * @param {Object} props
+ * @param {Array} props.data - Arreglo con totales por categoría.
+ */
+//
+
 export default function FinanceExpenseBreakdown({ data = [] }) {
 
   const totalGastos = data.reduce((acc, curr) => acc + (Number(curr.value) || 0), 0);

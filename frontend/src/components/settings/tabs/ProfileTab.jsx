@@ -5,6 +5,12 @@ import Button from "@/components/ui/Button";
 import { updatePerfilAction } from "@/actions/user.actions";
 import { toast } from "sonner";
 
+/**
+ * @description Pestaña de perfil del usuario logueado.
+ * @param {Object} props
+ * @param {Object} props.data - Datos del usuario.
+ */
+
 export default function ProfileTab({ data }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

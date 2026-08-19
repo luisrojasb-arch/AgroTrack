@@ -49,6 +49,11 @@ const getInitialState = (user) => {
   };
 };
 
+/**
+ * @description Modal para registrar nuevos usuarios o editar existentes.
+ * @param {Object} props - Propiedades del formulario.
+ */
+
 export default function UserFormModal({
   isOpen,
   onClose,

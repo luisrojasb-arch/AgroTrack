@@ -6,6 +6,10 @@ import { enviarMensajeContacto } from "@/actions/contacto.actions";
 import Button from "@/components/ui/Button";
 import { toast } from "sonner"; 
 
+/**
+ * @description Formulario de la página de contacto.
+ */
+
 export default function ContactForm() {
   // Estado del formulario
   const [formData, setFormData] = useState({

@@ -36,6 +36,11 @@ const getInitialState = (item) => {
   };
 };
 
+/**
+ * @description Modal de formulario para registrar o editar nacimientos.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function NacimientoFormModal({
   isOpen,
   onClose,

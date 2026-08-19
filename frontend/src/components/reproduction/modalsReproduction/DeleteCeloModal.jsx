@@ -4,6 +4,15 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 
+/**
+ * @description Modal de confirmación para eliminar un registro de celo.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad.
+ * @param {Function} props.onClose - Función de cierre.
+ * @param {Object} props.celo - Registro a borrar.
+ * @param {Function} props.onConfirm - Confirmación de borrado.
+ */
+
 export default function DeleteCeloModal({ isOpen, onClose, celo, onConfirm }) {
   const modalFooter = (
     <>

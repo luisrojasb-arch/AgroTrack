@@ -2,6 +2,10 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import { Leaf, ShieldCheck, Users } from "lucide-react";
 
+/**
+ * @description Sección principal (Hero) de la Landing Page.
+ */
+
 export default function HeroSection() {
   return (
     <section className="w-full px-6 md:px-8 lg:px-12 py-12 lg:py-20 flex flex-col lg:flex-row items-center gap-12">

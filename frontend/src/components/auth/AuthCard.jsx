@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { Leaf } from "lucide-react";
 
+
+/**
+ * @description Tarjeta contenedora para formularios de autenticación.
+ * @param {Object} props - Propiedades (children, título).
+ */
+
 export default function AuthCard({
   title,
   subtitle,

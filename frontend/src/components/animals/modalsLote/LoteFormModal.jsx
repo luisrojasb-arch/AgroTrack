@@ -46,6 +46,11 @@ const getInitialState = (lote) => {
   };
 };
 
+/**
+ * @description Modal para crear o editar un lote.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function LoteFormModal({
   isOpen,
   onClose,

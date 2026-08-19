@@ -10,6 +10,14 @@ const InfoCard = ({ title, value }) => (
   </div>
 );
 
+/**
+ * @description Modal para visualizar detalles completos de un artículo de inventario.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad.
+ * @param {Function} props.onClose - Función de cierre.
+ * @param {Object} props.data - Datos del artículo.
+ */
+
 export default function InventoryDetailsModal({ isOpen, onClose, data }) {
   if (!data) return null;
 

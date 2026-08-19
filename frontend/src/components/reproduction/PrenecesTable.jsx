@@ -1,6 +1,11 @@
 import { Check, Edit, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla de seguimiento de preñeces.
+ * @param {Object} props - Data y handlers.
+ */
+
 export default function PrenecesTable({
   preneces = [],
   onConfirmar,

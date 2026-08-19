@@ -1,5 +1,10 @@
 import Button from "@/components/ui/Button";
 
+
+/**
+ * @description Sección "Call to Action" de la página principal.
+ */
+
 export default function CtaSection() {
   return (
     <section className="w-full px-6 md:px-8 lg:px-12 py-10 bg-white">

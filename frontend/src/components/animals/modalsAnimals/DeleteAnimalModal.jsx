@@ -4,6 +4,11 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 
+/**
+ * @description Modal de confirmación para eliminar un animal del sistema.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function DeleteAnimalModal({
   isOpen,
   onClose,

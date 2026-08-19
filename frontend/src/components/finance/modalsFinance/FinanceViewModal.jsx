@@ -14,6 +14,14 @@ const InfoCard = ({ title, value, customValueClass }) => (
   </div>
 );
 
+/**
+ * @description Modal de solo lectura para ver detalles de una transacción.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad del modal.
+ * @param {Function} props.onClose - Cierra el modal.
+ * @param {Object} props.transaction - Datos de la transacción.
+ */
+
 export default function FinanceViewModal({ isOpen, onClose, transaction }) {
   if (!transaction) return null;
 

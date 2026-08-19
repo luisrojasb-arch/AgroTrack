@@ -11,6 +11,11 @@ export const metadata = {
   description: "Gestión de usuarios y permisos del sistema.",
 };
 
+/**
+ * @description Página de administración de usuarios, roles y accesos.
+ * @param {Object} props - Propiedades de Next.js (params, searchParams).
+ */
+
 export default async function UsersPage(props) {
   const searchParams = await props.searchParams;
 

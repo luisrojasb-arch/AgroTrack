@@ -5,6 +5,12 @@ import Button from "@/components/ui/Button";
 import { actualizarTasasCambioAction } from "@/actions/finca.actions";
 import { toast } from "sonner";
 
+/**
+ * @description Pestaña para configurar tasas de cambio del sistema.
+ * @param {Object} props
+ * @param {Object} props.data - Configuración de tasas.
+ */
+
 export default function RatesTab({ data }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

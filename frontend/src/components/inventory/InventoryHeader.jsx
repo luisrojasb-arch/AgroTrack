@@ -1,3 +1,7 @@
+/**
+ * @description Encabezado de la página de inventario.
+ */
+
 export default function InventoryHeader() {
   return (
     <div className="flex flex-col">

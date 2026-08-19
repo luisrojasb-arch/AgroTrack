@@ -10,6 +10,14 @@ const InfoCard = ({ title, value }) => (
   </div>
 );
 
+/**
+ * @description Modal para ver los detalles de un lote específico.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Estado de visibilidad.
+ * @param {Function} props.onClose - Función para cerrar.
+ * @param {Object} props.data - Datos del lote.
+ */
+
 export default function LoteDetailsModal({ isOpen, onClose, data }) {
   if (!data || !data.datos_basicos) return null;
 

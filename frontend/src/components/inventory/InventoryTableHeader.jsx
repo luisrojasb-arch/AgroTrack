@@ -1,5 +1,11 @@
 import Button from "@/components/ui/Button";
 
+/**
+ * @description Encabezado de la tabla de inventario con botón de registro.
+ * @param {Object} props
+ * @param {Function} props.onAddArticle - Función para abrir creación.
+ */
+
 export default function InventoryTableHeader({ onAddArticle }) {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">

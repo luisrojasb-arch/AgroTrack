@@ -1,5 +1,11 @@
 import Image from "next/image";
 
+/**
+ * @description Layout dividido para pantallas de login/registro (imagen y formulario).
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Contenido del formulario.
+ */
+
 export default function AuthSplitLayout({ children }) {
   return (
     <div className="flex w-full min-h-[calc(100vh-64px)]">

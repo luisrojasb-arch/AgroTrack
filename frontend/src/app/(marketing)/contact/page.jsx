@@ -5,6 +5,10 @@ export const metadata = {
   description: "¿Tienes preguntas sobre AgroTrack? Contáctanos.",
 };
 
+/**
+ * @description Página de contacto para comunicación con el equipo de soporte o ventas.
+ */
+
 export default function ContactPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">

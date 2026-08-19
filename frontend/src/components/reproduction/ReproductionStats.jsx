@@ -1,5 +1,11 @@
 import StatCard from "@/components/layout/StatCard";
 
+/**
+ * @description Tarjetas de resumen de reproducción (índices de parición, etc).
+ * @param {Object} props
+ * @param {Object} props.stats - Estadísticas de reproducción.
+ */
+
 export default function ReproductionStats({ stats }) {
   const enCelo = stats?.en_celo || 0;
   const prenadas = stats?.prenadas || 0;

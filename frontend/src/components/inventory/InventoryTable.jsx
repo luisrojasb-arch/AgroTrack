@@ -1,6 +1,11 @@
 import { Eye, Edit, Trash2, ArrowRightLeft } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla de listado de artículos del inventario.
+ * @param {Object} props - Propiedades de tabla (data y handlers).
+ */
+
 export default function InventoryTable({
   articulos = [],
   onView,

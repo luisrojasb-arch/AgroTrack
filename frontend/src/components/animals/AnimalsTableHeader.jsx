@@ -1,5 +1,11 @@
 import Button from "@/components/ui/Button";
 
+/**
+ * @description Encabezado de la tabla de animales con botón de agregar.
+ * @param {Object} props - Propiedades del header.
+ */
+//
+
 export default function AnimalsTableHeader({
   activeTab,
   onAddAnimal,

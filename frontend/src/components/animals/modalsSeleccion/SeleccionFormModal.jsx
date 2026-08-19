@@ -21,6 +21,12 @@ const emptyForm = {
   patas_traseras: "Buenas",
 };
 
+/**
+ * @description Modal para registrar o editar información de selección.
+ * @param {Object} props - Propiedades del modal.
+ */
+//
+
 export default function SeleccionFormModal({
   isOpen,
   onClose,
