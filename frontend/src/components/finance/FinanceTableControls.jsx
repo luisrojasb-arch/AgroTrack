@@ -6,6 +6,13 @@ import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Controles de filtros de la tabla financiera.
+ * @param {Object} props
+ * @param {Function} props.onAddTransaction - Acción para abrir modal de creación.
+ */
+//
+
 export default function FinanceTableControls({ onAddTransaction }) {
   const router = useRouter();
   const pathname = usePathname();

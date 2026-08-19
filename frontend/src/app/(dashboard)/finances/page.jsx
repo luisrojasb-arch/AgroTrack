@@ -12,6 +12,12 @@ export const metadata = {
   description: "Control de ingresos, gastos y balance de la finca.",
 };
 
+/**
+ * @description Página del módulo de Finanzas de la finca.
+ * @param {Object} props
+ * @param {Object} props.searchParams - Parámetros de búsqueda en la URL para filtros.
+ */
+
 export default async function FinancePage({ searchParams }) {
   const resolvedParams = await searchParams;
   const params = new URLSearchParams(resolvedParams || {}).toString();

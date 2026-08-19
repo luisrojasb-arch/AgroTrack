@@ -31,6 +31,11 @@ const getInitialState = (celo) => {
   return { hembra_id: "", hembra_label: "", fecha_celo: "", nota_celo: "" };
 };
 
+/**
+ * @description Modal de formulario para registrar celos.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function CeloFormModal({
   isOpen,
   onClose,

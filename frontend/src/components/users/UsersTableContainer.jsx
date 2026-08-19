@@ -16,6 +16,12 @@ import {
   deleteMiembroAction,
 } from "@/actions/user.actions";
 
+/**
+ * @description Contenedor principal de la tabla de usuarios.
+ * @param {Object} props
+ * @param {Object} props.initialData - Datos precargados.
+ */
+
 export default function UsersTableContainer({ initialData }) {
   const usuarios = initialData?.usuarios || [];
 

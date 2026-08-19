@@ -5,6 +5,12 @@ import Button from "@/components/ui/Button";
 import { actualizarFincaAction } from "@/actions/finca.actions";
 import { toast } from "sonner";
 
+/**
+ * @description Pestaña con información y configuración de la Finca.
+ * @param {Object} props
+ * @param {Object} props.data - Datos de la finca.
+ */
+
 export default function FarmTab({ data }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

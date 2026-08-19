@@ -1,6 +1,15 @@
 import { Eye, Edit, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla de historial de movimientos financieros.
+ * @param {Object} props
+ * @param {Array} props.transacciones - Lista de transacciones.
+ * @param {Function} props.onView - Acción para ver detalle.
+ * @param {Function} props.onEdit - Acción para editar.
+ * @param {Function} props.onDelete - Acción para eliminar.
+ */
+
 export default function FinanceTable({ transacciones = [], onView, onEdit, onDelete }) {
   return (
     <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">

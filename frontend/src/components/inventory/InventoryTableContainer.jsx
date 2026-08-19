@@ -24,6 +24,12 @@ import InventoryDetailsModal from "./modalsInventory/InventoryDetailsModal";
 import InventoryAdjustModal from "./modalsInventory/InventoryAdjustModal";
 import InventoryDeleteModal from "./modalsInventory/InventoryDeleteModal";
 
+/**
+ * @description Contenedor principal de la vista de inventario.
+ * @param {Object} props
+ * @param {Object} props.initialData - Datos cargados por el servidor.
+ */
+
 export default function InventoryTableContainer({ initialData }) {
   const router = useRouter();
 

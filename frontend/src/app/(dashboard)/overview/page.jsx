@@ -8,7 +8,9 @@ import {
   getDashboardGeneralAction,
 } from "@/actions/finca.actions";
 
-
+/**
+ * @description Página del Panel Principal (Dashboard/Overview) con el resumen general de la finca.
+ */
 
 export default async function OverviewPage() {
   const dashboard = await getDashboardGeneralAction();

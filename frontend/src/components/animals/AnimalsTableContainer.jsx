@@ -49,6 +49,12 @@ import {
   aprobarSeleccionAction,
 } from "@/actions/seleccion.actions";
 
+/**
+ * @description Contenedor principal de la vista de tablas de animales.
+ * @param {Object} props - Propiedades del contenedor.
+ */
+//
+
 export default function AnimalsTableContainer({
   initialData,
   activeTab,

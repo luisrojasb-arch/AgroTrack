@@ -1,3 +1,9 @@
+/**
+ * @description Encabezado principal del Panel con saludo personalizado.
+ * @param {Object} props
+ * @param {string} props.name - Nombre del usuario logueado.
+ */
+
 export default function OverviewHeader({ name }) {
   return (
     <div className="flex flex-col">

@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import Select from "./Select"; 
 import BarGraph from "./BarGraph"; 
 
+/**
+ * @description Wrapper del gráfico de barras que maneja su estructura y título.
+ * @param {Object} props
+ * @param {Array} props.data - Datos crudos a renderizar.
+ * @param {string} props.title - Título del gráfico.
+ */
+
 export default function BargraphContainer({ data, title }) {
   const rawData = data?.ingresos_vs_gastos || [];
 

@@ -1,3 +1,7 @@
+/**
+ * @description Encabezado del módulo de reproducción.
+ */
+
 export default function ReproductionHeader() {
   return (
     <div className="flex flex-col">

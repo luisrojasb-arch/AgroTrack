@@ -2,6 +2,13 @@
 
 import { Menu } from "lucide-react";
 
+/**
+ * @description Barra de navegación superior del sistema.
+ * @param {Object} props
+ * @param {Function} props.onMenuClick - Acción para abrir el menú móvil.
+ * @param {Object} props.usuario - Información del usuario logueado.
+ */
+
 export default function Navbar({ onMenuClick, usuario }) {
   const usuarioNombre = usuario?.nombre
     ? `${usuario.nombre} ${usuario.apellido}`

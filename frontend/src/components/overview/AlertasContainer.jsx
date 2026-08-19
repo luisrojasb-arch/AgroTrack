@@ -1,5 +1,11 @@
 import ListAlertElm from "@/components/overview/ListAlertElm";
 
+/**
+ * @description Contenedor de notificaciones y alertas del dashboard.
+ * @param {Object} props
+ * @param {Array} props.alertas - Listado de alertas pendientes.
+ */
+
 export default function AlertasContainer({ alertas }) {
   return (
     <div className="overflow-hidden flex flex-col w-full">

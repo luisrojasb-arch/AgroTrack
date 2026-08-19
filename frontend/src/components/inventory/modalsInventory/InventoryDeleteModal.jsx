@@ -5,11 +5,19 @@ import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
+/**
+ * @description Modal de confirmación para eliminar artículos del inventario.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad.
+ * @param {Function} props.onClose - Función de cierre.
+ * @param {Object} props.item - Artículo a borrar.
+ * @param {Function} props.onConfirm - Confirmación de borrado.
+ */
+
 export default function InventoryDeleteModal({ isOpen, onClose, item, onConfirm }) {
   const nombreAEnseñar = item?.nombre || item?.codigo || "este artículo";
 
   const handleConfirm = () => {
-    // CORRECCIÓN: Busca 'id' (de la tabla) o '_id' (de la base de datos directa)
     const itemId = item?.id || item?._id;
     
     if (!itemId) {

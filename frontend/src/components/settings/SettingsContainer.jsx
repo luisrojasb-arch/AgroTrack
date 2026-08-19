@@ -6,6 +6,13 @@ import ProfileTab from "./tabs/ProfileTab";
 import FarmTab from "./tabs/FarmTab";
 import RatesTab from "./tabs/RatesTab";
 
+/**
+ * @description Contenedor principal de la vista de configuraciones.
+ * @param {Object} props
+ * @param {Object} props.initialData - Datos iniciales.
+ * @param {string} props.userRole - Rol del usuario para validar permisos.
+ */
+
 export default function SettingsContainer({ initialData, userRole }) {
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab") || "perfil";

@@ -3,6 +3,11 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+/**
+ * @description Componente de paginación reutilizable.
+ * @param {Object} props - Propiedades de paginación (total, actual, límite).
+ */
+
 export default function Pagination({
   totalRegistros = 0,
   totalPaginas = 1,

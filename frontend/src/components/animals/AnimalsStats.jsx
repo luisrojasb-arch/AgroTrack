@@ -1,5 +1,12 @@
 import StatCard from "@/components/layout/StatCard";
 
+/**
+ * @description Tarjetas de estadísticas generales de los animales.
+ * @param {Object} props
+ * @param {Object} props.stats - Objeto con las métricas (total, machos, hembras, etc).
+ */
+//
+
 export default function AnimalsStats({ stats }) {
   const total = stats?.total_animales || 0;
   const hembras = stats?.hembras || 0;

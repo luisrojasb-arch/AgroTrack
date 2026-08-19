@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+/**
+ * @description Pie de página de la aplicación.
+ */
+
 export default function Footer() {
   return (
     <footer className="w-full bg-bg-nav">

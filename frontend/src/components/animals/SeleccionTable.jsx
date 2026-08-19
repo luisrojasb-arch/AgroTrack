@@ -1,6 +1,11 @@
 import { Eye, Edit, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla para gestionar el listado de selecciones.
+ * @param {Object} props - Propiedades de la tabla.
+ */
+
 export default function SeleccionTable({
   selecciones = [],
   onView,

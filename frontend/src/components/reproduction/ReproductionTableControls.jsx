@@ -5,6 +5,12 @@ import { Search } from "lucide-react";
 import Select from "@/components/ui/Select";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Controles de filtro adaptados a la pestaña activa de reproducción.
+ * @param {Object} props
+ * @param {string} props.activeTab - Pestaña actual para determinar filtros.
+ */
+
 export default function ReproductionTableControls({ activeTab }) {
   const router = useRouter();
   const pathname = usePathname();

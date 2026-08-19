@@ -17,6 +17,11 @@ const fetchJSON = async (token, endpoint, params = {}) => {
   return data;
 };
 
+/**
+ * @description Servicio de reportes. Maneja la generación y obtención de datos consolidados (producción, salud, finanzas, inventario, etc.) desde la API.
+ * @type {Object}
+ */
+
 export const reportesService = {
   obtenerDatosProduccion: async (token, params) => fetchJSON(token, "produccion", params),
   obtenerDatosSalud: async (token, params) => fetchJSON(token, "salud", params),

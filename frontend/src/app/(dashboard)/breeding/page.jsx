@@ -14,6 +14,11 @@ export const metadata = {
   description: "Gestión de ciclo reproductivo y nacimientos.",
 };
 
+/**
+ * @description Página del módulo de Reproducción de la finca.
+ * @param {Object} props - Propiedades de Next.js (params, searchParams).
+ */
+
 export default async function ReproductionPage(props) {
   const searchParams = await props.searchParams;
 

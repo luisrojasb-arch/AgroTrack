@@ -5,7 +5,6 @@ import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { toast } from "sonner";
 
-// Función para inicializar el estado mapeando correctamente los nombres del backend
 const getInitialState = (item) => {
   if (item) {
     // Al editar, el monto original viene como "200 COP", extraemos solo el número
@@ -36,6 +35,15 @@ const getInitialState = (item) => {
     metodo_pago: "Efectivo",
   };
 };
+
+/**
+ * @description Modal de formulario para registrar o editar ingresos/egresos.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad del modal.
+ * @param {Function} props.onClose - Cierra el modal.
+ * @param {Object|null} props.itemToEdit - Transacción a editar (null para crear).
+ * @param {Function} props.onSubmit - Ejecuta el guardado.
+ */
 
 export default function FinanceFormModal({ isOpen, onClose, itemToEdit = null, onSubmit }) {
   const isEditMode = !!itemToEdit;

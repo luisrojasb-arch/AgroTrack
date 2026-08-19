@@ -4,6 +4,15 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { AlertTriangle } from "lucide-react";
 
+/**
+ * @description Modal de confirmación para eliminar un lote.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Estado de visibilidad.
+ * @param {Function} props.onClose - Función para cerrar.
+ * @param {Object} props.lote - Lote seleccionado para eliminar.
+ * @param {Function} props.onConfirm - Función que ejecuta la eliminación.
+ */
+
 export default function DeleteLoteModal({ isOpen, onClose, lote, onConfirm }) {
   const nombreLote = lote?.codigo_lote || "este lote";
 

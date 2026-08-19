@@ -15,6 +15,13 @@ const COLORS = [
   "#06b6d4",
 ];
 
+/**
+ * @description Panel o dashboard específico de la sección de selección.
+ * @param {Object} props
+ * @param {Object} props.dashboardData - Datos para las gráficas de selección.
+ */
+//
+
 export default function SeleccionDashboard({ dashboardData }) {
   const graficaData = dashboardData?.grafica || [];
   const topProspectos = dashboardData?.top_prospectos || [];

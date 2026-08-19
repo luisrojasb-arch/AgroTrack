@@ -19,6 +19,10 @@ const SHORT_MONTHS = [
 ];
 const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+/**
+ * @description Tabla de registros CIPA (Inseminación Artificial).
+ */
+
 export default function CipaTable() {
   const generarTabla = (diasAAgregar) => {
     const filas = [];

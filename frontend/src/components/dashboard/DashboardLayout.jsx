@@ -5,6 +5,13 @@ import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
+/**
+ * @description Layout principal para todas las vistas internas de la plataforma.
+ * @param {Object} props
+ * @param {React.ReactNode} props.children - Contenido de la página.
+ * @param {Object} props.usuario - Información del usuario logueado.
+ */
+
 export default function DashboardLayout({ children, usuario }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

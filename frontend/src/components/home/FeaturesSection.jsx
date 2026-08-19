@@ -47,6 +47,10 @@ const features = [
   },
 ];
 
+/**
+ * @description Sección agrupadora de características en la Landing Page.
+ */
+
 export default function FeaturesSection() {
   return (
     <section className="w-full px-6 md:px-8 lg:px-12 py-10 bg-white">

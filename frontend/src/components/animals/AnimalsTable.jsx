@@ -24,6 +24,12 @@ const calcularEdad = (fecha) => {
   }`;
 };
 
+/**
+ * @description Tabla de listado principal de animales.
+ * @param {Object} props - Propiedades de la tabla (datos y funciones de acción).
+ */
+//
+
 export default function AnimalsTable({
   animales = [],
   onView,

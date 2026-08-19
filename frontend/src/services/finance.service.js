@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio financiero. Centraliza las peticiones a la API para transacciones de ingresos, egresos y resúmenes económicos de la finca.
+ * @type {Object}
+ */
+
 export const financeService = {
   getResumen: async (token, params = "") => {
     const res = await fetch(`${API_URL}/finanzas/resumen?${params}`, {

@@ -43,11 +43,19 @@ const getInitialState = (item) => {
   };
 };
 
+/**
+ * @description Modal de formulario para agregar o editar artículos en inventario.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad.
+ * @param {Function} props.onClose - Función de cierre.
+ * @param {Object|null} props.itemToEdit - Artículo a editar.
+ * @param {Function} props.onSubmit - Acción de guardado.
+ */
+
 export default function InventoryFormModal({ isOpen, onClose, itemToEdit = null, onSubmit }) {
   const isEditMode = !!itemToEdit;
   const [formData, setFormData] = useState(() => getInitialState(itemToEdit));
 
-  // CORRECCIÓN: Uso de useEffect para sincronizar el modal en lugar de mutar durante el renderizado
   useEffect(() => {
     if (isOpen) {
       setFormData(getInitialState(itemToEdit));
@@ -78,7 +86,6 @@ export default function InventoryFormModal({ isOpen, onClose, itemToEdit = null,
       <Button variant="white" onClick={onClose} type="button" className="w-full sm:w-auto">
         Cancelar
       </Button>
-      {/* CORRECCIÓN: Enlazamos el botón al formulario mediante el atributo 'form' para habilitar la validación nativa */}
       <Button variant="green" type="submit" form="inventory-form" className="w-full sm:w-auto">
         {isEditMode ? "Editar Artículo" : "Registrar Artículo"}
       </Button>
@@ -94,7 +101,6 @@ export default function InventoryFormModal({ isOpen, onClose, itemToEdit = null,
       width="max-w-3xl"
       footer={formFooter}
     >
-      {/* CORRECCIÓN: Se agrega id="inventory-form" para conectarlo con el botón de submit del footer */}
       <form id="inventory-form" className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 px-6 pb-2" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-1.5">
           <label className="text-[14px] font-medium text-black">Código *</label>
@@ -108,7 +114,7 @@ export default function InventoryFormModal({ isOpen, onClose, itemToEdit = null,
         
         <div className="flex flex-col gap-1.5">
           <label className="text-[14px] font-medium text-black">Categoría *</label>
-          {/* CORRECCIÓN: Uso de la función handleSelectChange */}
+          
           <Select opciones={["Alimento", "Medicamento", "Herramienta", "Insumo"]} valorSeleccionado={formData.categoria} onChange={(v) => handleSelectChange("categoria", v)} />
         </div>
         
@@ -119,19 +125,19 @@ export default function InventoryFormModal({ isOpen, onClose, itemToEdit = null,
         
         <div className="flex flex-col gap-1.5">
           <label className="text-[14px] font-medium text-black">Cantidad *</label>
-          {/* CORRECCIÓN: Se agregó step="any" y onKeyDown */}
+         
           <input type="number" name="cantidad" value={formData.cantidad} onChange={handleChange} onKeyDown={blockInvalidChar} placeholder="0" min="0" step="any" required className="w-full h-10 px-3 rounded-lg border border-border-agro focus:outline-none focus:ring-1 focus:ring-primary text-[14px] text-black" />
         </div>
         
         <div className="flex flex-col gap-1.5">
           <label className="text-[14px] font-medium text-black">Stock mínimo</label>
-          {/* CORRECCIÓN: Se agregó step="any" y onKeyDown */}
+         
           <input type="number" name="stock_minimo" value={formData.stock_minimo} onChange={handleChange} onKeyDown={blockInvalidChar} placeholder="0" min="0" step="any" className="w-full h-10 px-3 rounded-lg border border-border-agro focus:outline-none focus:ring-1 focus:ring-primary text-[14px] text-black" />
         </div>
         
         <div className="flex flex-col gap-1.5">
           <label className="text-[14px] font-medium text-black">Costo unitario ($)</label>
-          {/* CORRECCIÓN: Se agregó onKeyDown */}
+          
           <input type="number" name="costo_unitario" value={formData.costo_unitario} onChange={handleChange} onKeyDown={blockInvalidChar} placeholder="0" min="0" step="0.01" className="w-full h-10 px-3 rounded-lg border border-border-agro focus:outline-none focus:ring-1 focus:ring-primary text-[14px] text-black" />
         </div>
         

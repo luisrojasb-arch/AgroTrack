@@ -2,6 +2,12 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Navegación por pestañas de la sección de configuración.
+ * @param {Object} props
+ * @param {string} props.userRole - Rol del usuario.
+ */
+
 export default function SettingsTabs({ userRole }) {
   const router = useRouter();
   const pathname = usePathname();

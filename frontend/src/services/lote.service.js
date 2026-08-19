@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/**
+ * @description Servicio para la gestión de lotes. Provee los métodos para crear agrupaciones, asignar animales y registrar situaciones por lote en la API.
+ * @type {Object}
+ */
+
 export const loteService = {
   obtenerLotes: async (token, params = {}) => {
     const { page = 1, limit = 10, search = "" } = params;

@@ -5,6 +5,11 @@ import { createPortal } from "react-dom";
 import { Search, Loader2, X } from "lucide-react";
 import { getAnimalesAction } from "@/actions/animal.actions";
 
+/**
+ * @description Componente de input con búsqueda autocompletada para seleccionar animales.
+ * @param {Object} props - Propiedades del input (onSelect, filtros, etc).
+ */
+
 export default function AnimalSearchInput({
   sexoFilter,
   valorInicial,

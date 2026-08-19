@@ -38,6 +38,10 @@ const permissionsData = [
   { modulo: "Usuarios", admin: "check", trabajador: "x", veterinario: "x" },
 ];
 
+/**
+ * @description Tabla de consulta de matriz de permisos por roles.
+ */
+
 export default function PermissionsTable() {
   const renderIcon = (status) => {
     switch (status) {

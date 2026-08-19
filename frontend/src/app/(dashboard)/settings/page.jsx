@@ -4,6 +4,10 @@ import { getPerfilAction } from "@/actions/user.actions";
 import { getFincaAction } from "@/actions/finca.actions";
 import { getSession } from "@/actions/auth.actions";
 
+/**
+ * @description Página de configuración general de la finca y preferencias del sistema.
+ */
+
 export default async function SettingsPage() {
   const session = await getSession();
   const userRole = session?.rol || "";

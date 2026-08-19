@@ -27,6 +27,11 @@ const getInitialState = () => ({
   nota: "",
 });
 
+/**
+ * @description Modal para cambiar la situación de un lote.
+ * @param {Object} props - Propiedades del modal.
+ */
+
 export default function LoteSituationModal({
   isOpen,
   onClose,

@@ -15,6 +15,11 @@ const MONTHS = [
   "DICIEMBRE",
 ];
 
+/**
+ * @description Tabla genérica de presentación de datos con diseño limpio.
+ * @param {Object} props - Propiedades base (headers, data, renderRow).
+ */
+
 export default function TablaGenerica({
   titulo,
   descripcion,

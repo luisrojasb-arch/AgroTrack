@@ -5,6 +5,15 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 
+/**
+ * @description Modal para registrar ajustes manuales (entradas/salidas) de stock.
+ * @param {Object} props
+ * @param {boolean} props.isOpen - Visibilidad.
+ * @param {Function} props.onClose - Función de cierre.
+ * @param {Object} props.item - Artículo a ajustar.
+ * @param {Function} props.onSubmit - Procesador del ajuste.
+ */
+
 export default function InventoryAdjustModal({ isOpen, onClose, item, onSubmit }) {
   const [ajuste, setAjuste] = useState({ tipo: "Salida", cantidad: "", nota: "" });
 

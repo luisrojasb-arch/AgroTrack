@@ -1,5 +1,12 @@
 import Button from "@/components/ui/Button";
 
+/**
+ * @description Encabezado de las tablas de reproducción con botón de crear.
+ * @param {Object} props
+ * @param {string} props.activeTab - Pestaña actual.
+ * @param {Function} props.onAdd - Acción de creación genérica.
+ */
+
 export default function ReproductionTableHeader({ activeTab, onAdd }) {
   const getHeaderTitle = () => {
     switch (activeTab) {

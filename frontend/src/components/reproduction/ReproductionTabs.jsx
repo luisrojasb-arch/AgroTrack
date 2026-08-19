@@ -2,6 +2,10 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+/**
+ * @description Pestañas de navegación del módulo reproductivo (Celos, Preñez, etc).
+ */
+
 export default function ReproductionTabs() {
   const router = useRouter();
   const pathname = usePathname();

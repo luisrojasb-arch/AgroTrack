@@ -17,6 +17,11 @@ export const metadata = {
   description: "Gestión de animales y ganado porcino.",
 };
 
+/**
+ * @description Página principal del módulo de Animales de la finca.
+ * @param {Object} props - Propiedades de Next.js (params, searchParams).
+ */
+
 export default async function AnimalsPage(props) {
   const searchParams = await props.searchParams;
 

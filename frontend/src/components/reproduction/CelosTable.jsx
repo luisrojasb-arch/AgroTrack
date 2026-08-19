@@ -1,6 +1,11 @@
 import { Check, Edit, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla de listado de historial de celos.
+ * @param {Object} props - Data y handlers.
+ */
+
 export default function CelosTable({
   celos = [],
   onConfirmar,

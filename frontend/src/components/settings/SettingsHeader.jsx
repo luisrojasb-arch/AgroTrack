@@ -1,3 +1,7 @@
+/**
+ * @description Encabezado de la página de configuración.
+ */
+
 export default function SettingsHeader() {
   return (
     <div className="flex flex-col mb-6">

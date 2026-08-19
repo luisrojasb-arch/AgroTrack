@@ -1,6 +1,12 @@
 import { Eye, Edit, ClipboardList, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla para el listado de lotes.
+ * @param {Object} props - Propiedades de la tabla.
+ */
+//
+
 export default function LotesTable({
   lotes = [],
   onView,

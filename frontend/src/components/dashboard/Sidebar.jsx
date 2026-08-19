@@ -69,6 +69,13 @@ const menuItems = [
   },
 ];
 
+/**
+ * @description Menú lateral de navegación.
+ * @param {Object} props
+ * @param {Function} props.onClose - Función para cerrar el menú en móvil.
+ * @param {Object} props.usuario - Información del usuario logueado.
+ */
+
 export default function Sidebar({ onClose, usuario }) {
   const pathname = usePathname();
 

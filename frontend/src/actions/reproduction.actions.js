@@ -1,9 +1,13 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { reproductionService } from "@/services/reproduction.service";
-import { revalidatePath } from "next/cache";
+import { reportesService } from "@/services/reportes.service";
 
+/**
+ * @description Obtiene el token de autenticación.
+ * @returns {Promise<string>} Token de sesión.
+ * @throws {Error} Si no existe autenticación.
+ */
 async function getToken() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -11,139 +15,90 @@ async function getToken() {
   return token;
 }
 
-export async function getEstadisticasReproduccionAction() {
+/**
+ * @description Genera y obtiene los datos del reporte de producción.
+ * @param {Object} payload - Parámetros y filtros para el reporte.
+ * @returns {Promise<Object>} Datos generados para el reporte de producción.
+ */
+export async function getDatosProduccionAction(payload) {
   try {
     const token = await getToken();
-    const result = await reproductionService.obtenerEstadisticas(token);
+    const result = await reportesService.obtenerDatosProduccion(token, payload);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-export async function getCelosAction(params) {
+/**
+ * @description Genera y obtiene los datos del reporte de salud.
+ * @param {Object} payload - Parámetros y filtros para el reporte.
+ * @returns {Promise<Object>} Datos generados para el reporte de salud.
+ */
+export async function getDatosSaludAction(payload) {
   try {
     const token = await getToken();
-    const result = await reproductionService.obtenerCelos(token, params);
+    const result = await reportesService.obtenerDatosSalud(token, payload);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-export async function getPrenecesAction(params) {
+/**
+ * @description Genera y obtiene los datos del reporte financiero.
+ * @param {Object} payload - Parámetros y filtros para el reporte.
+ * @returns {Promise<Object>} Datos generados para el reporte financiero.
+ */
+export async function getDatosFinancieroAction(payload) {
   try {
     const token = await getToken();
-    const result = await reproductionService.obtenerPreneces(token, params);
+    const result = await reportesService.obtenerDatosFinanciero(token, payload);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-export async function getNacimientosAction(params) {
+/**
+ * @description Genera y obtiene los datos del reporte de inventario.
+ * @param {Object} payload - Parámetros y filtros para el reporte.
+ * @returns {Promise<Object>} Datos generados para el reporte de inventario.
+ */
+export async function getDatosInventarioAction(payload) {
   try {
     const token = await getToken();
-    const result = await reproductionService.obtenerNacimientos(token, params);
+    const result = await reportesService.obtenerDatosInventario(token, payload);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-export async function getDetalleCicloAction(id) {
+/**
+ * @description Genera y obtiene los datos del reporte reproductivo.
+ * @param {Object} payload - Parámetros y filtros para el reporte.
+ * @returns {Promise<Object>} Datos generados para el reporte reproductivo.
+ */
+export async function getDatosReproductivoAction(payload) {
   try {
     const token = await getToken();
-    const result = await reproductionService.obtenerDetalleCiclo(token, id);
+    const result = await reportesService.obtenerDatosReproductivo(token, payload);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
   }
 }
 
-export async function registrarCeloAction(payload) {
+/**
+ * @description Genera y obtiene los datos consolidados para el reporte general anual.
+ * @param {Object} payload - Parámetros del año o filtros adicionales.
+ * @returns {Promise<Object>} Datos generados para el reporte anual.
+ */
+export async function getDatosAnualAction(payload) {
   try {
     const token = await getToken();
-    const result = await reproductionService.registrarCelo(token, payload);
-    revalidatePath("/reproduction");
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function editarCeloAction(id, payload) {
-  try {
-    const token = await getToken();
-    const result = await reproductionService.editarCelo(token, id, payload);
-    revalidatePath("/reproduction");
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function confirmarPrenezAction(id, payload) {
-  try {
-    const token = await getToken();
-    const result = await reproductionService.confirmarPrenez(
-      token,
-      id,
-      payload,
-    );
-    revalidatePath("/reproduction");
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function editarPrenezAction(id, payload) {
-  try {
-    const token = await getToken();
-    const result = await reproductionService.editarPrenez(token, id, payload);
-    revalidatePath("/reproduction");
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function confirmarNacimientoAction(id, payload) {
-  try {
-    const token = await getToken();
-    const result = await reproductionService.confirmarNacimiento(
-      token,
-      id,
-      payload,
-    );
-    revalidatePath("/reproduction");
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function editarNacimientoAction(id, payload) {
-  try {
-    const token = await getToken();
-    const result = await reproductionService.editarNacimiento(
-      token,
-      id,
-      payload,
-    );
-    revalidatePath("/reproduction");
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-}
-
-export async function eliminarCicloAction(id) {
-  try {
-    const token = await getToken();
-    const result = await reproductionService.eliminarCiclo(token, id);
-    revalidatePath("/reproduction");
+    const result = await reportesService.obtenerDatosAnual(token, payload);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };

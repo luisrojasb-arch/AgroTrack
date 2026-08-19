@@ -1,6 +1,11 @@
 import { Edit, Trash2 } from "lucide-react";
 import ActionMenu from "@/components/ui/ActionMenu";
 
+/**
+ * @description Tabla de listado de nacimientos y destetes.
+ * @param {Object} props - Data y handlers.
+ */
+
 export default function NacimientosTable({
   nacimientos = [],
   onEdit,

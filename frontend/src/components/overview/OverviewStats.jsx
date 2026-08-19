@@ -1,4 +1,11 @@
 import StatCard from '@/components/layout/StatCard';
+
+/**
+ * @description Tarjetas de resumen estadístico global del Panel Principal.
+ * @param {Object} props
+ * @param {Object} props.stats - Datos consolidados.
+ */
+
 export default function OverviewStats({ stats }) {    
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

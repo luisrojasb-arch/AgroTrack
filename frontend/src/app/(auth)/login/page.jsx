@@ -8,6 +8,10 @@ import Button from "@/components/ui/Button";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { loginAction } from "@/actions/auth.actions";
 
+/**
+ * @description Página de inicio de sesión del sistema.
+ */
+
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
   const [showPassword, setShowPassword] = useState(false);
