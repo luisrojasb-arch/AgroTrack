@@ -1,7 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { reportesService } from "@/services/reportes.service";
+import { reproductionService } from "@/services/reproduction.service";
+import { revalidatePath } from "next/cache";
 
 /**
  * @description Obtiene el token de autenticación.
@@ -16,14 +17,13 @@ async function getToken() {
 }
 
 /**
- * @description Genera y obtiene los datos del reporte de producción.
- * @param {Object} payload - Parámetros y filtros para el reporte.
- * @returns {Promise<Object>} Datos generados para el reporte de producción.
+ * @description Obtiene las estadísticas y métricas del módulo de reproducción.
+ * @returns {Promise<Object>} Estadísticas reproductivas.
  */
-export async function getDatosProduccionAction(payload) {
+export async function getEstadisticasReproduccionAction() {
   try {
     const token = await getToken();
-    const result = await reportesService.obtenerDatosProduccion(token, payload);
+    const result = await reproductionService.obtenerEstadisticas(token);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -31,14 +31,14 @@ export async function getDatosProduccionAction(payload) {
 }
 
 /**
- * @description Genera y obtiene los datos del reporte de salud.
- * @param {Object} payload - Parámetros y filtros para el reporte.
- * @returns {Promise<Object>} Datos generados para el reporte de salud.
+ * @description Obtiene la lista de registros de celos.
+ * @param {Object} params - Parámetros de búsqueda o paginación.
+ * @returns {Promise<Object>} Listado de celos.
  */
-export async function getDatosSaludAction(payload) {
+export async function getCelosAction(params) {
   try {
     const token = await getToken();
-    const result = await reportesService.obtenerDatosSalud(token, payload);
+    const result = await reproductionService.obtenerCelos(token, params);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -46,14 +46,14 @@ export async function getDatosSaludAction(payload) {
 }
 
 /**
- * @description Genera y obtiene los datos del reporte financiero.
- * @param {Object} payload - Parámetros y filtros para el reporte.
- * @returns {Promise<Object>} Datos generados para el reporte financiero.
+ * @description Obtiene la lista de preñeces activas e históricas.
+ * @param {Object} params - Parámetros de búsqueda o paginación.
+ * @returns {Promise<Object>} Listado de preñeces.
  */
-export async function getDatosFinancieroAction(payload) {
+export async function getPrenecesAction(params) {
   try {
     const token = await getToken();
-    const result = await reportesService.obtenerDatosFinanciero(token, payload);
+    const result = await reproductionService.obtenerPreneces(token, params);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -61,14 +61,14 @@ export async function getDatosFinancieroAction(payload) {
 }
 
 /**
- * @description Genera y obtiene los datos del reporte de inventario.
- * @param {Object} payload - Parámetros y filtros para el reporte.
- * @returns {Promise<Object>} Datos generados para el reporte de inventario.
+ * @description Obtiene la lista de nacimientos y partos registrados.
+ * @param {Object} params - Parámetros de búsqueda o paginación.
+ * @returns {Promise<Object>} Listado de nacimientos.
  */
-export async function getDatosInventarioAction(payload) {
+export async function getNacimientosAction(params) {
   try {
     const token = await getToken();
-    const result = await reportesService.obtenerDatosInventario(token, payload);
+    const result = await reproductionService.obtenerNacimientos(token, params);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -76,14 +76,14 @@ export async function getDatosInventarioAction(payload) {
 }
 
 /**
- * @description Genera y obtiene los datos del reporte reproductivo.
- * @param {Object} payload - Parámetros y filtros para el reporte.
- * @returns {Promise<Object>} Datos generados para el reporte reproductivo.
+ * @description Obtiene los detalles específicos de un ciclo reproductivo.
+ * @param {string|number} id - Identificador del ciclo.
+ * @returns {Promise<Object>} Información detallada del ciclo.
  */
-export async function getDatosReproductivoAction(payload) {
+export async function getDetalleCicloAction(id) {
   try {
     const token = await getToken();
-    const result = await reportesService.obtenerDatosReproductivo(token, payload);
+    const result = await reproductionService.obtenerDetalleCiclo(token, id);
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };
@@ -91,14 +91,128 @@ export async function getDatosReproductivoAction(payload) {
 }
 
 /**
- * @description Genera y obtiene los datos consolidados para el reporte general anual.
- * @param {Object} payload - Parámetros del año o filtros adicionales.
- * @returns {Promise<Object>} Datos generados para el reporte anual.
+ * @description Registra la ocurrencia de un nuevo celo en el sistema.
+ * @param {Object} payload - Datos correspondientes al celo.
+ * @returns {Promise<Object>} Resultado del registro.
  */
-export async function getDatosAnualAction(payload) {
+export async function registrarCeloAction(payload) {
   try {
     const token = await getToken();
-    const result = await reportesService.obtenerDatosAnual(token, payload);
+    const result = await reproductionService.registrarCelo(token, payload);
+    revalidatePath("/reproduction");
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * @description Edita los datos de un celo registrado.
+ * @param {string|number} id - Identificador del celo.
+ * @param {Object} payload - Nuevos datos.
+ * @returns {Promise<Object>} Resultado de la edición.
+ */
+export async function editarCeloAction(id, payload) {
+  try {
+    const token = await getToken();
+    const result = await reproductionService.editarCelo(token, id, payload);
+    revalidatePath("/reproduction");
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * @description Confirma una preñez resultante de un celo/monta.
+ * @param {string|number} id - Identificador del evento/celo.
+ * @param {Object} payload - Datos de confirmación de la preñez.
+ * @returns {Promise<Object>} Resultado de la confirmación.
+ */
+export async function confirmarPrenezAction(id, payload) {
+  try {
+    const token = await getToken();
+    const result = await reproductionService.confirmarPrenez(
+      token,
+      id,
+      payload,
+    );
+    revalidatePath("/reproduction");
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * @description Edita los datos de un registro de preñez.
+ * @param {string|number} id - Identificador de la preñez.
+ * @param {Object} payload - Nuevos datos a actualizar.
+ * @returns {Promise<Object>} Resultado de la actualización.
+ */
+export async function editarPrenezAction(id, payload) {
+  try {
+    const token = await getToken();
+    const result = await reproductionService.editarPrenez(token, id, payload);
+    revalidatePath("/reproduction");
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * @description Confirma el parto o nacimiento resultante de una preñez.
+ * @param {string|number} id - Identificador de la preñez.
+ * @param {Object} payload - Datos correspondientes al parto (lechones vivos, muertos, etc).
+ * @returns {Promise<Object>} Resultado de la confirmación del nacimiento.
+ */
+export async function confirmarNacimientoAction(id, payload) {
+  try {
+    const token = await getToken();
+    const result = await reproductionService.confirmarNacimiento(
+      token,
+      id,
+      payload,
+    );
+    revalidatePath("/reproduction");
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * @description Edita los datos del registro de un nacimiento/parto.
+ * @param {string|number} id - Identificador del registro de nacimiento.
+ * @param {Object} payload - Datos actualizados del parto.
+ * @returns {Promise<Object>} Resultado de la edición.
+ */
+export async function editarNacimientoAction(id, payload) {
+  try {
+    const token = await getToken();
+    const result = await reproductionService.editarNacimiento(
+      token,
+      id,
+      payload,
+    );
+    revalidatePath("/reproduction");
+    return { success: true, data: result };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * @description Elimina por completo un ciclo reproductivo o evento específico del historial.
+ * @param {string|number} id - Identificador del ciclo.
+ * @returns {Promise<Object>} Resultado de la eliminación.
+ */
+export async function eliminarCicloAction(id) {
+  try {
+    const token = await getToken();
+    const result = await reproductionService.eliminarCiclo(token, id);
+    revalidatePath("/reproduction");
     return { success: true, data: result };
   } catch (error) {
     return { success: false, error: error.message };

@@ -1,7 +1,12 @@
+import ReportesContainer from "@/components/reports/ReportesContainer";
+export const metadata = {
+  title: "Reportes | AgroTrack",
+  description: "Generación de informes y análisis de datos de la finca.",
+};
 export default function ReportsPage() {
   return (
     <div>
-      <h1>Gestión de Informes</h1>
+      <ReportesContainer/>
     </div>
   );
 }
