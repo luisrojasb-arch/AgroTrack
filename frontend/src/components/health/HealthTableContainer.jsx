@@ -9,11 +9,13 @@ import HealthAnimalstable from "./HealthAnimalstable";
 import HealthLotestable from "./HealthLotestable";
 import HealthCronoBase from "./HealthCronoBase";
 import Pagination from "@/components/ui/Pagination";
-import { createTareaSaludAction, toggleTareaSaludAction } from "@/actions/salud.actions";
+import { createTareaSaludAction, toggleTareaSaludAction, updateTareaSaludAction, deleteTareaSaludAction } from "@/actions/salud.actions";
 import HealthAnimalFormModal from "@/components/health/modalsAnimals/HealthAnimalFormModal";
 import HealthLoteFormModal from "@/components/health/modalsLote/HealthLoteFormModal";
 import HealthTareasModal from "@/components/health/modalsTareas/HealthTareasModal"; 
-
+import HealthTareaDetailsModal from "@/components/health/modalsTareas/HealthTareaDetailsModal";
+import HealthTareaEditModal from "@/components/health/modalsTareas/HealthTareaEditModal";
+import HealthTareaDeleteModal from "@/components/health/modalsTareas/HealthTareaDeleteModal";
 export default function HealthTableContainer({
   initialData,
   activeTab = "individuales",
@@ -24,7 +26,6 @@ export default function HealthTableContainer({
   const lotedata = initialData?.lotes || { data: { registros: [], paginacion: {} } };
   const animaldata = initialData?.animales || { data: { registros: [], paginacion: {} } };
   
-  // Aseguramos que tareasdata sea siempre un arreglo para poder filtrarlo
   const tareasResponse = initialData?.tareas || [];
   const tareasdata = Array.isArray(tareasResponse) ? tareasResponse : tareasResponse.tareas || [];
 
@@ -39,21 +40,16 @@ export default function HealthTableContainer({
     paginacion = lotedata?.paginacion || paginacion;
   }
 
-  // Estados para controlar los Modales de Creación
   const [isAnimalModalOpen, setIsAnimalModalOpen] = useState(false);
   const [isLoteModalOpen, setIsLoteModalOpen] = useState(false);
   
-  // Estados para controlar el Modal de Ver Tareas
   const [isTareasModalOpen, setIsTareasModalOpen] = useState(false);
   const [tareasSeleccionadas, setTareasSeleccionadas] = useState([]);
 
-  // Handlers para abrir los modales de creación
   const handleAddAnimalHealth = () => setIsAnimalModalOpen(true);
   const handleAddLoteHealth = () => setIsLoteModalOpen(true);
 
-  // Handler para el botón "Ver Tareas" en la tabla
   const handleVerTareas = (item) => {
-    // Filtramos las tareas dependiendo si es un animal o un lote
     const tareasFiltradas = tareasdata.filter((t) => {
       if (activeTab === "individuales") {
         return t.animal_id?._id === item.id;
@@ -100,6 +96,49 @@ export default function HealthTableContainer({
       toast.success(res.data?.msg || "Estado de la tarea actualizado");
     } else {
       toast.error(res.error || "No se pudo actualizar la tarea");
+    }
+  };
+  const [selectedTareaAccion, setSelectedTareaAccion] = useState(null);
+  const [isDetalleTareaOpen, setIsDetalleTareaOpen] = useState(false);
+  const [isEditTareaOpen, setIsEditTareaOpen] = useState(false);
+  const [isDeleteTareaOpen, setIsDeleteTareaOpen] = useState(false);
+
+  const handleViewTareaDetails = (tarea) => {
+    setSelectedTareaAccion(tarea);
+    setIsDetalleTareaOpen(true);
+  };
+
+  const handleEditTarea = (tarea) => {
+    setSelectedTareaAccion(tarea);
+    setIsEditTareaOpen(true);
+  };
+
+  const handleDeleteTareaClick = (tarea) => {
+    setSelectedTareaAccion(tarea);
+    setIsDeleteTareaOpen(true);
+  };
+
+  const handleSubmitEditTarea = async (id, data) => {
+    const res = await updateTareaSaludAction(id, data);
+    if (res.success) {
+      setTareasSeleccionadas((prev) =>
+        prev.map((t) => (t._id === id ? { ...t, ...data } : t))
+      );
+      setIsEditTareaOpen(false);
+      toast.success("Tarea actualizada correctamente");
+    } else {
+      toast.error(res.error || "No se pudo actualizar la tarea");
+    }
+  };
+
+  const handleConfirmDeleteTarea = async (id) => {
+    const res = await deleteTareaSaludAction(id);
+    if (res.success) {
+      setTareasSeleccionadas((prev) => prev.filter((t) => t._id !== id));
+      setIsDeleteTareaOpen(false);
+      toast.success("Tarea eliminada correctamente");
+    } else {
+      toast.error(res.error || "No se pudo eliminar la tarea");
     }
   };
 
@@ -155,6 +194,29 @@ export default function HealthTableContainer({
         tareas={tareasSeleccionadas}
         entidadType={activeTab === "individuales" ? "Animal" : "Lote"}
         onToggleTarea={handleToggleTarea}
+        onViewClick={handleViewTareaDetails}
+        onEditClick={handleEditTarea}
+        onDeleteClick={handleDeleteTareaClick}
+      />
+
+      <HealthTareaDetailsModal
+        isOpen={isDetalleTareaOpen}
+        onClose={() => setIsDetalleTareaOpen(false)}
+        tarea={selectedTareaAccion}
+      />
+
+      <HealthTareaEditModal
+        isOpen={isEditTareaOpen}
+        onClose={() => setIsEditTareaOpen(false)}
+        tareaToEdit={selectedTareaAccion}
+        onSubmit={handleSubmitEditTarea}
+      />
+
+      <HealthTareaDeleteModal
+        isOpen={isDeleteTareaOpen}
+        onClose={() => setIsDeleteTareaOpen(false)}
+        tarea={selectedTareaAccion}
+        onConfirm={handleConfirmDeleteTarea}
       />
     </div>
   );

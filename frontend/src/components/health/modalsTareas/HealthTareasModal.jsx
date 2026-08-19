@@ -11,9 +11,11 @@ export default function HealthTareasModal({
   onClose,
   tareas = [],
   entidadType = "Animal",
-  onToggleTarea, // Nueva prop para manejar la actualización
+  onToggleTarea,
+  onViewClick,    
+  onEditClick,   
+  onDeleteClick, 
 }) {
-  // Estado local para manejar transiciones de carga mientras se actualiza
   const [loadingId, setLoadingId] = useState(null);
 
   const formatearFecha = (fechaISO) => {
@@ -31,7 +33,6 @@ export default function HealthTareasModal({
     
     setLoadingId(tareaId);
     try {
-      // Llamamos a la función que ejecuta el Server Action
       await onToggleTarea(tareaId);
     } catch (error) {
       toast.error("Error al actualizar la tarea");
@@ -58,7 +59,6 @@ export default function HealthTareasModal({
       <div className="flex flex-col gap-4 p-6">
         {tareas.length > 0 ? (
           tareas.map((tarea) => {
-            // Lógica de estado idéntica a la del backend (salud.controller.js)
             const ahora = new Date();
             const fechaTarea = new Date(tarea.fecha);
             
@@ -82,10 +82,8 @@ export default function HealthTareasModal({
                 key={tarea._id}
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white border border-border-agro rounded-xl shadow-sm gap-4"
               >
-                {/* Lado izquierdo: Información de la tarea */}
                 <div className="flex items-start gap-3">
                   
-                  {/* BOTÓN CHECK CIRCULAR */}
                   <button 
                     onClick={() => handleToggleClick(tarea._id)}
                     disabled={isUpdating}
@@ -103,7 +101,6 @@ export default function HealthTareasModal({
                     <div className="flex items-center gap-3">
                       <span className="text-[16px] font-bold text-black">{tarea.tipo}</span>
                       
-                      {/* ETIQUETA DE ESTADO */}
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${
                           tarea.aplicado
@@ -125,16 +122,23 @@ export default function HealthTareasModal({
                     </span>
                   </div>
                 </div>
-
-                {/* Lado derecho: Botones de acción */}
                 <div className="flex items-center gap-2 self-end sm:self-auto">
-                  <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-border-agro text-green-600 hover:bg-green-50 transition-colors cursor-pointer">
+                  <button 
+                    onClick={() => onViewClick && onViewClick(tarea)} 
+                    className="w-8 h-8 flex items-center justify-center rounded-lg border border-border-agro text-green-600 hover:bg-green-50 transition-colors cursor-pointer"
+                  >
                     <Eye size={16} />
                   </button>
-                  <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-border-agro text-green-600 hover:bg-green-50 transition-colors cursor-pointer">
+                  <button 
+                    onClick={() => onEditClick && onEditClick(tarea)} 
+                    className="w-8 h-8 flex items-center justify-center rounded-lg border border-border-agro text-green-600 hover:bg-green-50 transition-colors cursor-pointer"
+                  >
                     <Edit size={16} />
                   </button>
-                  <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
+                  <button 
+                    onClick={() => onDeleteClick && onDeleteClick(tarea)} 
+                    className="w-8 h-8 flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                  >
                     <Trash2 size={16} />
                   </button>
                 </div>
