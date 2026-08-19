@@ -12,7 +12,8 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al obtener estadísticas de salud");
+    if (!res.ok)
+      throw new Error(data.msg || "Error al obtener estadísticas de salud");
     return data.estadisticas;
   },
 
@@ -35,7 +36,8 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al obtener tareas de salud");
+    if (!res.ok)
+      throw new Error(data.msg || "Error al obtener tareas de salud");
     return data;
   },
 
@@ -47,7 +49,6 @@ export const saludService = {
       limit,
       search,
     }).toString();
-    console.log(query);
 
     const res = await fetch(`${API_URL}/salud/resumen-lotes?${query}`, {
       method: "GET",
@@ -59,7 +60,10 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al obtener resumen de salud por lotes");
+    if (!res.ok)
+      throw new Error(
+        data.msg || "Error al obtener resumen de salud por lotes",
+      );
     return data;
   },
 
@@ -82,7 +86,10 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al obtener resumen de salud por animales");
+    if (!res.ok)
+      throw new Error(
+        data.msg || "Error al obtener resumen de salud por animales",
+      );
     return data;
   },
 
@@ -97,7 +104,8 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al registrar la tarea de salud");
+    if (!res.ok)
+      throw new Error(data.msg || "Error al registrar la tarea de salud");
     return data;
   },
 
@@ -112,7 +120,10 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al obtener detalles de la tarea de salud");
+    if (!res.ok)
+      throw new Error(
+        data.msg || "Error al obtener detalles de la tarea de salud",
+      );
     return data;
   },
 
@@ -127,7 +138,23 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al editar la tarea de salud");
+    if (!res.ok)
+      throw new Error(data.msg || "Error al editar la tarea de salud");
+    return data;
+  },
+
+  toggleAplicarTarea: async (token, id) => {
+    const res = await fetch(`${API_URL}/salud/${id}/toggle`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    if (!res.ok)
+      throw new Error(data.msg || "Error al actualizar el estado de la tarea");
     return data;
   },
 
@@ -141,7 +168,8 @@ export const saludService = {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.msg || "Error al eliminar la tarea de salud");
+    if (!res.ok)
+      throw new Error(data.msg || "Error al eliminar la tarea de salud");
     return data;
   },
 };

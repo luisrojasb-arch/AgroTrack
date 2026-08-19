@@ -13,7 +13,7 @@ export default function FinanceExpenseBreakdown({ data = [] }) {
   };
 
   return (
-    <div className="bg-white border border-border-agro rounded-3xl p-6 shadow-sm flex flex-col w-full h-full min-h-[300px]">
+    <div className="bg-gradient-card border border-border-agro rounded-3xl p-6 shadow-sm flex flex-col w-full h-full min-h-[300px]">
       
       <div className="mb-8">
         <h3 className="text-[20px] font-bold text-black leading-tight mb-1">

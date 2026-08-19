@@ -4,8 +4,7 @@ import Lote from "../models/lote.model.js";
 import { catchAsync } from "../middlewares/catch_async.middleware.js";
 
 /**
- * @description Obtener la lista de tareas de salud (Paginadas de 5 en 5).
- * Se puede filtrar pasando ?animal_id=... o ?lote_id=... en la URL.
+ * @description Obtener la lista de tareas de salud con su estado dinámico calculado.
  */
 export const obtenerTareasSalud = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -22,7 +21,7 @@ export const obtenerTareasSalud = catchAsync(async (req, res) => {
   const options = {
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
-    sort: { fecha: -1 },
+    sort: { fecha: 1 },
     populate: [
       { path: "animal_id", select: "codigo nombre" },
       { path: "lote_id", select: "codigo_lote" },
@@ -30,9 +29,26 @@ export const obtenerTareasSalud = catchAsync(async (req, res) => {
   };
 
   const resultado = await Salud.paginate(query, options);
+  const ahora = new Date();
+
+  const tareasConEstado = resultado.docs.map((doc) => {
+    const tarea = doc.toObject();
+    let estado = "Pendiente";
+
+    if (tarea.aplicado) {
+      estado = "Aplicado";
+    } else if (new Date(tarea.fecha) < ahora) {
+      estado = "Vencido";
+    }
+
+    return {
+      ...tarea,
+      estado,
+    };
+  });
 
   res.status(200).json({
-    tareas: resultado.docs,
+    tareas: tareasConEstado,
     paginacion: {
       totalRegistros: resultado.totalDocs,
       totalPaginas: resultado.totalPages,
@@ -47,7 +63,33 @@ export const obtenerTareasSalud = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Registrar un nuevo evento de salud (Vacuna, Tratamiento, etc.).
+ * @description Alternar el check de aplicado (Marcar/Desmarcar como aplicado).
+ */
+export const toggleAplicarSalud = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const fincaId = req.finca._id;
+
+  const tarea = await Salud.findOne({
+    _id: id,
+    finca_id: fincaId,
+    esta_eliminado: false,
+  });
+
+  if (!tarea) {
+    return res.status(404).json({ msg: "Evento de salud no encontrado." });
+  }
+
+  tarea.aplicado = !tarea.aplicado;
+  await tarea.save();
+
+  res.status(200).json({
+    msg: `Evento marcado como ${tarea.aplicado ? "aplicado" : "pendiente"}.`,
+    tarea,
+  });
+});
+
+/**
+ * @description Registrar un nuevo evento de salud.
  */
 export const registrarSalud = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -64,7 +106,7 @@ export const registrarSalud = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Obtener los detalles de una tarea específica (Modal: Detalles de Salud).
+ * @description Obtener el detalle de una tarea específica.
  */
 export const obtenerDetalleSalud = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -86,7 +128,7 @@ export const obtenerDetalleSalud = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Editar un evento de salud (Modal: Editar Evento de Salud).
+ * @description Editar un evento de salud.
  */
 export const editarSalud = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -129,8 +171,7 @@ export const eliminarSalud = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Obtener el resumen de salud para la tabla principal de LOTES.
- * Calcula el progreso (ej. 0/9) y la próxima tarea pendiente.
+ * @description Resumen de salud para la tabla principal de LOTES.
  */
 export const obtenerResumenSaludLotes = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -159,10 +200,21 @@ export const obtenerResumenSaludLotes = catchAsync(async (req, res) => {
       }).sort({ fecha: 1 });
 
       const total = tareas.length;
-      const completadas = tareas.filter((t) => t.fecha <= ahora);
-      const pendientes = tareas.filter((t) => t.fecha > ahora);
+      const completadas = tareas.filter((t) => t.aplicado);
+      const pendientes = tareas.filter((t) => !t.aplicado);
 
       const proxima = pendientes.length > 0 ? pendientes[0] : null;
+
+      let estado = "N/A";
+      if (total > 0) {
+        if (pendientes.length === 0) {
+          estado = "Completado";
+        } else if (proxima && new Date(proxima.fecha) < ahora) {
+          estado = "Vencido";
+        } else {
+          estado = "Pendiente";
+        }
+      }
 
       return {
         id: lote._id,
@@ -174,7 +226,7 @@ export const obtenerResumenSaludLotes = catchAsync(async (req, res) => {
             ? "Completado"
             : "Sin cronograma",
         fecha: proxima ? proxima.fecha : null,
-        estado: proxima ? "Próximo" : total > 0 ? "Completado" : "N/A",
+        estado,
       };
     }),
   );
@@ -193,8 +245,7 @@ export const obtenerResumenSaludLotes = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Obtener el resumen de salud para la tabla principal de ANIMALES.
- * Muestra la tarea más inminente (o la última aplicada) por animal.
+ * @description Resumen de salud para la tabla principal de ANIMALES.
  */
 export const obtenerResumenSaludAnimales = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -225,23 +276,34 @@ export const obtenerResumenSaludAnimales = catchAsync(async (req, res) => {
         esta_eliminado: false,
       }).sort({ fecha: 1 });
 
-      const completadas = tareas.filter((t) => t.fecha <= ahora);
-      const pendientes = tareas.filter((t) => t.fecha > ahora);
+      const completadas = tareas.filter((t) => t.aplicado);
+      const pendientes = tareas.filter((t) => !t.aplicado);
 
       const proxima = pendientes.length > 0 ? pendientes[0] : null;
       const ultima =
         completadas.length > 0 ? completadas[completadas.length - 1] : null;
       const tareaMostrar = proxima || ultima;
 
+      let estadoCalculado = "Sin registros";
+      if (tareaMostrar) {
+        if (tareaMostrar.aplicado) {
+          estadoCalculado = "Aplicado";
+        } else {
+          const fechaTarea = new Date(tareaMostrar.fecha);
+          estadoCalculado = fechaTarea < ahora ? "Vencido" : "Pendiente";
+        }
+      }
+
       return {
         id: animal._id,
         codigo: animal.codigo,
         nombre: animal.nombre || "-",
+        fecha_nacimiento: animal.fecha_nacimiento,
         fecha: tareaMostrar ? tareaMostrar.fecha : null,
         tipo: tareaMostrar ? tareaMostrar.tipo : "-",
         producto: tareaMostrar ? tareaMostrar.producto || "-" : "-",
         dosis: tareaMostrar ? tareaMostrar.dosis || "-" : "-",
-        estado: proxima ? "Pendiente" : ultima ? "Aplicado" : "Sin registros",
+        estado: estadoCalculado,
       };
     }),
   );
@@ -260,7 +322,7 @@ export const obtenerResumenSaludAnimales = catchAsync(async (req, res) => {
 });
 
 /**
- * @description Obtener estadísticas generales de salud (Tarjetas resumen).
+ * @description Estadísticas generales de salud (Tarjetas resumen).
  */
 export const obtenerEstadisticasSalud = catchAsync(async (req, res) => {
   const fincaId = req.finca._id;
@@ -274,11 +336,10 @@ export const obtenerEstadisticasSalud = catchAsync(async (req, res) => {
   const total = tareas.length;
 
   tareas.forEach((tarea) => {
-    if (tarea.estado === "Completado") {
+    if (tarea.aplicado) {
       completados++;
     } else {
       const fechaTarea = new Date(tarea.fecha);
-
       if (fechaTarea < ahora) {
         vencidos++;
       } else {

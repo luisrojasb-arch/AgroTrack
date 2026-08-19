@@ -3,13 +3,14 @@
 import { useState, useRef, useEffect } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
 import { Search } from "lucide-react";
 
-export default function HealthAnimalFormModal({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  animalesDisponibles = [] 
+export default function HealthAnimalFormModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  animalesDisponibles = [],
 }) {
   const [formData, setFormData] = useState({
     animal_id: "",
@@ -35,13 +36,14 @@ export default function HealthAnimalFormModal({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
- 
-  const animalesFiltrados = animalesDisponibles.filter((animal) => {
-    const busqueda = searchTerm.toLowerCase();
-    const codigo = animal.codigo?.toLowerCase() || "";
-    const nombre = animal.nombre?.toLowerCase() || "";
-    return codigo.includes(busqueda) || nombre.includes(busqueda);
-  }).slice(0, 5); 
+  const animalesFiltrados = animalesDisponibles
+    .filter((animal) => {
+      const busqueda = searchTerm.toLowerCase();
+      const codigo = animal.codigo?.toLowerCase() || "";
+      const nombre = animal.nombre?.toLowerCase() || "";
+      return codigo.includes(busqueda) || nombre.includes(busqueda);
+    })
+    .slice(0, 5);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -51,7 +53,9 @@ export default function HealthAnimalFormModal({
 
   const handleSelectAnimal = (animal) => {
     setFormData((prev) => ({ ...prev, animal_id: animal._id }));
-    setSearchTerm(`${animal.codigo} ${animal.nombre ? `- ${animal.nombre}` : ""}`);
+    setSearchTerm(
+      `${animal.codigo} ${animal.nombre ? `- ${animal.nombre}` : ""}`,
+    );
     setIsDropdownOpen(false);
   };
 
@@ -77,10 +81,20 @@ export default function HealthAnimalFormModal({
 
   const formFooter = (
     <>
-      <Button type="button" variant="white" onClick={onClose} className="w-full sm:w-auto">
+      <Button
+        type="button"
+        variant="white"
+        onClick={onClose}
+        className="w-full sm:w-auto"
+      >
         Cancelar
       </Button>
-      <Button type="submit" variant="green" form="animal-health-form" className="w-full sm:w-auto">
+      <Button
+        type="submit"
+        variant="green"
+        form="animal-health-form"
+        className="w-full sm:w-auto"
+      >
         Registrar Salud
       </Button>
     </>
@@ -95,10 +109,15 @@ export default function HealthAnimalFormModal({
       footer={formFooter}
       width="max-w-2xl"
     >
-      <form id="animal-health-form" onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
-        
+      <form
+        id="animal-health-form"
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4 p-6"
+      >
         <div className="flex flex-col gap-1.5 relative" ref={dropdownRef}>
-          <label className="text-[13px] font-semibold text-black">Animal *</label>
+          <label className="text-[13px] font-semibold text-black">
+            Animal *
+          </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search size={16} className="text-gray-400" />
@@ -113,7 +132,7 @@ export default function HealthAnimalFormModal({
               className="w-full h-10.5 pl-9 pr-3 border border-border-agro rounded-lg text-sm text-black focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
-          
+
           {isDropdownOpen && searchTerm && (
             <div className="absolute z-50 top-full mt-1 w-full bg-white border border-border-agro rounded-lg shadow-lg overflow-hidden">
               <ul className="py-1 max-h-48 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
@@ -124,7 +143,8 @@ export default function HealthAnimalFormModal({
                       onClick={() => handleSelectAnimal(animal)}
                       className="px-4 py-2 text-sm text-gray-700 hover:bg-[#E8F3EB] hover:text-primary cursor-pointer transition-colors"
                     >
-                      <span className="font-semibold">{animal.codigo}</span> {animal.nombre ? `- ${animal.nombre}` : ""}
+                      <span className="font-semibold">{animal.codigo}</span>{" "}
+                      {animal.nombre ? `- ${animal.nombre}` : ""}
                     </li>
                   ))
                 ) : (
@@ -137,29 +157,31 @@ export default function HealthAnimalFormModal({
           )}
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 z-40">
           <label className="text-[13px] font-semibold text-black">Tipo *</label>
-          <select
-            name="tipo"
-            required
-            value={formData.tipo}
-            onChange={handleChange}
-            className="w-full h-10.5 px-3 border border-border-agro rounded-lg text-sm text-black focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white"
-          >
-            <option value="Vacuna">Vacuna</option>
-            <option value="Desparasitación">Desparasitación</option>
-            <option value="Descolmille">Descolmille</option>
-            <option value="Castración">Castración</option>
-            <option value="Cirugía">Cirugía</option>
-            <option value="Revisión">Revisión</option>
-            <option value="Tratamiento">Tratamiento</option>
-            <option value="Otro">Otro</option>
-          </select>
+          <Select
+            opciones={[
+              "Vacuna",
+              "Desparasitación",
+              "Descolmille",
+              "Castración",
+              "Cirugía",
+              "Revisión",
+              "Tratamiento",
+              "Otro",
+            ]}
+            valorSeleccionado={formData.tipo}
+            onChange={(valor) =>
+              setFormData((prev) => ({ ...prev, tipo: valor }))
+            }
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Producto *</label>
+            <label className="text-[13px] font-semibold text-black">
+              Producto *
+            </label>
             <input
               type="text"
               name="producto"
@@ -171,7 +193,9 @@ export default function HealthAnimalFormModal({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Dosis (ml) *</label>
+            <label className="text-[13px] font-semibold text-black">
+              Dosis (ml) *
+            </label>
             <input
               type="number"
               name="dosis"
@@ -188,7 +212,9 @@ export default function HealthAnimalFormModal({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Fecha *</label>
+            <label className="text-[13px] font-semibold text-black">
+              Fecha *
+            </label>
             <input
               type="date"
               name="fecha"
@@ -199,7 +225,9 @@ export default function HealthAnimalFormModal({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">Proxima dosis (Opcional)</label>
+            <label className="text-[13px] font-semibold text-black">
+              Proxima dosis (Opcional)
+            </label>
             <input
               type="date"
               name="proxima_dosis"

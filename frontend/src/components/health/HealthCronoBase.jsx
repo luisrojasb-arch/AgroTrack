@@ -1,51 +1,78 @@
+"use client";
+
 import { TriangleAlert } from "lucide-react";
 
 export default function HealthCronoBase() {
   const cronograma = [
-    { dia: "2", manejo: "Descolmillado y descola", producto: "Hierro dextrano + anticoccidial" },
+    {
+      dia: "2",
+      manejo: "Descolmillado y descola",
+      producto: "Hierro dextrano + anticoccidial",
+    },
     { dia: "5", manejo: "Vacuna edemas", producto: "Bepure (Inpra España)" },
     { dia: "12", manejo: "Vitaminas", producto: "Complejo B" },
-    { dia: "15", manejo: "Castración de machos", producto: "Castración quirúrgica (lactancia)" },
+    {
+      dia: "15",
+      manejo: "Castración de machos",
+      producto: "Castración quirúrgica (lactancia)",
+    },
     { dia: "21", manejo: "Vitaminas", producto: "Vitamina AD3E" },
-    { dia: "35", manejo: "Destete y desparasitación", producto: "Desparasitante oral" },
-    { dia: "40", manejo: "Vacuna cólera porcino", producto: "Vacuna PPC (obligatoria para salida)" },
+    {
+      dia: "35",
+      manejo: "Destete y desparasitación",
+      producto: "Desparasitante oral",
+    },
+    {
+      dia: "40",
+      manejo: "Vacuna cólera porcino",
+      producto: "Vacuna PPC (obligatoria para salida)",
+    },
   ];
 
   return (
-    <div className="bg-white border border-[var(--color-border-agro)] rounded-2xl overflow-hidden shadow-sm w-full">
-      
-      <div className="grid grid-cols-[80px_1fr_1fr] sm:grid-cols-[100px_1fr_1fr] p-5 border-b border-[var(--color-border-agro)]">
-        <div className="text-[13px] font-semibold text-[var(--color-gray-agro)] uppercase tracking-wide">
-          Dia
-        </div>
-        <div className="text-[13px] font-semibold text-[var(--color-gray-agro)] uppercase tracking-wide">
-          Manejo/Vacuna
-        </div>
-        <div className="text-[13px] font-semibold text-[var(--color-gray-agro)] uppercase tracking-wide">
-          Producto
-        </div>
-      </div>
+    <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
+      <table className="w-full text-left border-collapse min-w-[600px]">
+        <thead>
+          <tr className="border-b border-border-agro">
+            <th className="py-4 px-2 text-[12px] font-bold text-gray-500 uppercase tracking-wider">
+              Día
+            </th>
+            <th className="py-4 px-2 text-[12px] font-bold text-gray-500 uppercase tracking-wider">
+              Manejo/Vacuna
+            </th>
+            <th className="py-4 px-2 text-[12px] font-bold text-gray-500 uppercase tracking-wider">
+              Producto
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {cronograma.map((item, index) => (
+            <tr
+              key={index}
+              className="border-b border-[#F4F5F7] hover:bg-gray-50 transition-colors"
+            >
+              <td className="py-4 px-2 text-[14px] text-black font-medium">
+                {item.dia}
+              </td>
+              <td className="py-4 px-2 text-[14px] text-black">
+                {item.manejo}
+              </td>
+              <td className="py-4 px-2 text-[14px] text-black">
+                {item.producto}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      <div className="flex flex-col">
-        {cronograma.map((item, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-[80px_1fr_1fr] sm:grid-cols-[100px_1fr_1fr] p-5 border-b border-[var(--color-border-agro)] last:border-b-0 hover:bg-gray-50 transition-colors"
-          >
-            <div className="text-sm text-black font-medium">{item.dia}</div>
-            <div className="text-sm text-black pr-4">{item.manejo}</div>
-            <div className="text-sm text-black">{item.producto}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-[var(--color-bg-nav)] p-5 flex items-start sm:items-center gap-3 border-t border-[var(--color-border-agro)]">
-        <TriangleAlert className="w-5 h-5 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
-        <p className="text-sm text-[var(--color-gray-agro-muted)]">
-          Ningún animal debe salir de la finca sin la vacuna contra el cólera porcino (día 40).
+      {/* Alerta de advertencia sin fondo, flotando abajo */}
+      <div className="flex items-center gap-2 mt-6 px-2">
+        <TriangleAlert className="w-[18px] h-[18px] text-amber-500 shrink-0" />
+        <p className="text-[13px] text-gray-500">
+          Ningún animal debe salir de la finca sin la vacuna contra el cólera
+          porcino (día 40).
         </p>
       </div>
-      
     </div>
   );
 }
