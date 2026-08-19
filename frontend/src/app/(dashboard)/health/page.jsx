@@ -26,9 +26,9 @@ export default async function HealthPage({ searchParams }) {
   const resumenAnimales = await getResumenSaludAnimalesAction({ page, limit, search, filter });
   const animalesdisp = await getAnimalesAction()
   const lotesdisp = await getLotesAction()
-  console.log(animalesdisp.data.animales)
-  console.log(lotesdisp.data.lotes)
-  //console.log(tareas)
+  //console.log(animalesdisp.data.animales)
+  //console.log(lotesdisp.data.lotes)
+  console.log(tareas.data.tareas)
   //console.log(resumenLotes)
   //console.log(resumenAnimales)
 
