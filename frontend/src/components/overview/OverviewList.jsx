@@ -22,7 +22,7 @@ export default function OverviewList({ data }) {
   const alertasPaginadas = data.alertas.slice(startIndex, endIndex);
 
   return (
-    <div className="bg-white rounded-3xl border border-[var(--color-border-agro)] p-6 flex flex-col w-full h-full shadow-sm">
+    <div className="bg-gradient-card rounded-3xl border border-[var(--color-border-agro)] p-6 flex flex-col w-full h-full shadow-sm">
       <div className="flex-1 w-full">
         <AlertasContainer alertas={alertasPaginadas} />
       </div>

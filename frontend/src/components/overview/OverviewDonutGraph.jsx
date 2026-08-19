@@ -10,7 +10,7 @@ import {Doughnut} from 'react-chartjs-2'
 
 export default function OverviewDonutGraph({ data }) {
   return (
-    <div className="bg-white rounded-3xl border border-(--color-border-agro) p-6 flex flex-col w-full h-full shadow-sm">
+    <div className="bg-gradient-card rounded-3xl border border-(--color-border-agro) p-6 flex flex-col w-full h-full shadow-sm">
       <div className="mb-8">
         <h2 className="text-xl font-bold text-black mb-1">
           Distribución por Sexo
