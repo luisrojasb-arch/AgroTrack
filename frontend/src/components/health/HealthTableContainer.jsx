@@ -9,11 +9,10 @@ import HealthAnimalstable from "./HealthAnimalstable";
 import HealthLotestable from "./HealthLotestable";
 import HealthCronoBase from "./HealthCronoBase";
 import Pagination from "@/components/ui/Pagination";
-
+import { createTareaSaludAction, toggleTareaSaludAction } from "@/actions/salud.actions";
 import HealthAnimalFormModal from "@/components/health/modalsAnimals/HealthAnimalFormModal";
 import HealthLoteFormModal from "@/components/health/modalsLote/HealthLoteFormModal";
 import HealthTareasModal from "@/components/health/modalsTareas/HealthTareasModal"; 
-import { createTareaSaludAction } from "@/actions/salud.actions";
 
 export default function HealthTableContainer({
   initialData,
@@ -86,6 +85,23 @@ export default function HealthTableContainer({
       toast.error(res.error || "Hubo un error al guardar el registro");
     }
   };
+  const handleToggleTarea = async (tareaId) => {
+    const res = await toggleTareaSaludAction(tareaId);
+    
+    if (res.success) {
+      setTareasSeleccionadas(prevTareas => 
+        prevTareas.map(tarea => {
+          if (tarea._id === tareaId) {
+            return { ...tarea, aplicado: !tarea.aplicado }; 
+          }
+          return tarea;
+        })
+      );
+      toast.success(res.data?.msg || "Estado de la tarea actualizado");
+    } else {
+      toast.error(res.error || "No se pudo actualizar la tarea");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -133,12 +149,12 @@ export default function HealthTableContainer({
         lotesDisponibles={lotesdisp}
       />
 
-      {/* Nuevo Modal de Tareas */}
       <HealthTareasModal
         isOpen={isTareasModalOpen}
         onClose={() => setIsTareasModalOpen(false)}
         tareas={tareasSeleccionadas}
         entidadType={activeTab === "individuales" ? "Animal" : "Lote"}
+        onToggleTarea={handleToggleTarea}
       />
     </div>
   );

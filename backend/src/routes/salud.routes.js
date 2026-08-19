@@ -16,5 +16,5 @@ router.get("/", saludCtrl.obtenerTareasSalud);
 router.get("/:id", saludCtrl.obtenerDetalleSalud);
 router.put("/:id", saludCtrl.editarSalud);
 router.delete("/:id", saludCtrl.eliminarSalud);
-
+router.patch("/:id/toggle", saludCtrl.toggleAplicarSalud);
 export default router;
