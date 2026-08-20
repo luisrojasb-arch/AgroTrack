@@ -19,11 +19,6 @@ export const metadata = {
   description: "Gestión de animales y ganado porcino.",
 };
 
-export const metadata = {
-  title: "Animales | AgroTrack",
-  description: "Gestión de animales y ganado porcino de la finca.",
-};
-
 /**
  * @description Página principal del módulo de Animales de la finca.
  * @param {Object} props - Propiedades de Next.js (params, searchParams).

@@ -7,10 +7,6 @@ import Button from "@/components/ui/Button";
 import { toast } from "sonner";
 import { activarCuentaAction } from "@/actions/user.actions";
 
-export const metadata = {
-  title: "Completar Perfil | AgroTrack",
-  description: "Configura los datos iniciales de tu cuenta y finca.",
-};
 
 /**
  * @description Página para que el usuario complete los datos de su perfil tras el primer registro.

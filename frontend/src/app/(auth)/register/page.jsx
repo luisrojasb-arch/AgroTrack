@@ -9,10 +9,7 @@ import Link from "next/link";
 import { registrarUsuarioAction } from "@/actions/auth.actions";
 
 
-export const metadata = {
-  title: "Registro | AgroTrack",
-  description: "Crea una cuenta nueva y comienza a digitalizar tu finca.",
-};
+
 
 
 /**
